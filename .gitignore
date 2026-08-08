@@ -30,3 +30,16 @@ uploads/
 
 # 归档
 *.log
+
+# deps & build
+node_modules/
+dist/
+*.local
+.env.local
+# editors & os
+.DS_Store
+*.log
+# wechat devtools
+EasyProduct.MiniApp/project.private.config.json
+# pnpm workspace-local store (沙箱环境链接源，勿提交)
+.pnpm-store/
