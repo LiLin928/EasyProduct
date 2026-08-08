@@ -1,0 +1,12 @@
+{
+  "app": { "name": "EasyProduct" },
+  "button": { "add": "新增", "edit": "编辑", "delete": "删除", "search": "搜索", "reset": "重置", "confirm": "确定", "cancel": "取消" },
+  "tip": "提示",
+  "confirm": { "delete": "确认删除该记录吗？" },
+  "success": "操作成功",
+  "required": "该项不能为空",
+  "status": { "enabled": "启用", "disabled": "停用" },
+  "dict": { "customerType": { "b2b": "B2B客户", "retail": "零售会员" } },
+  "login": { "title": "登录", "userName": "账号", "password": "密码", "submit": "登 录", "logout": "退出登录" },
+  "pager": { "total": "共 {total} 条" }
+}

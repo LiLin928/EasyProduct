@@ -1,8 +1,8 @@
 // src/helpers/id.ts
 import Mock from 'mockjs'
 
-/** GUID 主键（全库主键形态） */
-export const guid = (): string => Mock.mock('@guid')
+/** GUID 主键（全库主键形态，后端序列化小写） */
+export const guid = (): string => Mock.mock('@guid').toLowerCase()
 
 /** ISO 8601 时间（全库时间形态） */
 export const isoTime = (): string => new Date().toISOString()

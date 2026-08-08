@@ -1,0 +1,11 @@
+{
+  "desktop": "工作台",
+  "basic": "基础管理",
+  "product": "商品中心",
+  "site": "官网管理",
+  "mall": "商城业务",
+  "crm": "CRM",
+  "workflow": "工作流",
+  "report": "报表管理",
+  "ops": "运维日志"
+}

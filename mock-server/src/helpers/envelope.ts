@@ -17,6 +17,9 @@ export interface PageData<T> {
 }
 
 export function paginate<T>(source: T[], pageIndex = 1, pageSize = 10, keyword?: string): PageData<T> {
+  if (pageIndex < 1) pageIndex = 1
+  if (pageSize < 1) pageSize = 10
+  if (pageSize > 500) pageSize = 500
   const filtered = keyword
     ? source.filter((i) => JSON.stringify(i).toLowerCase().includes(keyword.toLowerCase()))
     : source

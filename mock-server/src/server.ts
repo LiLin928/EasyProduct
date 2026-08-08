@@ -23,11 +23,17 @@ app.post('/__mock/reset', (_req, res) => {
   res.json(ok(null, '已重置'))
 })
 
-// Task 2 挂载路由（先占位注释）：
-// app.use('/api/admin', adminGuard)  + adminAuthRouter / menuRouter / dictRouter
-// app.use('/api/site', siteHomeRouter)
-// app.use('/api/app', appGuard) + appAuthRouter
-// app.use('/api/i18n', i18nRouter)
+import { adminAuthRouter } from './routes/admin/auth.js'
+import { adminMenuRouter } from './routes/admin/menu.js'
+import { adminDictRouter } from './routes/admin/dict.js'
+import { siteHomeRouter } from './routes/site/home.js'
+import { appAuthRouter } from './routes/app/auth.js'
+import { i18nRouter } from './routes/i18n.js'
+
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter)
+app.use('/api/site', siteHomeRouter)
+app.use('/api/app', appGuard, appAuthRouter)
+app.use('/api/i18n', i18nRouter)
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
