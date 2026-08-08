@@ -1,0 +1,32 @@
+# ===== EasyProduct .gitignore =====
+
+# 环境与敏感配置（规范：敏感值走环境变量，仓库只留 example）
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+appsettings.Development.json
+appsettings.Production.json
+
+# AI/工具缓存目录
+.claude/
+.playwright-cli/
+.superpowers/
+
+# 构建产物
+bin/
+obj/
+dist/
+node_modules/
+
+# IDE
+.vs/
+.vscode/
+
+# 运行时产物
+logs/
+uploads/
+
+# 归档
+*.log
