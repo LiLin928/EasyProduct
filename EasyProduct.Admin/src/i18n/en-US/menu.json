@@ -7,5 +7,6 @@
   "crm": "CRM",
   "workflow": "Workflow",
   "report": "Report",
-  "ops": "Ops"
+  "ops": "Ops",
+  "notFound": "Not Found"
 }

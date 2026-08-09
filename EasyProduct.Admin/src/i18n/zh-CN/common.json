@@ -9,5 +9,7 @@
   "dict": { "customerType": { "b2b": "B2B客户", "retail": "零售会员" } },
   "login": { "title": "登录", "userName": "账号", "password": "密码", "submit": "登 录", "logout": "退出登录" },
   "pager": { "total": "共 {total} 条" },
+  "placeholder": "模块建设中",
+  "locale": { "zhCN": "中文", "enUS": "EN" },
   "error": { "tokenExpired": "登录状态已过期，请重新登录", "forbidden": "没有操作权限", "network": "网络错误", "request": "请求失败" }
 }

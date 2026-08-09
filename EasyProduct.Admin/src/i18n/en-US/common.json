@@ -9,5 +9,7 @@
   "dict": { "customerType": { "b2b": "B2B Customer", "retail": "Retail Member" } },
   "login": { "title": "Sign In", "userName": "Username", "password": "Password", "submit": "Sign In", "logout": "Sign Out" },
   "pager": { "total": "{total} items" },
+  "placeholder": "Coming soon",
+  "locale": { "zhCN": "中文", "enUS": "EN" },
   "error": { "tokenExpired": "Session expired, please sign in again", "forbidden": "Permission denied", "network": "Network error", "request": "Request failed" }
 }
