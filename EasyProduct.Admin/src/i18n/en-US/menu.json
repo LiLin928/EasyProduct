@@ -1,0 +1,11 @@
+{
+  "desktop": "Dashboard",
+  "basic": "Basic",
+  "product": "Product",
+  "site": "Site",
+  "mall": "Mall",
+  "crm": "CRM",
+  "workflow": "Workflow",
+  "report": "Report",
+  "ops": "Ops"
+}

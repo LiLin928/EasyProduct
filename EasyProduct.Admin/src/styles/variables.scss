@@ -1,1 +1,12 @@
-// placeholder — Task 5 注入设计令牌（SCSS 常量）
+// src/styles/variables.scss（SCSS 静态常量：间距/圆角/字号/断点）
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$radius-sm: 4px;
+$radius-md: 8px;
+$font-size-sm: 13px;
+$font-size-md: 14px;
+$font-size-lg: 16px;
+$admin-min-width: 1280px;

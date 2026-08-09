@@ -1,0 +1,13 @@
+{
+  "app": { "name": "EasyProduct" },
+  "button": { "add": "Add", "edit": "Edit", "delete": "Delete", "search": "Search", "reset": "Reset", "confirm": "OK", "cancel": "Cancel" },
+  "tip": "Notice",
+  "confirm": { "delete": "Delete this record?" },
+  "success": "Success",
+  "required": "Required",
+  "status": { "enabled": "Enabled", "disabled": "Disabled" },
+  "dict": { "customerType": { "b2b": "B2B Customer", "retail": "Retail Member" } },
+  "login": { "title": "Sign In", "userName": "Username", "password": "Password", "submit": "Sign In", "logout": "Sign Out" },
+  "pager": { "total": "{total} items" },
+  "error": { "tokenExpired": "Session expired, please sign in again", "forbidden": "Permission denied", "network": "Network error", "request": "Request failed" }
+}

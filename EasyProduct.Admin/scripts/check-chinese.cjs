@@ -20,7 +20,17 @@ function walk(dir) {
     const lines = fs.readFileSync(full, 'utf8').split('\n')
     lines.forEach((line, i) => {
       const trimmed = line.trim()
-      if (CJK.test(line) && !trimmed.startsWith('//') && !trimmed.startsWith('*')) {
+      // 跳过注释行
+      if (
+        trimmed.startsWith('/**') ||
+        trimmed.startsWith('*') ||
+        trimmed.startsWith('//')
+      ) {
+        return
+      }
+      // 移除行尾注释后检查
+      const codePart = line.split('//')[0]
+      if (CJK.test(codePart)) {
         console.error(`${path.relative(SRC, full)}:${i + 1}: ${trimmed}`)
         hits += 1
       }

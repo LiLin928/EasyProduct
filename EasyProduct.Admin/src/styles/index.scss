@@ -1,0 +1,33 @@
+// src/styles/index.scss（全局样式唯一入口；主题色一律 CSS Variables）
+@use './variables' as *;
+@use './mixins' as *;
+
+:root {
+  --ep-primary: #409eff;
+  --ep-bg: #f5f7fa;
+  --ep-bg-card: #ffffff;
+  --ep-text: #303133;
+  --ep-text-secondary: #909399;
+  --ep-border: #dcdfe6;
+  --ep-scrollbar: #c0c4cc;
+}
+
+[data-theme='dark'] {
+  --ep-bg: #141414;
+  --ep-bg-card: #1d1e1f;
+  --ep-text: #e5eaf3;
+  --ep-text-secondary: #a3a6ad;
+  --ep-border: #4c4d4f;
+  --ep-scrollbar: #6c6e72;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  min-width: $admin-min-width;
+  background: var(--ep-bg);
+  color: var(--ep-text);
+  font-size: $font-size-md;
+}
