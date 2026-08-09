@@ -1,0 +1,1 @@
+{ "desc": "EasyProduct MiniApp", "rules": [{ "action": "allow", "page": "*" }] }

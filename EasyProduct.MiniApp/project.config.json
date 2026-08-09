@@ -1,0 +1,12 @@
+{
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "useCompilerPlugins": ["typescript", "sass"],
+    "urlCheck": false
+  },
+  "condition": {}
+}

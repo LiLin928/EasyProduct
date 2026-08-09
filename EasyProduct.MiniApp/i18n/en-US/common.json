@@ -1,0 +1,7 @@
+{
+  "app": { "name": "EasyProduct" },
+  "button": { "confirm": "OK", "cancel": "Cancel" },
+  "loading": "Loading…",
+  "loadFailed": "Load failed",
+  "tab": { "home": "Home", "category": "Category", "cart": "Cart", "profile": "Profile" }
+}
