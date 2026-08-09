@@ -1,0 +1,7 @@
+{
+  "app": { "name": "EasyProduct" },
+  "nav": { "home": "首页" },
+  "footer": { "rights": "版权所有" },
+  "error": { "network": "网络错误" },
+  "locale": { "zhCN": "中文", "enUS": "EN" }
+}

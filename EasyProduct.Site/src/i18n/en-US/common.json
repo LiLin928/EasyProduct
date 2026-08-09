@@ -1,0 +1,7 @@
+{
+  "app": { "name": "EasyProduct" },
+  "nav": { "home": "Home" },
+  "footer": { "rights": "All rights reserved" },
+  "error": { "network": "Network error" },
+  "locale": { "zhCN": "中文", "enUS": "EN" }
+}
