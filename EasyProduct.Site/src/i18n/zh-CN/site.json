@@ -13,5 +13,18 @@
     "detail": "新闻详情",
     "top": "置顶",
     "views": "次浏览"
+  },
+  "inquiry": {
+    "title": "询价篮",
+    "empty": "询价篮为空",
+    "browseProducts": "浏览产品",
+    "remove": "删除",
+    "contactInfo": "联系信息",
+    "companyName": "公司名称",
+    "contactName": "联系人",
+    "phone": "电话",
+    "email": "邮箱",
+    "submit": "提交询价",
+    "submitting": "提交中..."
   }
 }

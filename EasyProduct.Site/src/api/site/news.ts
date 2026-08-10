@@ -1,7 +1,7 @@
 // src/api/site/news.ts
 import { get } from '@/utils/request'
 import type { PageResult } from '@/types/api'
-import type { NewsItem, NewsQuery } from '@/types/site'
+import type { NewsItem, NewsDetail, NewsQuery } from '@/types/site'
 
 /** 新闻列表 */
 export const getNewsList = (params: NewsQuery) =>
@@ -9,4 +9,4 @@ export const getNewsList = (params: NewsQuery) =>
 
 /** 新闻详情 */
 export const getNewsDetail = (id: string) =>
-  get<NewsItem>(`/api/site/news/${id}`)
+  get<NewsDetail>(`/api/site/news/${id}`)

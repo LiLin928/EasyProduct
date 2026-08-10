@@ -13,5 +13,18 @@
     "detail": "News Detail",
     "top": "Top",
     "views": "views"
+  },
+  "inquiry": {
+    "title": "Inquiry",
+    "empty": "Inquiry basket is empty",
+    "browseProducts": "Browse Products",
+    "remove": "Remove",
+    "contactInfo": "Contact Information",
+    "companyName": "Company Name",
+    "contactName": "Contact Person",
+    "phone": "Phone",
+    "email": "Email",
+    "submit": "Submit Inquiry",
+    "submitting": "Submitting..."
   }
 }
