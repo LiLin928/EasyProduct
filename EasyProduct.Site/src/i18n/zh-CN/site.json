@@ -26,5 +26,14 @@
     "email": "邮箱",
     "submit": "提交询价",
     "submitting": "提交中..."
+  },
+  "videos": {
+    "title": "视频中心",
+    "views": "次播放"
+  },
+  "downloads": {
+    "title": "资料下载",
+    "downloads": "次下载",
+    "download": "下载"
   }
 }
