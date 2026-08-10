@@ -5,11 +5,13 @@ import 'element-plus/dist/index.css'
 import App from './App.vue'
 import { i18n } from './i18n'
 import { setupRouter } from './router'
+import { setupPermissionDirective } from './directives/permission'
 import './styles/index.scss'
 
 const app = createApp(App)
 app.use(createPinia())
 app.use(i18n)
 app.use(ElementPlus)
+setupPermissionDirective(app)
 setupRouter(app)
 app.mount('#app')
