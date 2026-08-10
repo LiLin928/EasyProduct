@@ -7,5 +7,11 @@
     "allCategories": "All Categories",
     "quantity": "Quantity",
     "addToInquiry": "Add to Inquiry"
+  },
+  "news": {
+    "title": "News",
+    "detail": "News Detail",
+    "top": "Top",
+    "views": "views"
   }
 }

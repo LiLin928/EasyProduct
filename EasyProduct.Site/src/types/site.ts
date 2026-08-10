@@ -61,3 +61,26 @@ export interface ProductQuery {
   categoryId?: string
   keyword?: string
 }
+
+/** 新闻详情 */
+export interface NewsDetail {
+  id: string
+  categoryId: string
+  title: string
+  titleEn: string
+  summary: string
+  summaryEn: string
+  content: string
+  contentEn: string
+  coverImage: string
+  isTop: boolean
+  viewCount: number
+  publishTime: string
+}
+
+/** 新闻查询参数 */
+export interface NewsQuery {
+  pageIndex: number
+  pageSize: number
+  keyword?: string
+}
