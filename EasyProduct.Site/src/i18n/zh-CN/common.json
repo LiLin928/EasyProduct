@@ -3,5 +3,12 @@
   "nav": { "home": "首页" },
   "footer": { "rights": "版权所有" },
   "error": { "network": "网络错误" },
-  "locale": { "zhCN": "中文", "enUS": "EN" }
+  "locale": { "zhCN": "中文", "enUS": "EN" },
+  "pagination": {
+    "prev": "上一页",
+    "next": "下一页",
+    "page": "第 {current} 页 / 共 {total} 页"
+  },
+  "empty": "暂无数据",
+  "loading": "加载中..."
 }

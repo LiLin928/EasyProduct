@@ -3,5 +3,12 @@
   "nav": { "home": "Home" },
   "footer": { "rights": "All rights reserved" },
   "error": { "network": "Network error" },
-  "locale": { "zhCN": "中文", "enUS": "EN" }
+  "locale": { "zhCN": "中文", "enUS": "EN" },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}"
+  },
+  "empty": "No data",
+  "loading": "Loading..."
 }
