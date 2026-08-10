@@ -1,4 +1,11 @@
 {
   "home": { "newsTitle": "新闻动态", "moreNews": "查看更多" },
-  "notFound": { "back": "返回首页" }
+  "notFound": { "back": "返回首页" },
+  "products": {
+    "title": "产品中心",
+    "detail": "产品详情",
+    "allCategories": "全部分类",
+    "quantity": "数量",
+    "addToInquiry": "加入询价篮"
+  }
 }

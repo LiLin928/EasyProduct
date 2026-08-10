@@ -1,4 +1,11 @@
 {
   "home": { "newsTitle": "News", "moreNews": "More" },
-  "notFound": { "back": "Back to Home" }
+  "notFound": { "back": "Back to Home" },
+  "products": {
+    "title": "Products",
+    "detail": "Product Detail",
+    "allCategories": "All Categories",
+    "quantity": "Quantity",
+    "addToInquiry": "Add to Inquiry"
+  }
 }

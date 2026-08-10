@@ -8,6 +8,8 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/components/layout/AppLayout.vue'),
     children: [
       { path: '', name: 'home', component: () => import('@/views/home/index.vue'), meta: { title: 'common.nav.home' } },
+      { path: 'products', name: 'products', component: () => import('@/views/products/index.vue'), meta: { title: 'site.products.title' } },
+      { path: 'products/:id', name: 'product-detail', component: () => import('@/views/products/detail.vue'), meta: { title: 'site.products.detail' } },
     ],
   },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/error/404.vue'), meta: { title: 'site.notFound.back' } },

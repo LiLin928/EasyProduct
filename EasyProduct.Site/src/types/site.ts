@@ -26,3 +26,38 @@ export interface NewsQuery {
   pageSize: number
   keyword?: string
 }
+
+/** 产品分类 */
+export interface ProductCategory {
+  id: string
+  name: string
+  nameEn: string
+  parentId: string
+  sort: number
+}
+
+/** 产品 */
+export interface Product {
+  id: string
+  categoryId: string
+  code: string
+  name: string
+  nameEn: string
+  summary: string
+  summaryEn: string
+  coverImage: string
+  images: string[]
+  price: number
+  unit: string
+  specs: string
+  status: string
+  createdAt: string
+}
+
+/** 产品查询参数 */
+export interface ProductQuery {
+  pageIndex: number
+  pageSize: number
+  categoryId?: string
+  keyword?: string
+}
