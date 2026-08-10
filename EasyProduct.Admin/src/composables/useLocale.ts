@@ -1,8 +1,6 @@
 // src/composables/useLocale.ts
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
-import { SUPPORT_LOCALES } from '@/i18n'
 import type { Locale } from '@/i18n'
 
 export interface LocaleOption {
@@ -25,8 +23,8 @@ export function useLocale(): UseLocaleReturn {
   const appStore = useAppStore()
 
   const locales: LocaleOption[] = [
-    { value: 'zh-CN', label: '中文' },
-    { value: 'en-US', label: 'English' },
+    { value: 'zh-CN', label: t('common.locale.zhCN') },
+    { value: 'en-US', label: t('common.locale.enUS') },
   ]
 
   const setLocale = (next: Locale): void => {
