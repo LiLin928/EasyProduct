@@ -7,7 +7,7 @@ export interface Banner {
   link: string
 }
 
-/** 官网新闻（内容中英字段由后端存储，不进语言包——规范 3.3） */
+/** 官网新闻 */
 export interface NewsItem {
   id: string
   categoryId: string
@@ -20,7 +20,23 @@ export interface NewsItem {
   publishTime: string
 }
 
-/** 新闻查询 */
+/** 新闻详情 */
+export interface NewsDetail {
+  id: string
+  categoryId: string
+  title: string
+  titleEn: string
+  summary: string
+  summaryEn: string
+  content: string
+  contentEn: string
+  coverImage: string
+  isTop: boolean
+  viewCount: number
+  publishTime: string
+}
+
+/** 新闻查询参数 */
 export interface NewsQuery {
   pageIndex: number
   pageSize: number
@@ -62,25 +78,45 @@ export interface ProductQuery {
   keyword?: string
 }
 
-/** 新闻详情 */
-export interface NewsDetail {
+/** 视频 */
+export interface Video {
   id: string
-  categoryId: string
   title: string
   titleEn: string
-  summary: string
-  summaryEn: string
-  content: string
-  contentEn: string
   coverImage: string
-  isTop: boolean
+  videoUrl: string
+  duration: number
   viewCount: number
   publishTime: string
 }
 
-/** 新闻查询参数 */
-export interface NewsQuery {
-  pageIndex: number
-  pageSize: number
-  keyword?: string
+/** 下载 */
+export interface Download {
+  id: string
+  title: string
+  titleEn: string
+  fileUrl: string
+  fileSize: number
+  downloadCount: number
+  publishTime: string
+}
+
+/** 关于 */
+export interface About {
+  id: string
+  title: string
+  titleEn: string
+  content: string
+  contentEn: string
+  updatedAt: string
+}
+
+/** 联系信息 */
+export interface ContactInfo {
+  address: string
+  addressEn: string
+  phone: string
+  email: string
+  workingHours: string
+  workingHoursEn: string
 }
