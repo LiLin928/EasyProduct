@@ -9,16 +9,25 @@ export const adminUserRouter = Router()
 adminUserRouter.get('/basic/user/list', (req, res) => {
   const pageIndex = Number(req.query.pageIndex ?? 1)
   const pageSize = Number(req.query.pageSize ?? 10)
-  const keyword = req.query.keyword as string | undefined
+  const userName = req.query.userName as string | undefined
+  const realName = req.query.realName as string | undefined
+  const status = req.query.status as string | undefined
 
   let filtered = ADMIN_USERS
-  if (keyword) {
-    filtered = filtered.filter(
-      (u) =>
-        u.userName.includes(keyword) ||
-        u.realName.includes(keyword) ||
-        u.email.includes(keyword),
-    )
+
+  // 按用户名搜索
+  if (userName) {
+    filtered = filtered.filter((u) => u.userName.includes(userName))
+  }
+
+  // 按真实姓名搜索
+  if (realName) {
+    filtered = filtered.filter((u) => u.realName.includes(realName))
+  }
+
+  // 按状态筛选
+  if (status) {
+    filtered = filtered.filter((u) => u.status === status)
   }
 
   res.json(ok(paginate(filtered, pageIndex, pageSize)))
@@ -43,4 +52,14 @@ adminUserRouter.put('/basic/user/:id', (req, res) => {
 
 adminUserRouter.delete('/basic/user/:id', (req, res) => {
   res.json(ok(null, '删除成功'))
+})
+
+// 重置密码
+adminUserRouter.post('/basic/user/:id/reset-password', (req, res) => {
+  const user = ADMIN_USERS.find((u) => u.id === req.params.id)
+  if (!user) {
+    res.json(fail('用户不存在', 404))
+    return
+  }
+  res.json(ok(null, '密码已重置为：123456'))
 })

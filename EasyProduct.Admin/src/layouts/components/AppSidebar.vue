@@ -9,13 +9,37 @@
       router
       class="app-sidebar__menu"
     >
-      <el-menu-item
+      <template
         v-for="item in menus"
         :key="item.id"
-        :index="item.path"
       >
-        <span>{{ t(item.titleKey) }}</span>
-      </el-menu-item>
+        <!-- 有子菜单 -->
+        <el-sub-menu
+          v-if="item.children && item.children.length > 0"
+          :index="item.path"
+        >
+          <template #title>
+            <el-icon><component :is="item.icon" /></el-icon>
+            <span>{{ t(item.titleKey) }}</span>
+          </template>
+          <el-menu-item
+            v-for="child in item.children"
+            :key="child.id"
+            :index="child.path"
+          >
+            <el-icon><component :is="child.icon" /></el-icon>
+            <span>{{ t(child.titleKey) }}</span>
+          </el-menu-item>
+        </el-sub-menu>
+        <!-- 无子菜单 -->
+        <el-menu-item
+          v-else
+          :index="item.path"
+        >
+          <el-icon><component :is="item.icon" /></el-icon>
+          <span>{{ t(item.titleKey) }}</span>
+        </el-menu-item>
+      </template>
     </el-menu>
   </div>
 </template>
@@ -23,7 +47,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getMenuList } from '@/api/basic/menu'
+import { getUserMenuTree } from '@/api/basic/menu'
 import { useAppStore } from '@/stores/app'
 import { useI18n } from 'vue-i18n'
 import type { MenuItem } from '@/types/basic'
@@ -34,7 +58,7 @@ const appStore = useAppStore()
 const menus = ref<MenuItem[]>([])
 
 onMounted(async () => {
-  menus.value = await getMenuList()
+  menus.value = await getUserMenuTree()
 })
 </script>
 

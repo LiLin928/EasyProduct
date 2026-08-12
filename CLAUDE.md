@@ -2,6 +2,30 @@
 
 > EasyProduct = EasyWebSite（官网）+ EasyProject（电商管理）+ EasyCRM（CRM/ERP 前端）三项目整合后的模块化单体项目。
 
+## 项目路径规范
+
+**重要：所有命令和操作必须基于项目根目录**
+
+- **项目根目录**：`D:\4-MyProject\EasyProduct`
+- **前端 Admin**：`D:\4-MyProject\EasyProduct\EasyProduct.Admin`
+- **前端 Site**：`D:\4-MyProject\EasyProduct\EasyProduct.Site`
+- **前端 MiniApp**：`D:\4-MyProject\EasyProduct\EasyProduct.MiniApp`
+- **后端 API**：`D:\4-MyProject\EasyProduct\EasyProduct.WebApi`
+- **Mock 服务器**：`D:\4-MyProject\EasyProduct\mock-server`
+- **文档目录**：`D:\4-MyProject\EasyProduct\docs`
+
+**启动命令示例：**
+```bash
+# 启动前端 Admin（在项目根目录执行）
+cd D:\4-MyProject\EasyProduct\EasyProduct.Admin && pnpm dev
+
+# 启动 Mock 服务器（在项目根目录执行）
+cd D:\4-MyProject\EasyProduct\mock-server && pnpm dev
+
+# 启动后端 API（在项目根目录执行）
+cd D:\4-MyProject\EasyProduct\EasyProduct.WebApi && dotnet run
+```
+
 ## 项目概览
 
 - **后端**：EasyProduct.WebApi（.NET 8 模块化单体，SqlSugar + Autofac + MySQL 8）

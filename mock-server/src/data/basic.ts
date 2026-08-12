@@ -15,10 +15,23 @@ export const USER_PERMISSIONS: Record<string, string[]> = {
   ops: ['ops:log:list'],
 }
 
-/** 菜单树骨架：工作台 + 八大模块根（children 由 F2 Basic 模块补全） */
+/** 菜单树：工作台 + 八大模块 */
 export const MENU_TREE = [
   { id: guid(), parentId: '0', name: 'desktop', path: '/desktop', titleKey: 'menu.desktop', icon: 'Monitor', sort: 1, children: [] },
-  { id: guid(), parentId: '0', name: 'basic', path: '/basic', titleKey: 'menu.basic', icon: 'Setting', sort: 2, children: [] },
+  {
+    id: guid(),
+    parentId: '0',
+    name: 'basic',
+    path: '/basic',
+    titleKey: 'menu.basicRoot',
+    icon: 'Setting',
+    sort: 2,
+    children: [
+      { id: guid(), parentId: '0', name: 'basic-user', path: '/basic/user', titleKey: 'menu.basicUser', icon: 'User', sort: 1, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-role', path: '/basic/role', titleKey: 'menu.basicRole', icon: 'UserFilled', sort: 2, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-menu', path: '/basic/menu', titleKey: 'menu.basicMenu', icon: 'Menu', sort: 3, children: [] },
+    ]
+  },
   { id: guid(), parentId: '0', name: 'product', path: '/product', titleKey: 'menu.product', icon: 'Goods', sort: 3, children: [] },
   { id: guid(), parentId: '0', name: 'site', path: '/site', titleKey: 'menu.site', icon: 'Monitor', sort: 4, children: [] },
   { id: guid(), parentId: '0', name: 'mall', path: '/mall', titleKey: 'menu.mall', icon: 'ShoppingCart', sort: 5, children: [] },

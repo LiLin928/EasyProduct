@@ -1,8 +1,10 @@
 import { createI18n } from 'vue-i18n'
 import enCommon from './en-US/common.json'
 import enMenu from './en-US/menu.json'
+import enBasic from './en-US/basic.json'
 import zhCommon from './zh-CN/common.json'
 import zhMenu from './zh-CN/menu.json'
+import zhBasic from './zh-CN/basic.json'
 
 export const SUPPORT_LOCALES = ['zh-CN', 'en-US'] as const
 export type Locale = (typeof SUPPORT_LOCALES)[number]
@@ -10,8 +12,8 @@ export type Locale = (typeof SUPPORT_LOCALES)[number]
 const LOCALE_KEY = 'locale'
 
 const messages = {
-  'zh-CN': { common: zhCommon, menu: zhMenu },
-  'en-US': { common: enCommon, menu: enMenu },
+  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic },
+  'en-US': { common: enCommon, menu: enMenu, basic: enBasic },
 }
 
 export const i18n = createI18n({

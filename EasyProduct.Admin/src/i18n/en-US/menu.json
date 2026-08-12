@@ -1,6 +1,9 @@
 {
   "desktop": "Dashboard",
-  "basic": "Basic",
+  "basicRoot": "Basic Management",
+  "basicUser": "User Management",
+  "basicRole": "Role Management",
+  "basicMenu": "Menu Management",
   "product": "Product",
   "site": "Site",
   "mall": "Mall",

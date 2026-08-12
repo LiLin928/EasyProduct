@@ -1,6 +1,9 @@
 {
   "desktop": "工作台",
-  "basic": "基础管理",
+  "basicRoot": "基础管理",
+  "basicUser": "用户管理",
+  "basicRole": "角色管理",
+  "basicMenu": "菜单管理",
   "product": "商品中心",
   "site": "官网管理",
   "mall": "商城业务",
