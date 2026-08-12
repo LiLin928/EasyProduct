@@ -266,6 +266,30 @@ interface PageResult<T> {
 
 ## 开发环境设置
 
+### 快速启动
+
+**推荐方式：同时启动 Mock + 前端（并行运行）**
+
+在项目根目录 `D:\4-MyProject\EasyProduct` 打开两个终端：
+
+**终端 1 - Mock 服务器：**
+```bash
+cd mock-server
+pnpm dev
+```
+- 访问地址：http://localhost:7700
+- 提供 API 模拟数据
+
+**终端 2 - 前端 Admin：**
+```bash
+cd EasyProduct.Admin
+pnpm dev
+```
+- 访问地址：http://localhost:5173（端口冲突时自动切换）
+- 默认会连接到 Mock 服务器
+
+### 单独启动
+
 1. **后端**：
    ```bash
    cd EasyProduct.WebApi
@@ -284,8 +308,8 @@ interface PageResult<T> {
 3. **Mock 服务器**：
    ```bash
    cd mock-server
-   npm install
-   node index.js
+   pnpm install
+   pnpm dev
    ```
 
 ## 常见任务
