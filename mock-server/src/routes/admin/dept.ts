@@ -43,7 +43,11 @@ adminDeptRouter.get('/basic/dept/:id/users', (req, res) => {
       phone: '13800138000',
       email: 'zhangsan@company.com',
       status: 'enabled',
-      roles: ['技术员'],
+      roleNames: ['技术员'],
+      deptId: req.params.id,
+      roleIds: [guid()],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     },
     {
       id: guid(),
@@ -52,7 +56,11 @@ adminDeptRouter.get('/basic/dept/:id/users', (req, res) => {
       phone: '13800138001',
       email: 'lisi@company.com',
       status: 'enabled',
-      roles: ['开发工程师'],
+      roleNames: ['开发工程师'],
+      deptId: req.params.id,
+      roleIds: [guid()],
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     },
   ]))
 })
@@ -64,7 +72,7 @@ adminDeptRouter.post('/basic/dept', (req, res) => {
 
 /** 编辑部门 */
 adminDeptRouter.put('/basic/dept/:id', (req, res) => {
-  res.json(ok(null, '更新成功'))
+  res.json(ok({ id: req.params.id }, '更新成功'))
 })
 
 /** 删除部门 */
