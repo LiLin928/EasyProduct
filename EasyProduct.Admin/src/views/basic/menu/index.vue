@@ -329,10 +329,6 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .menu-page {
-  &__toolbar {
-    margin-bottom: $spacing-md;
-  }
-
   &__table {
     .menu-title {
       display: flex;
