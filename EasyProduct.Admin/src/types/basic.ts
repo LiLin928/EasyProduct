@@ -1,3 +1,5 @@
+import type { PageQuery } from './api'
+
 /** 登录入参 */
 export interface LoginParams {
   userName: string
@@ -140,5 +142,90 @@ export interface MenuCreateParams {
   permission?: string
   component?: string
   visible: boolean
+  status: 'enabled' | 'disabled'
+}
+
+// ==================== 部门管理 ====================
+
+/** 部门（完整模型） */
+export interface Dept {
+  id: string
+  parentId: string
+  name: string
+  code: string
+  sort: number
+  status: 'enabled' | 'disabled'
+  leaderName?: string // 部门负责人
+  phone?: string // 联系电话
+  email?: string // 邮箱
+  fullPath?: string // 部门路径（如：总公司/技术部/前端组）
+  level?: number // 层级
+  memberCount?: number // 成员数量
+  description?: string // 描述
+  children?: Dept[]
+}
+
+/** 部门创建参数 */
+export interface DeptCreateParams {
+  parentId: string
+  name: string
+  code: string
+  sort: number
+  status: 'enabled' | 'disabled'
+  leaderName?: string
+  phone?: string
+  email?: string
+  description?: string
+}
+
+/** 部门更新参数 */
+export type DeptUpdateParams = Partial<DeptCreateParams>
+
+// ==================== 字典管理 ====================
+
+/** 字典类型 */
+export interface DictType {
+  id: string
+  name: string
+  code: string
+  status: 'enabled' | 'disabled'
+  remark: string
+}
+
+/** 字典类型查询参数 */
+export interface DictTypeQuery extends PageQuery {
+  name?: string
+  code?: string
+}
+
+/** 字典类型创建参数 */
+export interface DictTypeCreateParams {
+  name: string
+  code: string
+  status: 'enabled' | 'disabled'
+  remark: string
+}
+
+/** 字典数据（管理页面用） */
+export interface DictData {
+  id: string
+  typeCode: string
+  value: string
+  labelKey: string
+  sort: number
+  status: 'enabled' | 'disabled'
+}
+
+/** 字典数据查询参数 */
+export interface DictDataQuery extends PageQuery {
+  typeCode: string
+}
+
+/** 字典数据创建参数 */
+export interface DictDataCreateParams {
+  typeCode: string
+  value: string
+  labelKey: string
+  sort: number
   status: 'enabled' | 'disabled'
 }
