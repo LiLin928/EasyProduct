@@ -1,5 +1,10 @@
 <template>
   <el-card class="base-search-form">
+    <!-- 工具栏插槽 -->
+    <div v-if="$slots.toolbar" class="base-search-form__toolbar">
+      <slot name="toolbar" />
+    </div>
+
     <el-form
       :model="localModel"
       :inline="true"
@@ -49,8 +54,8 @@
         />
       </el-form-item>
 
-      <!-- 操作按钮 -->
-      <el-form-item v-if="showButtons">
+      <!-- 操作按钮（右对齐） -->
+      <el-form-item v-if="showButtons" class="base-search-form__actions">
         <el-button
           type="primary"
           :loading="loading"
@@ -117,5 +122,25 @@ const handleReset = (): void => {
 <style scoped lang="scss">
 .base-search-form {
   margin-bottom: $spacing-md;
+
+  &__toolbar {
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid #ebeef5;
+  }
+
+  &__actions {
+    margin-left: auto; // 推到右侧
+  }
+
+  // 下拉框最小宽度
+  .el-select {
+    min-width: 200px;
+  }
+
+  // 日期选择器最小宽度
+  .el-date-editor--daterange {
+    min-width: 240px;
+  }
 }
 </style>
