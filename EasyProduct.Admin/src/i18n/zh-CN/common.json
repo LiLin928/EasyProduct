@@ -18,6 +18,8 @@
   "required": "该项不能为空",
   "inputPlaceholder": "请输入",
   "selectPlaceholder": "请选择",
+  "startDate": "开始日期",
+  "endDate": "结束日期",
   "emailFormat": "请输入正确的邮箱格式",
   "status": { "enabled": "启用", "disabled": "停用" },
   "dict": { "customerType": { "b2b": "B2B客户", "retail": "零售会员" } },

@@ -18,6 +18,8 @@
   "required": "Required",
   "inputPlaceholder": "Please input",
   "selectPlaceholder": "Please select",
+  "startDate": "Start Date",
+  "endDate": "End Date",
   "emailFormat": "Invalid email format",
   "status": { "enabled": "Enabled", "disabled": "Disabled" },
   "dict": { "customerType": { "b2b": "B2B Customer", "retail": "Retail Member" } },
