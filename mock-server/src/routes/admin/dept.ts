@@ -46,8 +46,8 @@ adminDeptRouter.get('/basic/dept/:id/users', (req, res) => {
       roleNames: ['技术员'],
       deptId: req.params.id,
       roleIds: [guid()],
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
     {
       id: guid(),
@@ -59,8 +59,8 @@ adminDeptRouter.get('/basic/dept/:id/users', (req, res) => {
       roleNames: ['开发工程师'],
       deptId: req.params.id,
       roleIds: [guid()],
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   ]))
 })
