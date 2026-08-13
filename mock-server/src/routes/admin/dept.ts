@@ -6,12 +6,25 @@ import { guid } from '../../helpers/id.js'
 
 export const adminDeptRouter = Router()
 
-adminDeptRouter.get('/basic/dept/list', (_req, res) => {
+/** 部门树 */
+adminDeptRouter.get('/basic/dept/tree', (_req, res) => {
   res.json(ok(DEPTS))
 })
 
+/** 部门详情 */
 adminDeptRouter.get('/basic/dept/:id', (req, res) => {
-  const dept = DEPTS.find((d) => d.id === req.params.id)
+  const findDept = (list: any[], id: string): any => {
+    for (const item of list) {
+      if (item.id === id) return item
+      if (item.children) {
+        const found = findDept(item.children, id)
+        if (found) return found
+      }
+    }
+    return null
+  }
+
+  const dept = findDept(DEPTS, req.params.id)
   if (!dept) {
     res.json(fail('部门不存在', 404))
     return
@@ -19,14 +32,42 @@ adminDeptRouter.get('/basic/dept/:id', (req, res) => {
   res.json(ok(dept))
 })
 
+/** 部门成员列表 */
+adminDeptRouter.get('/basic/dept/:id/users', (req, res) => {
+  // 返回模拟成员数据
+  res.json(ok([
+    {
+      id: guid(),
+      userName: 'user001',
+      realName: '张三',
+      phone: '13800138000',
+      email: 'zhangsan@company.com',
+      status: 'enabled',
+      roles: ['技术员'],
+    },
+    {
+      id: guid(),
+      userName: 'user002',
+      realName: '李四',
+      phone: '13800138001',
+      email: 'lisi@company.com',
+      status: 'enabled',
+      roles: ['开发工程师'],
+    },
+  ]))
+})
+
+/** 新增部门 */
 adminDeptRouter.post('/basic/dept', (req, res) => {
   res.json(ok({ id: guid() }, '创建成功'))
 })
 
+/** 编辑部门 */
 adminDeptRouter.put('/basic/dept/:id', (req, res) => {
   res.json(ok(null, '更新成功'))
 })
 
+/** 删除部门 */
 adminDeptRouter.delete('/basic/dept/:id', (req, res) => {
   res.json(ok(null, '删除成功'))
 })
