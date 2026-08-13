@@ -16,6 +16,21 @@ export interface UseSearchReturn {
 }
 
 /**
+ * 日期范围字段名称集合
+ * 只有这些字段才会被拆解为 startTime/endTime
+ */
+const DATE_RANGE_FIELDS = new Set([
+  'dateRange',
+  'timeRange',
+  'createTime',
+  'updateTime',
+  'orderTime',
+  'payTime',
+  'shipTime',
+  'completeTime'
+])
+
+/**
  * 搜索表单 composable
  * @param options 配置项
  */
@@ -34,8 +49,8 @@ export function useSearch(options: UseSearchOptions = {}): UseSearchReturn {
     Object.entries(searchModel).forEach(([key, value]) => {
       // 过滤空值
       if (value !== '' && value !== null && value !== undefined) {
-        // 日期范围处理：拆解为 startTime/endTime
-        if (Array.isArray(value) && value.length === 2) {
+        // 日期范围处理：仅对特定字段名拆解为 startTime/endTime
+        if (Array.isArray(value) && value.length === 2 && DATE_RANGE_FIELDS.has(key)) {
           params['startTime'] = value[0]
           params['endTime'] = value[1]
         } else {
