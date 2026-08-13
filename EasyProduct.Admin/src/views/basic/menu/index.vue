@@ -1,50 +1,12 @@
 <template>
   <div class="menu-page">
     <!-- 搜索表单 -->
-    <el-card class="menu-page__search">
-      <el-form
-        :inline="true"
-        :model="searchForm"
-      >
-        <el-form-item :label="t('basic.menu.searchName')">
-          <el-input
-            v-model="searchForm.name"
-            :placeholder="t('common.inputPlaceholder')"
-            clearable
-            @clear="handleSearch"
-            @keyup.enter="handleSearch"
-          />
-        </el-form-item>
-        <el-form-item :label="t('basic.menu.searchStatus')">
-          <el-select
-            v-model="searchForm.status"
-            :placeholder="t('basic.menu.allStatus')"
-            clearable
-            @change="handleSearch"
-          >
-            <el-option
-              label="启用"
-              value="enabled"
-            />
-            <el-option
-              label="禁用"
-              value="disabled"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleSearch"
-          >
-            {{ t('common.search') }}
-          </el-button>
-          <el-button @click="handleReset">
-            {{ t('common.reset') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <BaseSearchForm
+      :fields="searchFields"
+      :model="searchModel"
+      @search="handleSearch"
+      @reset="handleReset"
+    />
 
     <!-- 工具栏 -->
     <el-card class="menu-page__toolbar">
@@ -191,6 +153,9 @@ import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useDialog } from '@/composables/useDialog'
+import { useSearch } from '@/composables/useSearch'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+import type { SearchField } from '@/types/search'
 import {
   getMenuTree,
   deleteMenu,
@@ -206,21 +171,38 @@ const loading = ref(false)
 const menuTree = ref<Menu[]>([])
 const isExpandAll = ref(true)
 
-// 搜索表单
-const searchForm = ref({
-  name: '',
-  status: ''
-})
+// 搜索字段配置
+const searchFields: SearchField[] = [
+  {
+    prop: 'name',
+    label: 'basic.menu.searchName',
+    type: 'input'
+  },
+  {
+    prop: 'status',
+    label: 'basic.menu.searchStatus',
+    type: 'select',
+    options: [
+      { label: 'basic.menu.enabled', value: 'enabled' },
+      { label: 'basic.menu.disabled', value: 'disabled' }
+    ]
+  }
+]
 
-// 表单弹窗
-const formDialog = useDialog<Menu>()
+// 搜索逻辑
+const { searchModel, handleSearch, handleReset } = useSearch({
+  defaultModel: {
+    name: '',
+    status: ''
+  }
+})
 
 // 过滤后的表格数据
 const filteredTableData = computed(() => {
-  if (!searchForm.value.name && !searchForm.value.status) {
+  if (!searchModel.name && !searchModel.status) {
     return menuTree.value
   }
-  return filterMenuTree(menuTree.value, searchForm.value)
+  return filterMenuTree(menuTree.value, searchModel)
 })
 
 // 过滤菜单树（递归）
@@ -248,6 +230,9 @@ const filterMenuTree = (
     }))
 }
 
+// 表单弹窗
+const formDialog = useDialog<Menu>()
+
 // 加载菜单树
 const loadMenuTree = async (): Promise<void> => {
   loading.value = true
@@ -258,19 +243,6 @@ const loadMenuTree = async (): Promise<void> => {
     // 加载失败
   } finally {
     loading.value = false
-  }
-}
-
-// 搜索
-const handleSearch = (): void => {
-  // 触发计算属性重新计算
-}
-
-// 重置搜索
-const handleReset = (): void => {
-  searchForm.value = {
-    name: '',
-    status: ''
   }
 }
 
@@ -358,10 +330,6 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .menu-page {
-  &__search {
-    margin-bottom: $spacing-md;
-  }
-
   &__toolbar {
     margin-bottom: $spacing-md;
   }

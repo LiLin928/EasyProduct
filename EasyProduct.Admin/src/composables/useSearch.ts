@@ -2,17 +2,17 @@
 import { reactive } from 'vue'
 import type { UnwrapNestedRefs } from 'vue'
 
-export interface UseSearchOptions {
-  defaultModel?: Record<string, unknown>
-  onSearch?: (model: Record<string, unknown>) => void
+export interface UseSearchOptions<T = Record<string, unknown>> {
+  defaultModel?: T
+  onSearch?: (model: T) => void
   onReset?: () => void
 }
 
-export interface UseSearchReturn {
-  searchModel: UnwrapNestedRefs<Record<string, unknown>>
+export interface UseSearchReturn<T = Record<string, unknown>> {
+  searchModel: UnwrapNestedRefs<T>
   handleSearch: () => void
   handleReset: () => void
-  getSearchParams: () => Record<string, unknown>
+  getSearchParams: () => Partial<T>
 }
 
 /**
@@ -34,27 +34,30 @@ const DATE_RANGE_FIELDS = new Set([
  * 搜索表单 composable
  * @param options 配置项
  */
-export function useSearch(options: UseSearchOptions = {}): UseSearchReturn {
-  const { defaultModel = {}, onSearch, onReset } = options
+export function useSearch<T extends Record<string, unknown> = Record<string, unknown>>(
+  options: UseSearchOptions<T> = {}
+): UseSearchReturn<T> {
+  const { defaultModel = {} as T, onSearch, onReset } = options
 
   // 响应式搜索模型
-  const searchModel = reactive<Record<string, unknown>>({ ...defaultModel })
+  const searchModel = reactive<T>({ ...defaultModel } as T)
 
   /**
    * 获取搜索参数（过滤空值）
    */
-  const getSearchParams = (): Record<string, unknown> => {
-    const params: Record<string, unknown> = {}
+  const getSearchParams = (): Partial<T> => {
+    const params: Partial<T> = {}
+    const rawParams = params as Record<string, unknown>
 
-    Object.entries(searchModel).forEach(([key, value]) => {
+    Object.entries(searchModel as Record<string, unknown>).forEach(([key, value]) => {
       // 过滤空值
       if (value !== '' && value !== null && value !== undefined) {
         // 日期范围处理：仅对特定字段名拆解为 startTime/endTime
         if (Array.isArray(value) && value.length === 2 && DATE_RANGE_FIELDS.has(key)) {
-          params['startTime'] = value[0]
-          params['endTime'] = value[1]
+          rawParams['startTime'] = value[0]
+          rawParams['endTime'] = value[1]
         } else {
-          params[key] = value
+          rawParams[key] = value
         }
       }
     })
@@ -66,7 +69,7 @@ export function useSearch(options: UseSearchOptions = {}): UseSearchReturn {
    * 搜索方法
    */
   const handleSearch = (): void => {
-    onSearch?.(getSearchParams())
+    onSearch?.(getSearchParams() as T)
   }
 
   /**
