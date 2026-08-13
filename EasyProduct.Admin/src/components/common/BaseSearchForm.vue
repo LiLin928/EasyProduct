@@ -1,18 +1,15 @@
 <template>
   <el-card class="base-search-form">
-    <!-- 工具栏插槽 -->
-    <div
-      v-if="$slots.toolbar"
-      class="base-search-form__toolbar"
-    >
-      <slot name="toolbar" />
-    </div>
-
     <el-form
       :model="localModel"
       :inline="true"
       :label-width="labelWidth"
     >
+      <!-- 工具栏插槽（左侧） -->
+      <el-form-item v-if="$slots.toolbar">
+        <slot name="toolbar" />
+      </el-form-item>
+
       <!-- 动态渲染字段 -->
       <el-form-item
         v-for="field in fields"
@@ -128,12 +125,6 @@ const handleReset = (): void => {
 <style scoped lang="scss">
 .base-search-form {
   margin-bottom: $spacing-md;
-
-  &__toolbar {
-    margin-bottom: $spacing-md;
-    padding-bottom: $spacing-md;
-    border-bottom: 1px solid #ebeef5;
-  }
 
   &__actions {
     margin-left: auto; // 推到右侧
