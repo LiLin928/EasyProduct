@@ -10,6 +10,7 @@ export interface UseSearchOptions<T = Record<string, unknown>> {
 
 export interface UseSearchReturn<T = Record<string, unknown>> {
   searchModel: UnwrapNestedRefs<T>
+  resetModel: () => void
   handleSearch: () => void
   handleReset: () => void
   getSearchParams: () => Partial<T>
@@ -80,8 +81,16 @@ export function useSearch<T extends Record<string, unknown> = Record<string, unk
     onReset?.()
   }
 
+  /**
+   * 重置搜索模型
+   */
+  const resetModel = (): void => {
+    Object.assign(searchModel, defaultModel)
+  }
+
   return {
     searchModel,
+    resetModel,
     handleSearch,
     handleReset,
     getSearchParams
