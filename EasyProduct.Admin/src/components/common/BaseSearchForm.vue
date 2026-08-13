@@ -1,7 +1,10 @@
 <template>
   <el-card class="base-search-form">
     <!-- 工具栏插槽 -->
-    <div v-if="$slots.toolbar" class="base-search-form__toolbar">
+    <div
+      v-if="$slots.toolbar"
+      class="base-search-form__toolbar"
+    >
       <slot name="toolbar" />
     </div>
 
@@ -55,7 +58,10 @@
       </el-form-item>
 
       <!-- 操作按钮（右对齐） -->
-      <el-form-item v-if="showButtons" class="base-search-form__actions">
+      <el-form-item
+        v-if="showButtons"
+        class="base-search-form__actions"
+      >
         <el-button
           type="primary"
           :loading="loading"

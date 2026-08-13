@@ -6,24 +6,23 @@
       :model="searchModel"
       @search="handleSearch"
       @reset="handleReset"
-    />
-
-    <!-- 工具栏 -->
-    <el-card class="menu-page__toolbar">
-      <el-button
-        v-permission="['basic:menu:edit']"
-        type="primary"
-        @click="handleAdd"
-      >
-        {{ t('common.add') }}
-      </el-button>
-      <el-button @click="handleExpandAll">
-        {{ t('basic.menu.expandAll') }}
-      </el-button>
-      <el-button @click="handleCollapseAll">
-        {{ t('basic.menu.collapseAll') }}
-      </el-button>
-    </el-card>
+    >
+      <template #toolbar>
+        <el-button
+          v-permission="['basic:menu:edit']"
+          type="primary"
+          @click="handleAdd"
+        >
+          {{ t('common.add') }}
+        </el-button>
+        <el-button @click="handleExpandAll">
+          {{ t('basic.menu.expandAll') }}
+        </el-button>
+        <el-button @click="handleCollapseAll">
+          {{ t('basic.menu.collapseAll') }}
+        </el-button>
+      </template>
+    </BaseSearchForm>
 
     <!-- 菜单树形表格 -->
     <el-card class="menu-page__table">

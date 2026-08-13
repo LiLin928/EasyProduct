@@ -6,18 +6,17 @@
       :model="searchModel"
       @search="handleSearch"
       @reset="handleReset"
-    />
-
-    <!-- 工具栏 -->
-    <el-card class="user-page__toolbar">
-      <el-button
-        v-permission="['basic:user:edit']"
-        type="primary"
-        @click="handleAdd"
-      >
-        {{ t('common.add') }}
-      </el-button>
-    </el-card>
+    >
+      <template #toolbar>
+        <el-button
+          v-permission="['basic:user:edit']"
+          type="primary"
+          @click="handleAdd"
+        >
+          {{ t('common.add') }}
+        </el-button>
+      </template>
+    </BaseSearchForm>
 
     <!-- 列表 -->
     <el-card class="user-page__table">
@@ -150,7 +149,7 @@ const searchFields: SearchField[] = [
 ]
 
 // 搜索逻辑
-const { searchModel, getSearchParams } = useSearch({
+const { searchModel, resetModel, getSearchParams } = useSearch({
   defaultModel: {
     userName: '',
     realName: '',
@@ -172,7 +171,7 @@ const handleSearch = (): void => {
 
 // 重置（清空搜索参数并重置）
 const handleReset = (): void => {
-  // 清空查询中的搜索字段
+  resetModel() // 清空 UI
   delete query.userName
   delete query.realName
   delete query.status
@@ -231,8 +230,5 @@ const handleDelete = async (row: User): Promise<void> => {
 
 <style scoped lang="scss">
 .user-page {
-  &__toolbar {
-    margin-bottom: $spacing-md;
-  }
 }
 </style>

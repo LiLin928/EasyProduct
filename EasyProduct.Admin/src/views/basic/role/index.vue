@@ -6,18 +6,17 @@
       :model="searchModel"
       @search="handleSearch"
       @reset="handleReset"
-    />
-
-    <!-- 工具栏 -->
-    <el-card class="role-page__toolbar">
-      <el-button
-        v-permission="['basic:role:edit']"
-        type="primary"
-        @click="handleAdd"
-      >
-        {{ t('common.add') }}
-      </el-button>
-    </el-card>
+    >
+      <template #toolbar>
+        <el-button
+          v-permission="['basic:role:edit']"
+          type="primary"
+          @click="handleAdd"
+        >
+          {{ t('common.add') }}
+        </el-button>
+      </template>
+    </BaseSearchForm>
 
     <!-- 列表 -->
     <el-card class="role-page__table">
