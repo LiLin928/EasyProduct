@@ -1,55 +1,12 @@
 <template>
   <div class="role-page">
-    <!-- 搜索栏 -->
-    <el-card class="role-page__search">
-      <el-form
-        :model="query"
-        :inline="true"
-        label-width="auto"
-      >
-        <el-form-item :label="t('basic.role.name')">
-          <el-input
-            v-model="query.name"
-            :placeholder="t('common.inputPlaceholder')"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item :label="t('basic.role.code')">
-          <el-input
-            v-model="query.code"
-            :placeholder="t('common.inputPlaceholder')"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item :label="t('basic.role.status')">
-          <el-select
-            v-model="query.status"
-            :placeholder="t('common.selectPlaceholder')"
-            clearable
-          >
-            <el-option
-              label="启用"
-              value="enabled"
-            />
-            <el-option
-              label="禁用"
-              value="disabled"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleSearch"
-          >
-            {{ t('common.search') }}
-          </el-button>
-          <el-button @click="handleReset">
-            {{ t('common.reset') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <!-- 搜索表单 -->
+    <BaseSearchForm
+      :fields="searchFields"
+      :model="searchModel"
+      @search="handleSearch"
+      @reset="handleReset"
+    />
 
     <!-- 工具栏 -->
     <el-card class="role-page__toolbar">
@@ -167,19 +124,69 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useTable } from '@/composables/useTable'
 import { useDialog } from '@/composables/useDialog'
+import { useSearch } from '@/composables/useSearch'
 import { getRoleList, deleteRole } from '@/api/basic/role'
 import type { Role } from '@/types/basic'
+import type { SearchField } from '@/types/search'
 import BaseTable from '@/components/common/BaseTable.vue'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
 import RoleForm from './components/RoleForm.vue'
 import MenuAssign from './components/MenuAssign.vue'
 
 const { t } = useI18n()
 
+// 搜索字段配置
+const searchFields: SearchField[] = [
+  {
+    prop: 'name',
+    label: 'basic.role.name',
+    type: 'input'
+  },
+  {
+    prop: 'code',
+    label: 'basic.role.code',
+    type: 'input'
+  },
+  {
+    prop: 'status',
+    label: 'basic.role.status',
+    type: 'select',
+    options: [
+      { label: '启用', value: 'enabled' },
+      { label: '禁用', value: 'disabled' }
+    ]
+  }
+]
+
+// 搜索逻辑
+const { searchModel, getSearchParams } = useSearch({
+  defaultModel: {
+    name: '',
+    code: '',
+    status: ''
+  }
+})
+
 // 列表状态
-const { loading, list, total, query, handleSearch, handleReset, handlePageChange, reload } = useTable(
+const { loading, list, total, query, handleSearch: tableSearch, handleReset: tableReset, handlePageChange, reload } = useTable(
   getRoleList,
   { immediate: true }
 )
+
+// 搜索（合并搜索参数到查询）
+const handleSearch = (): void => {
+  Object.assign(query, getSearchParams())
+  tableSearch()
+}
+
+// 重置（清空搜索参数并重置）
+const handleReset = (): void => {
+  // 清空查询中的搜索字段
+  delete query.name
+  delete query.code
+  delete query.status
+  tableReset()
+}
 
 // 表单弹窗
 const formDialog = useDialog<Role>()
@@ -231,7 +238,6 @@ const handleDelete = async (row: Role): Promise<void> => {
 
 <style scoped lang="scss">
 .role-page {
-  &__search,
   &__toolbar {
     margin-bottom: $spacing-md;
   }
