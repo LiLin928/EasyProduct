@@ -12,7 +12,9 @@
     "add": "新增用户",
     "edit": "编辑用户",
     "resetPassword": "重置密码",
-    "resetPasswordConfirm": "确认重置该用户的密码吗？"
+    "resetPasswordConfirm": "确认重置该用户的密码吗？",
+    "enabled": "启用",
+    "disabled": "禁用"
   },
   "role": {
     "name": "角色名称",

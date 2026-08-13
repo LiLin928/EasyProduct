@@ -12,7 +12,9 @@
     "add": "Add User",
     "edit": "Edit User",
     "resetPassword": "Reset Password",
-    "resetPasswordConfirm": "Are you sure to reset this user's password?"
+    "resetPasswordConfirm": "Are you sure to reset this user's password?",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
   },
   "role": {
     "name": "Role Name",

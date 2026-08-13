@@ -1,55 +1,12 @@
 <template>
   <div class="user-page">
-    <!-- 搜索栏 -->
-    <el-card class="user-page__search">
-      <el-form
-        :model="query"
-        :inline="true"
-        label-width="auto"
-      >
-        <el-form-item :label="t('basic.user.userName')">
-          <el-input
-            v-model="query.userName"
-            :placeholder="t('common.inputPlaceholder')"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item :label="t('basic.user.realName')">
-          <el-input
-            v-model="query.realName"
-            :placeholder="t('common.inputPlaceholder')"
-            clearable
-          />
-        </el-form-item>
-        <el-form-item :label="t('basic.user.status')">
-          <el-select
-            v-model="query.status"
-            :placeholder="t('common.selectPlaceholder')"
-            clearable
-          >
-            <el-option
-              label="启用"
-              value="enabled"
-            />
-            <el-option
-              label="禁用"
-              value="disabled"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleSearch"
-          >
-            {{ t('common.search') }}
-          </el-button>
-          <el-button @click="handleReset">
-            {{ t('common.reset') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <!-- 搜索表单 -->
+    <BaseSearchForm
+      :fields="searchFields"
+      :model="searchModel"
+      @search="handleSearch"
+      @reset="handleReset"
+    />
 
     <!-- 工具栏 -->
     <el-card class="user-page__toolbar">
@@ -159,18 +116,68 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useTable } from '@/composables/useTable'
 import { useDialog } from '@/composables/useDialog'
+import { useSearch } from '@/composables/useSearch'
 import { getUserList, deleteUser, resetPassword } from '@/api/basic/user'
 import type { User } from '@/types/basic'
+import type { SearchField } from '@/types/search'
 import BaseTable from '@/components/common/BaseTable.vue'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
 import UserForm from './components/UserForm.vue'
 
 const { t } = useI18n()
 
+// 搜索字段配置
+const searchFields: SearchField[] = [
+  {
+    prop: 'userName',
+    label: 'basic.user.userName',
+    type: 'input'
+  },
+  {
+    prop: 'realName',
+    label: 'basic.user.realName',
+    type: 'input'
+  },
+  {
+    prop: 'status',
+    label: 'basic.user.status',
+    type: 'select',
+    options: [
+      { label: 'basic.user.enabled', value: 'enabled' },
+      { label: 'basic.user.disabled', value: 'disabled' }
+    ]
+  }
+]
+
+// 搜索逻辑
+const { searchModel, getSearchParams } = useSearch({
+  defaultModel: {
+    userName: '',
+    realName: '',
+    status: ''
+  }
+})
+
 // 列表状态
-const { loading, list, total, query, handleSearch, handleReset, handlePageChange, reload } = useTable(
+const { loading, list, total, query, handleSearch: tableSearch, handleReset: tableReset, handlePageChange, reload } = useTable(
   getUserList,
   { immediate: true }
 )
+
+// 搜索（合并搜索参数到查询）
+const handleSearch = (): void => {
+  Object.assign(query, getSearchParams())
+  tableSearch()
+}
+
+// 重置（清空搜索参数并重置）
+const handleReset = (): void => {
+  // 清空查询中的搜索字段
+  delete query.userName
+  delete query.realName
+  delete query.status
+  tableReset()
+}
 
 // 表单弹窗
 const formDialog = useDialog<User>()
@@ -224,7 +231,6 @@ const handleDelete = async (row: User): Promise<void> => {
 
 <style scoped lang="scss">
 .user-page {
-  &__search,
   &__toolbar {
     margin-bottom: $spacing-md;
   }
