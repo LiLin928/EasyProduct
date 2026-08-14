@@ -4,6 +4,8 @@
   "basicUser": "用户管理",
   "basicRole": "角色管理",
   "basicMenu": "菜单管理",
+  "basicDept": "部门管理",
+  "basicDict": "字典管理",
   "product": "商品中心",
   "site": "官网管理",
   "mall": "商城业务",

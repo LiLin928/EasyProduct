@@ -123,5 +123,64 @@
       "hasChildren": "Cannot delete department with children",
       "deleteConfirm": "Confirm to delete department [{name}]?"
     }
+  },
+  "dict": {
+    "type": {
+      "title": "Dict Type",
+      "name": "Type Name",
+      "code": "Type Code",
+      "status": "Status",
+      "searchPlaceholder": "Search type name/code",
+      "form": {
+        "addTitle": "Add Dict Type",
+        "editTitle": "Edit Dict Type",
+        "name": "Type Name",
+        "namePlaceholder": "Please enter type name",
+        "nameRequired": "Please enter type name",
+        "nameLength": "Type name length must be 2-100 characters",
+        "code": "Type Code",
+        "codePlaceholder": "Please enter type code",
+        "codeRequired": "Please enter type code",
+        "codeFormat": "Code can only contain letters, numbers, underscores and hyphens, and must start with a letter",
+        "status": "Status",
+        "remark": "Remark",
+        "remarkPlaceholder": "Please enter remark"
+      },
+      "message": {
+        "addSuccess": "Add Success",
+        "updateSuccess": "Update Success",
+        "deleteSuccess": "Delete Success",
+        "deleteConfirm": "Confirm to delete dict type [{name}]?"
+      }
+    },
+    "data": {
+      "title": "Dict Data",
+      "selectType": "Please select dict type",
+      "selectTypeTip": "Please select a dict type on the left",
+      "label": "Dict Label",
+      "value": "Dict Value",
+      "sort": "Sort",
+      "status": "Status",
+      "form": {
+        "addTitle": "Add Dict Data",
+        "editTitle": "Edit Dict Data",
+        "label": "Dict Label",
+        "labelPlaceholder": "Please enter dict label",
+        "labelRequired": "Please enter dict label",
+        "labelLength": "Dict label length must be 2-100 characters",
+        "value": "Dict Value",
+        "valuePlaceholder": "Please enter dict value",
+        "valueRequired": "Please enter dict value",
+        "valueFormat": "Dict value can only contain letters, numbers, underscores and hyphens",
+        "sort": "Sort",
+        "status": "Status"
+      },
+      "message": {
+        "addSuccess": "Add Success",
+        "updateSuccess": "Update Success",
+        "deleteSuccess": "Delete Success",
+        "deleteConfirm": "Confirm to delete dict data [{label}]?"
+      }
+    }
   }
 }

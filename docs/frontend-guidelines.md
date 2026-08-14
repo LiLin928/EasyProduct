@@ -389,7 +389,268 @@ open()      // 新增
 **组合约定：** 表单弹窗 = `useDialog + useForm`；弹窗关闭自动 `resetFields()`；提交成功后自动 `close()` 并 `reload()` 列表。
 
 **后续可扩展：** `useExport`（导出）、`useUpload`（上传）在出现第 3 处使用时封装。
-### 2.5 页面开发模板（import 顺序六段式）
+
+### 2.5 查询组件封装规范
+
+项目提供统一的查询组件封装，**所有列表页查询功能必须遵循以下规范**：
+
+#### BaseSearchForm 组件
+
+**位置**：`src/components/common/BaseSearchForm.vue`
+
+**功能特性**：
+- 动态字段配置（支持 input、select、dateRange 三种类型）
+- 工具栏插槽（toolbar slot，右对齐）
+- 自动触发搜索（回车、清空、选择变更）
+- 双向绑定搜索模型
+- 国际化支持
+
+**Props 定义**：
+
+```typescript
+interface SearchField {
+  type: 'input' | 'select' | 'dateRange'  // 字段类型
+  prop: string                             // 字段名
+  label: string                            // 标签（i18n key）
+  placeholder?: string                     // 占位符（i18n key）
+  clearable?: boolean                      // 是否可清空（默认 true）
+  options?: Array<{                        // Select 选项
+    label: string                           // 选项标签（i18n key）
+    value: string | number                  // 选项值
+  }>
+  startPlaceholder?: string                // DateRange 开始占位符
+  endPlaceholder?: string                  // DateRange 结束占位符
+}
+
+interface Props {
+  fields: SearchField[]            // 字段配置
+  model: Record<string, unknown>   // 搜索模型（v-model）
+  loading?: boolean                // 加载状态
+  labelWidth?: string | number     // 标签宽度（默认 'auto'）
+  showButtons?: boolean            // 是否显示按钮（默认 true）
+  searchButtonText?: string        // 搜索按钮文案（i18n key，默认 'common.search'）
+  resetButtonText?: string         // 重置按钮文案（i18n key，默认 'common.reset'）
+}
+```
+
+**使用示例**：
+
+```vue
+<template>
+  <BaseSearchForm
+    :fields="searchFields"
+    :model="searchModel"
+    :loading="loading"
+    @update:model="searchModel = $event"
+    @search="handleSearch"
+    @reset="handleReset"
+  >
+    <!-- 工具栏插槽（可选） -->
+    <template #toolbar>
+      <el-button type="primary" @click="handleAdd">新增</el-button>
+    </template>
+  </BaseSearchForm>
+</template>
+
+<script setup lang="ts">
+import { useSearch } from '@/composables/useSearch'
+import type { SearchField } from '@/types/search'
+
+// 定义搜索字段
+const searchFields: SearchField[] = [
+  {
+    type: 'input',
+    prop: 'keyword',
+    label: 'common.keyword',
+    placeholder: 'common.inputKeyword'
+  },
+  {
+    type: 'select',
+    prop: 'status',
+    label: 'common.status',
+    options: [
+      { label: 'common.all', value: '' },
+      { label: 'status.active', value: 'active' },
+      { label: 'status.inactive', value: 'inactive' }
+    ]
+  },
+  {
+    type: 'dateRange',
+    prop: 'dateRange',
+    label: 'common.dateRange'
+  }
+]
+
+// 使用 useSearch composable
+const { searchModel, handleSearch, handleReset, getSearchParams } = useSearch({
+  defaultModel: { keyword: '', status: '', dateRange: [] },
+  onSearch: (params) => {
+    console.log('搜索参数:', params)
+    // 调用 API 获取数据
+  },
+  onReset: () => {
+    console.log('重置搜索')
+  }
+})
+</script>
+```
+
+#### useSearch Composable
+
+**位置**：`src/composables/useSearch.ts`
+
+**功能特性**：
+- 响应式搜索模型管理
+- 自动过滤空值参数
+- 日期范围字段自动拆解（支持 dateRange、timeRange、createTime、updateTime、orderTime、payTime、shipTime、completeTime 等字段名）
+- 重置功能
+
+**API 说明**：
+
+```typescript
+interface UseSearchOptions<T> {
+  defaultModel?: T                    // 默认搜索模型
+  onSearch?: (model: T) => void       // 搜索回调
+  onReset?: () => void                // 重置回调
+}
+
+interface UseSearchReturn<T> {
+  searchModel: UnwrapNestedRefs<T>    // 响应式搜索模型
+  resetModel: () => void              // 重置模型方法
+  handleSearch: () => void            // 搜索方法
+  handleReset: () => void             // 重置方法
+  getSearchParams: () => Partial<T>   // 获取过滤后的搜索参数
+}
+```
+
+**日期范围字段拆解规则**：
+
+```typescript
+// 仅以下字段名会被自动拆解为 startTime/endTime：
+const DATE_RANGE_FIELDS = new Set([
+  'dateRange',
+  'timeRange',
+  'createTime',
+  'updateTime',
+  'orderTime',
+  'payTime',
+  'shipTime',
+  'completeTime'
+])
+
+// 示例：{ createTime: ['2024-01-01', '2024-12-31'] }
+// 拆解为：{ startTime: '2024-01-01', endTime: '2024-12-31' }
+```
+
+#### 开发规范（强制）
+
+1. **所有列表页必须使用 BaseSearchForm**，禁止自定义搜索表单组件
+2. **搜索逻辑必须使用 useSearch composable**，禁止重复编写搜索状态管理代码
+3. **字段配置必须使用 i18n key**，禁止硬编码中文标签或占位符
+4. **工具栏按钮使用 toolbar 插槽**，保持布局一致性和右对齐
+5. **日期范围字段名必须在 DATE_RANGE_FIELDS 集合中定义**，确保正确拆解为 startTime/endTime
+6. **组合使用模式**：`BaseSearchForm + useSearch + useTable`，三者配合覆盖列表页搜索场景
+
+#### 完整集成示例
+
+```vue
+<template>
+  <div class="customer-list">
+    <!-- 搜索栏 -->
+    <BaseSearchForm
+      :fields="searchFields"
+      :model="searchModel"
+      :loading="loading"
+      @update:model="searchModel = $event"
+      @search="handleSearch"
+      @reset="handleReset"
+    >
+      <template #toolbar>
+        <el-button type="primary" @click="handleCreate">
+          <el-icon><Plus /></el-icon>
+          {{ t('common.button.add') }}
+        </el-button>
+      </template>
+    </BaseSearchForm>
+
+    <!-- 表格 -->
+    <el-card shadow="never">
+      <el-table :data="list" v-loading="loading">
+        <el-table-column prop="name" label="客户名称" />
+        <el-table-column prop="type" label="客户类型" />
+        <!-- 更多列... -->
+      </el-table>
+      <el-pagination
+        :current-page="query.pageIndex"
+        :page-size="query.pageSize"
+        :total="total"
+        @current-change="handlePageChange"
+      />
+    </el-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+import { useSearch } from '@/composables/useSearch'
+import { useTable } from '@/composables/useTable'
+import { useLocale } from '@/composables/useLocale'
+import { getCustomerList } from '@/api/crm/customer'
+import type { SearchField } from '@/types/search'
+
+const { t } = useLocale()
+
+// 搜索字段配置
+const searchFields: SearchField[] = [
+  {
+    type: 'input',
+    prop: 'keyword',
+    label: 'crm.customer.keyword',
+    placeholder: 'crm.customer.inputKeyword'
+  },
+  {
+    type: 'select',
+    prop: 'type',
+    label: 'crm.customer.type',
+    options: [
+      { label: 'common.all', value: '' },
+      { label: 'crm.customer.type.b2b', value: 'b2b' },
+      { label: 'crm.customer.type.retail', value: 'retail' }
+    ]
+  },
+  {
+    type: 'dateRange',
+    prop: 'createTime',
+    label: 'crm.customer.createTime'
+  }
+]
+
+// 搜索逻辑
+const { searchModel, handleSearch: searchHandler, handleReset } = useSearch({
+  defaultModel: { keyword: '', type: '', createTime: [] },
+  onSearch: (params) => {
+    // 日期范围会自动拆解为 startTime/endTime
+    console.log('搜索参数:', params)
+  }
+})
+
+// 表格逻辑
+const { loading, list, total, query, handlePageChange, reload } =
+  useTable(getCustomerList, { keyword: '', type: '', createTime: [] })
+
+// 组合搜索与表格
+const handleSearch = () => {
+  searchHandler()
+  reload()
+}
+
+onMounted(handleSearch)
+</script>
+```
+
+### 2.6 页面开发模板（import 顺序六段式）
 
 ```vue
 <template>
@@ -447,7 +708,7 @@ const handleDelete = async (row: Customer) => {
 </style>
 ```
 
-### 2.6 路由与菜单
+### 2.7 路由与菜单
 
 - 路由表集中在 `src/router/index.ts`，按域拆分子模块文件（`router/modules/crm.ts` 等），`children` 分组。
 - 每个业务路由必须有 `meta.title`（i18n key）、`meta.icon`（Element Plus 图标名）、`meta.permission`（权限标识，可选）。

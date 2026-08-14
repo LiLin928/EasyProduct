@@ -14,7 +14,10 @@
       label-width="100px"
     >
       <!-- 上级部门 -->
-      <el-form-item :label="t('dept.form.parent')" prop="parentId">
+      <el-form-item
+        :label="t('dept.form.parent')"
+        prop="parentId"
+      >
         <el-tree-select
           v-model="formData.parentId"
           :data="treeDataForSelect"
@@ -27,7 +30,10 @@
       </el-form-item>
 
       <!-- 部门名称 -->
-      <el-form-item :label="t('dept.form.name')" prop="name">
+      <el-form-item
+        :label="t('dept.form.name')"
+        prop="name"
+      >
         <el-input
           v-model="formData.name"
           maxlength="100"
@@ -37,7 +43,10 @@
       </el-form-item>
 
       <!-- 部门编码 -->
-      <el-form-item :label="t('dept.form.code')" prop="code">
+      <el-form-item
+        :label="t('dept.form.code')"
+        prop="code"
+      >
         <el-input
           v-model="formData.code"
           maxlength="50"
@@ -47,20 +56,37 @@
       </el-form-item>
 
       <!-- 排序 -->
-      <el-form-item :label="t('dept.form.sort')" prop="sort">
-        <el-input-number v-model="formData.sort" :min="0" :max="999" />
+      <el-form-item
+        :label="t('dept.form.sort')"
+        prop="sort"
+      >
+        <el-input-number
+          v-model="formData.sort"
+          :min="0"
+          :max="999"
+        />
       </el-form-item>
 
       <!-- 状态 -->
-      <el-form-item :label="t('dept.form.status')" prop="status">
+      <el-form-item
+        :label="t('dept.form.status')"
+        prop="status"
+      >
         <el-radio-group v-model="formData.status">
-          <el-radio value="enabled">{{ t('common.status.enabled') }}</el-radio>
-          <el-radio value="disabled">{{ t('common.status.disabled') }}</el-radio>
+          <el-radio value="enabled">
+            {{ t('common.status.enabled') }}
+          </el-radio>
+          <el-radio value="disabled">
+            {{ t('common.status.disabled') }}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
 
       <!-- 部门负责人 -->
-      <el-form-item :label="t('dept.form.leaderName')" prop="leaderName">
+      <el-form-item
+        :label="t('dept.form.leaderName')"
+        prop="leaderName"
+      >
         <el-input
           v-model="formData.leaderName"
           maxlength="50"
@@ -69,7 +95,10 @@
       </el-form-item>
 
       <!-- 联系电话 -->
-      <el-form-item :label="t('dept.form.phone')" prop="phone">
+      <el-form-item
+        :label="t('dept.form.phone')"
+        prop="phone"
+      >
         <el-input
           v-model="formData.phone"
           maxlength="20"
@@ -78,7 +107,10 @@
       </el-form-item>
 
       <!-- 邮箱 -->
-      <el-form-item :label="t('dept.form.email')" prop="email">
+      <el-form-item
+        :label="t('dept.form.email')"
+        prop="email"
+      >
         <el-input
           v-model="formData.email"
           maxlength="100"
@@ -87,7 +119,10 @@
       </el-form-item>
 
       <!-- 描述 -->
-      <el-form-item :label="t('dept.form.description')" prop="description">
+      <el-form-item
+        :label="t('dept.form.description')"
+        prop="description"
+      >
         <el-input
           v-model="formData.description"
           type="textarea"
@@ -103,7 +138,11 @@
       <el-button @click="emit('update:modelValue', false)">
         {{ t('common.cancel') }}
       </el-button>
-      <el-button type="primary" :loading="saving" @click="handleSave">
+      <el-button
+        type="primary"
+        :loading="saving"
+        @click="handleSave"
+      >
         {{ t('common.button.confirm') }}
       </el-button>
     </template>

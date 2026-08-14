@@ -123,5 +123,64 @@
       "hasChildren": "该部门下存在子部门，无法删除",
       "deleteConfirm": "确认删除部门【{name}】吗？"
     }
+  },
+  "dict": {
+    "type": {
+      "title": "字典类型",
+      "name": "类型名称",
+      "code": "类型编码",
+      "status": "状态",
+      "searchPlaceholder": "搜索类型名称/编码",
+      "form": {
+        "addTitle": "新增字典类型",
+        "editTitle": "编辑字典类型",
+        "name": "类型名称",
+        "namePlaceholder": "请输入类型名称",
+        "nameRequired": "请输入类型名称",
+        "nameLength": "类型名称长度为 2-100 个字符",
+        "code": "类型编码",
+        "codePlaceholder": "请输入类型编码",
+        "codeRequired": "请输入类型编码",
+        "codeFormat": "编码只能包含字母、数字、下划线和连字符，且必须以字母开头",
+        "status": "状态",
+        "remark": "备注",
+        "remarkPlaceholder": "请输入备注"
+      },
+      "message": {
+        "addSuccess": "新增成功",
+        "updateSuccess": "更新成功",
+        "deleteSuccess": "删除成功",
+        "deleteConfirm": "确认删除字典类型【{name}】吗？"
+      }
+    },
+    "data": {
+      "title": "字典数据",
+      "selectType": "请选择字典类型",
+      "selectTypeTip": "请在左侧选择一个字典类型",
+      "label": "字典标签",
+      "value": "字典值",
+      "sort": "排序",
+      "status": "状态",
+      "form": {
+        "addTitle": "新增字典数据",
+        "editTitle": "编辑字典数据",
+        "label": "字典标签",
+        "labelPlaceholder": "请输入字典标签",
+        "labelRequired": "请输入字典标签",
+        "labelLength": "字典标签长度为 2-100 个字符",
+        "value": "字典值",
+        "valuePlaceholder": "请输入字典值",
+        "valueRequired": "请输入字典值",
+        "valueFormat": "字典值只能包含字母、数字、下划线和连字符",
+        "sort": "排序",
+        "status": "状态"
+      },
+      "message": {
+        "addSuccess": "新增成功",
+        "updateSuccess": "更新成功",
+        "deleteSuccess": "删除成功",
+        "deleteConfirm": "确认删除字典数据【{label}】吗？"
+      }
+    }
   }
 }

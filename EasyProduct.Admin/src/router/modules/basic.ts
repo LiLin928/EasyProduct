@@ -24,8 +24,20 @@ export const basicRoutes: RouteRecordRaw[] = [
         name: 'basic-menu',
         component: () => import('@/views/basic/menu/index.vue'),
         meta: { title: 'menu.basicMenu', icon: 'Menu' }
+      },
+      {
+        path: 'dept',
+        name: 'basic-dept',
+        component: () => import('@/views/basic/dept/index.vue'),
+        meta: { title: 'menu.basicDept', icon: 'OfficeBuilding' }
+      },
+      {
+        path: 'dict',
+        name: 'basic-dict',
+        component: () => import('@/views/basic/dict/index.vue'),
+        meta: { title: 'menu.basicDict', icon: 'Collection' }
       }
-      // 批次 2~4 的路由后续追加（dept/dict/announcement/setting/profile）
+      // 批次 3~4 的路由后续追加（announcement/setting/profile）
     ]
   }
 ]

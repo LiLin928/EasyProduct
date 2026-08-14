@@ -4,6 +4,8 @@
   "basicUser": "User Management",
   "basicRole": "Role Management",
   "basicMenu": "Menu Management",
+  "basicDept": "Department Management",
+  "basicDict": "Dictionary Management",
   "product": "Product",
   "site": "Site",
   "mall": "Mall",

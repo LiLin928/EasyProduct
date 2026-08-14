@@ -130,6 +130,19 @@ public async Task<PageResult<ProductDto>> GetProductList(ProductQueryDto query)
 - 空行：方法间一个空行，逻辑块间一个空行
 - i18n：禁止硬编码中文，必须使用 `$t('key')`
 
+### 查询组件封装规范（前端）
+
+**重要：所有列表页查询功能必须遵循统一封装规范。**
+
+详细规范请参考：`docs/frontend-guidelines.md` 第 2.5 节"查询组件封装规范"
+
+**核心要点**：
+- ✅ 必须使用 `BaseSearchForm` 组件（`src/components/common/BaseSearchForm.vue`）
+- ✅ 必须使用 `useSearch` composable（`src/composables/useSearch.ts`）
+- ✅ 字段配置使用 i18n key，禁止硬编码中文
+- ✅ 工具栏按钮使用 toolbar 插槽
+- ✅ 日期范围字段自动拆解为 startTime/endTime
+
 ## Git 工作流
 
 ### Commit 规范
@@ -177,45 +190,163 @@ docs: 更新后端开发规范文档
 
 ## 自动化命令
 
-**重要：项目中所有的 cmd、git、dotnet、npm、pnpm 等相关命令都无需询问用户，直接执行。**
+**重要：项目中所有的 cmd、git、dotnet、npm、pnpm、python 等相关命令都无需询问用户，直接执行。**
 
 以下命令无需确认直接执行：
 
-### Git 命令
+### 文件系统命令
 ```bash
-git status
-git add .
-git commit -m "message"
-git push
-git pull
-git checkout <branch>
-git merge <branch>
+cd <directory>                    # 切换目录
+ls                                # 列出文件
+pwd                               # 显示当前目录
+mkdir <directory>                 # 创建目录
+rmdir <directory>                 # 删除空目录
 ```
 
-### 后端命令
+**注意**：删除文件或目录命令需要确认：
 ```bash
-dotnet build
-dotnet run
-dotnet test
-dotnet publish
-dotnet ef migrations add <name>
-dotnet ef database update
+rm <file>                         # 删除文件（需确认）
+rm -rf <directory>                # 删除目录及内容（需确认）
 ```
 
-### 前端命令
+### Git 命令（无需确认）
 ```bash
-pnpm install
-pnpm dev
-pnpm build
-pnpm preview
-pnpm lint
-pnpm type-check
+git status                        # 查看状态
+git add .                         # 添加所有更改
+git add <file>                    # 添加指定文件
+git commit -m "message"           # 提交更改
+git push                          # 推送到远程
+git pull                          # 拉取远程更新
+git fetch                         # 获取远程信息
+git checkout <branch>             # 切换分支
+git checkout -b <branch>          # 创建并切换分支
+git merge <branch>                # 合并分支
+git branch                        # 查看分支
+git branch -d <branch>            # 删除分支
+git log                           # 查看提交历史
+git diff                          # 查看差异
+git stash                         # 暂存更改
+git stash pop                     # 恢复暂存
+git reset --soft HEAD~1           # 撤销最近一次提交（保留更改）
+git revert <commit>               # 撤销指定提交
 ```
 
-### Mock 服务器命令
+**注意**：以下 Git 命令需要确认：
 ```bash
-node mock-server/index.js
+git reset --hard                  # 强制重置（需确认）
+git push -f                       # 强制推送（需确认）
+git clean -fd                     # 删除未跟踪文件（需确认）
 ```
+
+### 后端命令（无需确认）
+```bash
+dotnet restore                    # 恢复依赖
+dotnet build                      # 构建项目
+dotnet run                        # 运行项目
+dotnet test                       # 运行测试
+dotnet publish                    # 发布项目
+dotnet clean                      # 清理构建输出
+dotnet ef migrations add <name>   # 添加迁移
+dotnet ef database update         # 更新数据库
+dotnet ef migrations remove       # 删除最近迁移
+dotnet ef database drop           # 删除数据库（需确认）
+dotnet new <template>             # 创建新项目/项
+dotnet add package <package>      # 添加 NuGet 包
+dotnet remove package <package>   # 移除 NuGet 包
+dotnet list package               # 列出包
+```
+
+### 前端命令（无需确认）
+```bash
+pnpm install                      # 安装依赖
+pnpm add <package>                # 添加依赖
+pnpm remove <package>             # 移除依赖
+pnpm dev                          # 启动开发服务器
+pnpm build                        # 构建生产版本
+pnpm preview                      # 预览生产构建
+pnpm lint                         # 代码检查
+pnpm lint:fix                     # 自动修复代码问题
+pnpm type-check                   # 类型检查
+pnpm test                         # 运行测试
+pnpm test:coverage                # 测试覆盖率
+pnpm run <script>                 # 运行脚本
+pnpm update                       # 更新依赖
+pnpm outdated                     # 检查过期依赖
+
+npm install                       # 安装依赖（pnpm 不可用时）
+npm run dev                       # 启动开发服务器
+npm run build                     # 构建生产版本
+npm run lint                      # 代码检查
+npm test                          # 运行测试
+```
+
+### Python 命令（无需确认）
+```bash
+python --version                  # 查看 Python 版本
+python <script.py>                # 运行 Python 脚本
+python -m venv <name>             # 创建虚拟环境
+pip install <package>             # 安装包
+pip install -r requirements.txt   # 安装依赖列表
+pip freeze                        # 列出已安装包
+pip list                          # 列出包
+pip uninstall <package>           # 卸载包（需确认）
+pip cache purge                   # 清理缓存
+```
+
+### Windows CMD 命令（无需确认）
+```bash
+dir                               # 列出目录内容
+type <file>                       # 显示文件内容
+copy <source> <dest>              # 复制文件
+move <source> <dest>             # 移动文件
+ren <old> <new>                   # 重命名文件
+```
+
+**注意**：删除命令需要确认：
+```bash
+del <file>                        # 删除文件（需确认）
+rd /s /q <directory>              # 删除目录（需确认）
+```
+
+### 组合命令（无需确认）
+```bash
+# 前端开发流程
+cd EasyProduct.Admin && pnpm install && pnpm dev
+
+# 后端开发流程
+cd EasyProduct.WebApi && dotnet restore && dotnet build && dotnet run
+
+# Mock 服务器启动
+cd mock-server && pnpm install && pnpm dev
+
+# Git 提交流程
+git add . && git commit -m "feat: 新功能" && git push
+
+# 前端检查流程
+pnpm lint:fix && pnpm type-check && pnpm build
+
+# 后端检查流程
+dotnet build && dotnet test
+
+# 数据库迁移流程
+dotnet ef migrations add InitialCreate && dotnet ef database update
+```
+
+### 命令执行规则总结
+
+**无需确认的命令类型**：
+1. ✅ 文件系统：cd、ls、pwd、mkdir（创建）
+2. ✅ Git：所有非破坏性操作（status、add、commit、push、pull、checkout、merge、branch、log、diff、stash、reset --soft）
+3. ✅ 后端：所有 dotnet 命令（除 ef database drop）
+4. ✅ 前端：所有 pnpm/npm 命令
+5. ✅ Python：所有 python/pip 命令（除 pip uninstall）
+6. ✅ Windows CMD：所有非删除命令
+
+**需要确认的命令类型**：
+1. ❌ 删除文件/目录：rm、del、rd、git clean
+2. ❌ 危险 Git 操作：git reset --hard、git push -f
+3. ❌ 删除依赖：pip uninstall、dotnet ef database drop
+4. ❌ 任何显式要求确认的命令
 
 ## 统一响应格式
 
