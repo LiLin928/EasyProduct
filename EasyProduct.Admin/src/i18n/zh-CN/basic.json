@@ -57,6 +57,41 @@
     "updateFailed": "更新失败"
   },
   "dept": {
+    "tree": {
+      "title": "部门树",
+      "addRoot": "新增根部门",
+      "searchPlaceholder": "搜索部门名称",
+      "addChild": "新增",
+      "edit": "编辑",
+      "delete": "删除"
+    },
+    "detail": {
+      "title": "部门详情",
+      "selectDept": "请选择部门",
+      "selectDeptTip": "请在左侧选择一个部门查看详情",
+      "name": "部门名称",
+      "code": "部门编码",
+      "path": "部门路径",
+      "level": "层级",
+      "leader": "部门负责人",
+      "phone": "联系电话",
+      "email": "邮箱",
+      "memberCount": "成员数量",
+      "description": "描述"
+    },
+    "member": {
+      "title": "部门成员",
+      "userName": "用户名",
+      "realName": "真实姓名",
+      "phone": "手机号",
+      "email": "邮箱",
+      "status": "状态",
+      "roles": "角色"
+    },
+    "message": {
+      "hasChildren": "该部门下存在子部门，无法删除",
+      "deleteConfirm": "确认删除部门【{name}】吗？"
+    },
     "form": {
       "addTitle": "新增部门",
       "editTitle": "编辑部门",
@@ -84,7 +119,9 @@
     "message": {
       "addSuccess": "新增成功",
       "updateSuccess": "更新成功",
-      "deleteSuccess": "删除成功"
+      "deleteSuccess": "删除成功",
+      "hasChildren": "该部门下存在子部门，无法删除",
+      "deleteConfirm": "确认删除部门【{name}】吗？"
     }
   }
 }

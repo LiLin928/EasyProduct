@@ -57,6 +57,41 @@
     "updateFailed": "Update Failed"
   },
   "dept": {
+    "tree": {
+      "title": "Department Tree",
+      "addRoot": "Add Root",
+      "searchPlaceholder": "Search department name",
+      "addChild": "Add",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "title": "Department Details",
+      "selectDept": "Please select department",
+      "selectDeptTip": "Please select a department on the left to view details",
+      "name": "Department Name",
+      "code": "Department Code",
+      "path": "Department Path",
+      "level": "Level",
+      "leader": "Leader",
+      "phone": "Phone",
+      "email": "Email",
+      "memberCount": "Member Count",
+      "description": "Description"
+    },
+    "member": {
+      "title": "Department Members",
+      "userName": "Username",
+      "realName": "Real Name",
+      "phone": "Phone",
+      "email": "Email",
+      "status": "Status",
+      "roles": "Roles"
+    },
+    "message": {
+      "hasChildren": "Cannot delete department with children",
+      "deleteConfirm": "Confirm to delete department [{name}]?"
+    },
     "form": {
       "addTitle": "Add Department",
       "editTitle": "Edit Department",
@@ -84,7 +119,9 @@
     "message": {
       "addSuccess": "Add Success",
       "updateSuccess": "Update Success",
-      "deleteSuccess": "Delete Success"
+      "deleteSuccess": "Delete Success",
+      "hasChildren": "Cannot delete department with children",
+      "deleteConfirm": "Confirm to delete department [{name}]?"
     }
   }
 }
