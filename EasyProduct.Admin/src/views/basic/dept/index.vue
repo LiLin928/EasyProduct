@@ -5,6 +5,7 @@
       <!-- 左侧：部门树 -->
       <el-col :span="5">
         <el-card
+          v-loading="loading"
           shadow="never"
           class="tree-card"
         >
@@ -234,7 +235,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { ElTree } from 'element-plus'
 import { useLocale } from '@/composables/useLocale'
@@ -295,18 +296,17 @@ const loadTree = async (): Promise<void> => {
 
     // 如果有需要重新选中的部门ID，刷新后重新选中
     if (refreshSelectDeptId.value) {
-      // 使用 setTimeout 确保 DOM 更新后再选中
-      setTimeout(() => {
-        treeRef.value?.setCurrentKey(refreshSelectDeptId.value)
-        // 查找并设置当前部门详情
-        const node = findDeptById(treeData.value, refreshSelectDeptId.value!)
-        if (node) {
-          currentDept.value = node
-          // 重新加载成员列表
-          loadMembers(node.id)
-        }
-        refreshSelectDeptId.value = null
-      }, 100)
+      // 使用 nextTick 确保 DOM 更新后再选中
+      await nextTick()
+      treeRef.value?.setCurrentKey(refreshSelectDeptId.value)
+      // 查找并设置当前部门详情
+      const node = findDeptById(treeData.value, refreshSelectDeptId.value!)
+      if (node) {
+        currentDept.value = node
+        // 重新加载成员列表
+        loadMembers(node.id)
+      }
+      refreshSelectDeptId.value = null
     }
   } catch (error) {
     // 错误已在拦截器处理
