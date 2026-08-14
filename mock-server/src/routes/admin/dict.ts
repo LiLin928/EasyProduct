@@ -97,5 +97,13 @@ adminDictRouter.delete('/basic/dict-data/:id', (req, res) => {
 
 /** 批量删除字典数据 */
 adminDictRouter.post('/basic/dict-data/batch-delete', (req, res) => {
+  const { ids } = req.body
+
+  // 参数验证
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    res.json(fail('请选择要删除的数据', 400))
+    return
+  }
+
   res.json(ok(null, '删除成功'))
 })
