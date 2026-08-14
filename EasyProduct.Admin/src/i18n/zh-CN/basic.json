@@ -55,5 +55,36 @@
     "operation": "操作",
     "updateSuccess": "更新成功",
     "updateFailed": "更新失败"
+  },
+  "dept": {
+    "form": {
+      "addTitle": "新增部门",
+      "editTitle": "编辑部门",
+      "parent": "上级部门",
+      "parentPlaceholder": "请选择上级部门",
+      "noParent": "无（顶级部门）",
+      "name": "部门名称",
+      "namePlaceholder": "请输入部门名称",
+      "nameRequired": "请输入部门名称",
+      "nameLength": "部门名称长度为 2-100 个字符",
+      "code": "部门编码",
+      "codePlaceholder": "请输入部门编码",
+      "codeRequired": "请输入部门编码",
+      "sort": "排序",
+      "status": "状态",
+      "leaderName": "部门负责人",
+      "leaderNamePlaceholder": "请输入部门负责人",
+      "phone": "联系电话",
+      "phonePlaceholder": "请输入联系电话",
+      "email": "邮箱",
+      "emailPlaceholder": "请输入邮箱",
+      "description": "描述",
+      "descriptionPlaceholder": "请输入描述"
+    },
+    "message": {
+      "addSuccess": "新增成功",
+      "updateSuccess": "更新成功",
+      "deleteSuccess": "删除成功"
+    }
   }
 }

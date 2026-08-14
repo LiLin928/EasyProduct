@@ -55,5 +55,36 @@
     "operation": "Operation",
     "updateSuccess": "Update Success",
     "updateFailed": "Update Failed"
+  },
+  "dept": {
+    "form": {
+      "addTitle": "Add Department",
+      "editTitle": "Edit Department",
+      "parent": "Parent Department",
+      "parentPlaceholder": "Please select parent department",
+      "noParent": "None (Top Level)",
+      "name": "Department Name",
+      "namePlaceholder": "Please enter department name",
+      "nameRequired": "Please enter department name",
+      "nameLength": "Department name length must be 2-100 characters",
+      "code": "Department Code",
+      "codePlaceholder": "Please enter department code",
+      "codeRequired": "Please enter department code",
+      "sort": "Sort",
+      "status": "Status",
+      "leaderName": "Leader",
+      "leaderNamePlaceholder": "Please enter leader name",
+      "phone": "Phone",
+      "phonePlaceholder": "Please enter phone",
+      "email": "Email",
+      "emailPlaceholder": "Please enter email",
+      "description": "Description",
+      "descriptionPlaceholder": "Please enter description"
+    },
+    "message": {
+      "addSuccess": "Add Success",
+      "updateSuccess": "Update Success",
+      "deleteSuccess": "Delete Success"
+    }
   }
 }
