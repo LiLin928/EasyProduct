@@ -154,22 +154,45 @@ const formData = reactive<DeptCreateParams>({
 // 表单验证规则
 const formRules: FormRules = {
   name: [
-    { required: true, message: t('dept.form.nameRequired'), trigger: 'blur' },
-    { min: 2, max: 100, message: t('dept.form.nameLength'), trigger: 'blur' },
+    { required: true, message: () => t('dept.form.nameRequired'), trigger: 'blur' },
+    { min: 2, max: 100, message: () => t('dept.form.nameLength'), trigger: 'blur' },
   ],
   code: [
-    { required: true, message: t('dept.form.codeRequired'), trigger: 'blur' },
+    { required: true, message: () => t('dept.form.codeRequired'), trigger: 'blur' },
   ],
   email: [
-    { type: 'email', message: t('common.emailFormat'), trigger: 'blur' },
+    { type: 'email', message: () => t('common.emailFormat'), trigger: 'blur' },
   ],
 }
 
+/**
+ * 递归排除当前部门及其子部门
+ * @param depts 部门列表
+ * @param excludeId 要排除的部门 ID
+ * @returns 过滤后的部门列表
+ */
+const excludeDeptAndChildren = (depts: Dept[], excludeId: string): Dept[] => {
+  return depts
+    .filter((dept) => dept.id !== excludeId)
+    .map((dept) => ({
+      ...dept,
+      children: dept.children ? excludeDeptAndChildren(dept.children, excludeId) : undefined,
+    }))
+}
+
 // 为 TreeSelect 准备的数据（添加一个"无"选项）
+// 编辑模式下排除当前部门及其子部门，防止循环引用
 const treeDataForSelect = computed(() => {
+  let filteredData = props.treeData
+
+  // 编辑模式：排除当前部门及其子部门
+  if (props.deptId) {
+    filteredData = excludeDeptAndChildren(filteredData, props.deptId)
+  }
+
   return [
     { id: '0', name: t('dept.form.noParent'), children: [] },
-    ...props.treeData,
+    ...filteredData,
   ]
 })
 
