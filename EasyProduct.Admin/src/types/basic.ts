@@ -261,3 +261,32 @@ export interface SystemConfigCreateParams {
   type: SystemConfigType
   remark: string
 }
+
+// ==================== 工作台 ====================
+
+/** 工作台统计卡片数据 */
+export interface DesktopOverview {
+  userCount: number
+  orderCount: number
+  salesAmount: number
+  todayVisits: number
+  recentOrders: DesktopRecentOrder[]
+  todos: DesktopTodo[]
+}
+
+/** 最近订单（工作台用） */
+export interface DesktopRecentOrder {
+  id: string
+  amount: number
+  status: string
+  customerName: string
+  createTime: string
+}
+
+/** 待办（工作台用） */
+export interface DesktopTodo {
+  id: string
+  title: string
+  type: string
+  createTime: string
+}
