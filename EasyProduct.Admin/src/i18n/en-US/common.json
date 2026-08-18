@@ -27,5 +27,11 @@
   "pager": { "total": "{total} items" },
   "placeholder": "Coming soon",
   "locale": { "zhCN": "中文", "enUS": "EN" },
-  "error": { "tokenExpired": "Session expired, please sign in again", "forbidden": "Permission denied", "network": "Network error", "request": "Request failed" }
+  "error": { "tokenExpired": "Session expired, please sign in again", "forbidden": "Permission denied", "network": "Network error", "request": "Request failed" },
+  "upload": {
+    "clickToUpload": "Click to upload",
+    "reupload": "Re-upload",
+    "remove": "Remove",
+    "oversize": "File size cannot exceed {size}MB"
+  }
 }
