@@ -229,3 +229,35 @@ export interface DictDataCreateParams {
   sort: number
   status: 'enabled' | 'disabled'
 }
+
+// ==================== 系统参数 ====================
+
+/** 系统参数值类型（驱动编辑控件） */
+export type SystemConfigType = 'string' | 'number' | 'boolean'
+
+/** 系统参数实体 */
+export interface SystemConfig {
+  id: string // GUID
+  key: string // 参数键（唯一）
+  label: string // 参数名称
+  value: string // 参数值
+  type: SystemConfigType // 值类型
+  remark: string // 备注
+  createdAt: string // 创建时间（ISO 8601）
+  updatedAt: string // 更新时间（ISO 8601）
+}
+
+/** 系统参数查询参数 */
+export interface SystemConfigQuery extends PageQuery {
+  key?: string
+  label?: string
+}
+
+/** 系统参数创建参数 */
+export interface SystemConfigCreateParams {
+  key: string
+  label: string
+  value: string
+  type: SystemConfigType
+  remark: string
+}
