@@ -236,5 +236,30 @@
       "batchDeleteConfirm": "确认删除选中的 {count} 条参数吗？",
       "keyExists": "参数键已存在"
     }
+  },
+  "desktop": {
+    "welcome": "欢迎回来",
+    "role": "当前角色",
+    "today": "今日",
+    "stat": {
+      "userCount": "用户总数",
+      "orderCount": "订单总数",
+      "salesAmount": "销售总额",
+      "todayVisits": "今日访客"
+    },
+    "quickEntry": "快捷入口",
+    "recentOrders": "最近订单",
+    "todos": "待办事项",
+    "order": {
+      "amount": "金额",
+      "customer": "客户",
+      "status": "状态",
+      "createTime": "时间"
+    },
+    "todo": {
+      "title": "标题",
+      "type": "类型",
+      "createTime": "时间"
+    }
   }
 }

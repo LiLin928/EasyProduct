@@ -236,5 +236,31 @@
       "batchDeleteConfirm": "Delete {count} selected configs?",
       "keyExists": "Config key already exists"
     }
+  },
+  "desktop": {
+    "welcome": "Welcome back",
+    "role": "Role",
+    "today": "Today",
+    "stat": {
+      "userCount": "Users",
+      "orderCount": "Orders",
+      "salesAmount": "Sales",
+      "todayVisits": "Today Visits"
+    },
+    "quickEntry": "Quick Entry",
+    "recentOrders": "Recent Orders",
+    "todos": "Todos",
+    "order": {
+      "amount": "Amount",
+      "customer": "Customer",
+      "status": "Status",
+      "createTime": "Time"
+    },
+    "todo": {
+      "title": "Title",
+      "type": "Type",
+      "createTime": "Time"
+    }
   }
 }
+
