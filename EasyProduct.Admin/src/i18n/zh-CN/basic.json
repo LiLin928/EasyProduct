@@ -192,5 +192,49 @@
         "deleteConfirm": "确认删除字典数据【{label}】吗？"
       }
     }
+  },
+  "config": {
+    "title": "系统参数",
+    "key": "参数键",
+    "label": "参数名称",
+    "value": "参数值",
+    "type": "值类型",
+    "remark": "备注",
+    "createdAt": "创建时间",
+    "updatedAt": "更新时间",
+    "add": "新增参数",
+    "edit": "编辑",
+    "save": "保存",
+    "cancel": "取消",
+    "inlineEdit": "内联编辑",
+    "typeString": "文本",
+    "typeNumber": "数字",
+    "typeBoolean": "布尔",
+    "form": {
+      "addTitle": "新增参数",
+      "editTitle": "编辑参数",
+      "key": "参数键",
+      "keyPlaceholder": "请输入参数键",
+      "keyRequired": "请输入参数键",
+      "keyFormat": "参数键只能包含字母、数字、下划线，且以字母开头",
+      "label": "参数名称",
+      "labelPlaceholder": "请输入参数名称",
+      "labelRequired": "请输入参数名称",
+      "value": "参数值",
+      "valuePlaceholder": "请输入参数值",
+      "valueRequired": "请输入参数值",
+      "type": "值类型",
+      "typeRequired": "请选择值类型",
+      "remark": "备注",
+      "remarkPlaceholder": "请输入备注"
+    },
+    "message": {
+      "addSuccess": "新增成功",
+      "updateSuccess": "更新成功",
+      "deleteSuccess": "删除成功",
+      "deleteConfirm": "确认删除参数【{label}】吗？",
+      "batchDeleteConfirm": "确认删除选中的 {count} 条参数吗？",
+      "keyExists": "参数键已存在"
+    }
   }
 }

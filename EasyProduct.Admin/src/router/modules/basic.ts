@@ -36,8 +36,13 @@ export const basicRoutes: RouteRecordRaw[] = [
         name: 'basic-dict',
         component: () => import('@/views/basic/dict/index.vue'),
         meta: { title: 'menu.basicDict', icon: 'Collection' }
+      },
+      {
+        path: 'config',
+        name: 'basic-config',
+        component: () => import('@/views/basic/config/index.vue'),
+        meta: { title: 'menu.basicConfig', icon: 'Tools' }
       }
-      // 批次 3~4 的路由后续追加（announcement/setting/profile）
     ]
   }
 ]

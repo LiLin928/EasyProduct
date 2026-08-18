@@ -1,9 +1,11 @@
 {
   "app": { "name": "EasyProduct" },
-  "button": { "add": "新增", "edit": "编辑", "delete": "删除", "search": "搜索", "reset": "重置", "confirm": "确定", "cancel": "取消" },
+  "button": { "add": "新增", "edit": "编辑", "delete": "删除",
+  "batchDelete": "批量删除", "search": "搜索", "reset": "重置", "confirm": "确定", "cancel": "取消" },
   "add": "新增",
   "edit": "编辑",
   "delete": "删除",
+  "batchDelete": "批量删除",
   "search": "搜索",
   "reset": "重置",
   "confirm": "确定",

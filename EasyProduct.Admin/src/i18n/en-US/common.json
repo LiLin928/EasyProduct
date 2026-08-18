@@ -4,6 +4,7 @@
   "add": "Add",
   "edit": "Edit",
   "delete": "Delete",
+  "batchDelete": "Batch Delete",
   "search": "Search",
   "reset": "Reset",
   "confirm": "OK",

@@ -192,5 +192,49 @@
         "deleteConfirm": "Confirm to delete dict data [{label}]?"
       }
     }
+  },
+  "config": {
+    "title": "System Config",
+    "key": "Key",
+    "label": "Label",
+    "value": "Value",
+    "type": "Type",
+    "remark": "Remark",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "add": "Add Config",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "inlineEdit": "Inline Edit",
+    "typeString": "String",
+    "typeNumber": "Number",
+    "typeBoolean": "Boolean",
+    "form": {
+      "addTitle": "Add Config",
+      "editTitle": "Edit Config",
+      "key": "Key",
+      "keyPlaceholder": "Enter key",
+      "keyRequired": "Please enter key",
+      "keyFormat": "Key can only contain letters, numbers, underscores, and must start with a letter",
+      "label": "Label",
+      "labelPlaceholder": "Enter label",
+      "labelRequired": "Please enter label",
+      "value": "Value",
+      "valuePlaceholder": "Enter value",
+      "valueRequired": "Please enter value",
+      "type": "Type",
+      "typeRequired": "Please select type",
+      "remark": "Remark",
+      "remarkPlaceholder": "Enter remark"
+    },
+    "message": {
+      "addSuccess": "Added successfully",
+      "updateSuccess": "Updated successfully",
+      "deleteSuccess": "Deleted successfully",
+      "deleteConfirm": "Delete config [{label}]?",
+      "batchDeleteConfirm": "Delete {count} selected configs?",
+      "keyExists": "Config key already exists"
+    }
   }
 }

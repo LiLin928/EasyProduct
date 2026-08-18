@@ -6,6 +6,7 @@
   "basicMenu": "菜单管理",
   "basicDept": "部门管理",
   "basicDict": "字典管理",
+  "basicConfig": "系统参数",
   "product": "商品中心",
   "site": "官网管理",
   "mall": "商城业务",
