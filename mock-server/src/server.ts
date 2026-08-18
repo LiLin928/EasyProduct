@@ -29,6 +29,7 @@ import { adminDictRouter } from './routes/admin/dict.js'
 import { adminUserRouter } from './routes/admin/user.js'
 import { adminDeptRouter } from './routes/admin/dept.js'
 import { adminRoleRouter } from './routes/admin/role.js'
+import { adminFileRouter } from './routes/admin/file.js'
 import { siteHomeRouter } from './routes/site/home.js'
 import { siteProductRouter } from './routes/site/product.js'
 import { siteCategoryRouter } from './routes/site/category.js'
@@ -41,7 +42,7 @@ import { siteInquiryRouter } from './routes/site/inquiry.js'
 import { appAuthRouter } from './routes/app/auth.js'
 import { i18nRouter } from './routes/i18n.js'
 
-app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter)
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter)
 app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter)
 app.use('/api/app', appGuard, appAuthRouter)
 app.use('/api/i18n', i18nRouter)
