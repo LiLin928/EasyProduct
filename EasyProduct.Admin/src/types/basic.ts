@@ -290,3 +290,32 @@ export interface DesktopTodo {
   type: string
   createTime: string
 }
+
+// ==================== 个人中心 ====================
+
+/** 当前用户信息（个人中心用） */
+export interface ProfileInfo {
+  id: string
+  userName: string
+  realName: string
+  phone?: string
+  email?: string
+  avatar?: string
+  roles: string[]
+  deptName?: string
+  lastLoginTime?: string
+}
+
+/** 个人中心基本信息更新参数 */
+export interface ProfileUpdateParams {
+  realName: string
+  phone?: string
+  email?: string
+  avatar?: string
+}
+
+/** 修改密码参数 */
+export interface ChangePwdParams {
+  oldPassword: string
+  newPassword: string
+}
