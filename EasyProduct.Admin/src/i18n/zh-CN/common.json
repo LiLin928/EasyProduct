@@ -33,5 +33,6 @@
     "reupload": "重新上传",
     "remove": "移除",
     "oversize": "文件大小不能超过 {size}MB"
-  }
+  },
+  "richText": { "placeholder": "请输入内容" }
 }
