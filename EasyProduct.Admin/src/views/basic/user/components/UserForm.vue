@@ -66,10 +66,10 @@
       >
         <el-radio-group v-model="model.status">
           <el-radio value="enabled">
-            启用
+            {{ t('common.status.enabled') }}
           </el-radio>
           <el-radio value="disabled">
-            禁用
+            {{ t('common.status.disabled') }}
           </el-radio>
         </el-radio-group>
       </el-form-item>
@@ -92,11 +92,11 @@
           :placeholder="t('common.selectPlaceholder')"
         >
           <el-option
-            label="超级管理员"
+            :label="t('basic.user.roleSuper')"
             value="1"
           />
           <el-option
-            label="普通用户"
+            :label="t('basic.user.roleNormal')"
             value="2"
           />
         </el-select>

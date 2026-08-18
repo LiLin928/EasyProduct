@@ -50,7 +50,7 @@
         >
           <template #default="{ row }">
             <el-tag :type="row.status === 'enabled' ? 'success' : 'danger'">
-              {{ row.status === 'enabled' ? '启用' : '禁用' }}
+              {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
             </el-tag>
           </template>
         </el-table-column>
@@ -151,8 +151,8 @@ const searchFields: SearchField[] = [
     label: 'basic.role.status',
     type: 'select',
     options: [
-      { label: '启用', value: 'enabled' },
-      { label: '禁用', value: 'disabled' }
+      { label: 'common.status.enabled', value: 'enabled' },
+      { label: 'common.status.disabled', value: 'disabled' }
     ]
   }
 ]

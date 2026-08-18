@@ -121,10 +121,10 @@
       >
         <el-radio-group v-model="model.status">
           <el-radio value="enabled">
-            启用
+            {{ t('common.status.enabled') }}
           </el-radio>
           <el-radio value="disabled">
-            禁用
+            {{ t('common.status.disabled') }}
           </el-radio>
         </el-radio-group>
       </el-form-item>
@@ -209,7 +209,7 @@ const rules: FormRules = {
     },
     {
       pattern: /^[a-zA-Z][a-zA-Z0-9-]*$/,
-      message: '路由名称必须以字母开头，只能包含字母、数字和短横线',
+      message: () => t('basic.menu.form.nameFormat'),
       trigger: 'blur'
     }
   ],
@@ -221,7 +221,7 @@ const rules: FormRules = {
     },
     {
       pattern: /^\//,
-      message: '路由路径必须以 / 开头',
+      message: () => t('basic.menu.form.pathFormat'),
       trigger: 'blur'
     }
   ],

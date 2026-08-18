@@ -14,7 +14,9 @@
     "resetPassword": "重置密码",
     "resetPasswordConfirm": "确认重置该用户的密码吗？",
     "enabled": "启用",
-    "disabled": "禁用"
+    "disabled": "禁用",
+    "roleSuper": "超级管理员",
+    "roleNormal": "普通用户"
   },
   "role": {
     "name": "角色名称",
@@ -54,7 +56,15 @@
     "hiddenLabel": "隐藏",
     "operation": "操作",
     "updateSuccess": "更新成功",
-    "updateFailed": "更新失败"
+    "updateFailed": "更新失败",
+    "iconSelect": {
+      "title": "选择图标",
+      "searchPlaceholder": "搜索图标"
+    },
+    "form": {
+      "nameFormat": "路由名称必须以字母开头，只能包含字母、数字和短横线",
+      "pathFormat": "路由路径必须以 / 开头"
+    }
   },
   "dept": {
     "tree": {

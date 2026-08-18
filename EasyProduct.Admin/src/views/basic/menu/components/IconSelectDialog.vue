@@ -1,14 +1,14 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="选择图标"
+    :title="t('basic.menu.iconSelect.title')"
     width="800px"
     @update:model-value="handleClose"
   >
     <div class="icon-select">
       <el-input
         v-model="searchKeyword"
-        placeholder="搜索图标"
+        :placeholder="t('basic.menu.iconSelect.searchPlaceholder')"
         clearable
         class="icon-select__search"
       >

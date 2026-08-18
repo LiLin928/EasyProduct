@@ -55,7 +55,7 @@
         >
           <template #default="{ row }">
             <el-tag :type="row.status === 'enabled' ? 'success' : 'danger'">
-              {{ row.status === 'enabled' ? '启用' : '禁用' }}
+              {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
             </el-tag>
           </template>
         </el-table-column>

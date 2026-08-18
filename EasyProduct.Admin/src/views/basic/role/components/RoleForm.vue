@@ -46,10 +46,10 @@
       >
         <el-radio-group v-model="model.status">
           <el-radio value="enabled">
-            启用
+            {{ t('common.status.enabled') }}
           </el-radio>
           <el-radio value="disabled">
-            禁用
+            {{ t('common.status.disabled') }}
           </el-radio>
         </el-radio-group>
       </el-form-item>

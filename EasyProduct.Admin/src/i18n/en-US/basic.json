@@ -14,7 +14,9 @@
     "resetPassword": "Reset Password",
     "resetPasswordConfirm": "Are you sure to reset this user's password?",
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "roleSuper": "Super Admin",
+    "roleNormal": "Normal User"
   },
   "role": {
     "name": "Role Name",
@@ -54,7 +56,15 @@
     "hiddenLabel": "Hidden",
     "operation": "Operation",
     "updateSuccess": "Update Success",
-    "updateFailed": "Update Failed"
+    "updateFailed": "Update Failed",
+    "iconSelect": {
+      "title": "Select Icon",
+      "searchPlaceholder": "Search icon"
+    },
+    "form": {
+      "nameFormat": "Route name must start with a letter and contain only letters, numbers and hyphens",
+      "pathFormat": "Route path must start with /"
+    }
   },
   "dept": {
     "tree": {

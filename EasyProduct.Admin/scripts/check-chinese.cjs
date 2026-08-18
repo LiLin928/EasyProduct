@@ -24,7 +24,8 @@ function walk(dir) {
       if (
         trimmed.startsWith('/**') ||
         trimmed.startsWith('*') ||
-        trimmed.startsWith('//')
+        trimmed.startsWith('//') ||
+        trimmed.startsWith('<!--')
       ) {
         return
       }
