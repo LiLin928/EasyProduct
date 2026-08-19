@@ -1,5 +1,6 @@
 // src/api/basic/announcement.ts
 import { get, post, put, del } from '@/utils/request'
+import type { PageResult } from '@/types/api'
 import type {
   Announcement,
   AnnouncementQuery,
@@ -12,7 +13,7 @@ import type {
  * 获取公告列表（管理端）
  */
 export const getAnnouncementList = (params: AnnouncementQuery) =>
-  get<{ list: Announcement[]; total: number }>('/api/admin/basic/announcement', params)
+  get<PageResult<Announcement>>('/api/admin/basic/announcement', params)
 
 /**
  * 获取公告详情
