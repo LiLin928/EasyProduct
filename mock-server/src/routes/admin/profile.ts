@@ -1,7 +1,7 @@
 // src/routes/admin/profile.ts
 import { Router } from 'express'
 import { ok, fail } from '../../helpers/envelope.js'
-import { ADMIN_USERS } from '../../data/admin/basic.js'
+import { ADMIN_USERS } from '../../data/admin/user.js'
 import { isoTime } from '../../helpers/id.js'
 
 export const adminProfileRouter = Router()
