@@ -1,0 +1,40 @@
+<!--pages/announcement/detail.wxml——公告详情页模板 -->
+<view class="announcement-detail">
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{ loading }}">
+    {{ t('common.loading') }}
+  </view>
+
+  <!-- 公告详情 -->
+  <view class="detail-content" wx:if="{{ !loading && announcement }}">
+    <!-- 标题 -->
+    <view class="detail-title">{{ announcement.title }}</view>
+
+    <!-- 元信息 -->
+    <view class="detail-meta">
+      <text class="type-tag type-{{ announcement.type }}">
+        {{ announcement.type === 'system' ? '系统' : announcement.type === 'activity' ? '活动' : '更新' }}
+      </text>
+      <text class="publish-time">{{ publishedAtText }}: {{ announcement.publishTime }}</text>
+    </view>
+
+    <!-- 内容（富文本） -->
+    <view class="detail-body">
+      <rich-text nodes="{{ announcement.content }}"></rich-text>
+    </view>
+
+    <!-- 附件列表 -->
+    <view class="attachments" wx:if="{{ announcement.attachments && announcement.attachments.length > 0 }}">
+      <view class="attachments-title">{{ attachmentText }}</view>
+      <view class="attachment-item" wx:for="{{ announcement.attachments }}" wx:key="id">
+        <view class="attachment-info">
+          <text class="attachment-name">{{ item.name }}</text>
+          <text class="attachment-size">{{ item.size > 1024 * 1024 ? (item.size / 1024 / 1024).toFixed(2) + 'MB' : (item.size / 1024).toFixed(2) + 'KB' }}</text>
+        </view>
+        <button class="download-btn" bindtap="downloadAttachment" data-url="{{ item.url }}" data-name="{{ item.name }}">
+          {{ downloadText }}
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

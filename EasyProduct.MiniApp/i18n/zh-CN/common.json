@@ -3,5 +3,19 @@
   "button": { "confirm": "确定", "cancel": "取消" },
   "loading": "加载中…",
   "loadFailed": "加载失败",
-  "tab": { "home": "首页", "category": "分类", "cart": "购物车", "profile": "我的" }
+  "tab": { "home": "首页", "category": "分类", "cart": "购物车", "profile": "我的" },
+  "announcement": {
+    "title": "公告中心",
+    "detail": "公告详情",
+    "type": { "system": "系统公告", "activity": "活动公告", "update": "更新公告" },
+    "unread": "未读",
+    "noData": "暂无公告",
+    "publishedAt": "发布时间",
+    "attachment": "附件",
+    "download": "下载",
+    "markRead": "标记已读",
+    "pullRefresh": "下拉刷新",
+    "loadMore": "上拉加载更多",
+    "noMore": "没有更多了"
+  }
 }

@@ -1,0 +1,35 @@
+<!--pages/announcement/index.wxml——公告列表页模板 -->
+<view class="announcement-list">
+  <!-- 未读数量提示 -->
+  <view class="unread-badge" wx:if="{{ unreadCount > 0 }}">
+    {{ t('common.announcement.unread') }}: {{ unreadCount }}
+  </view>
+
+  <!-- 公告列表 -->
+  <view class="announcement-item" wx:for="{{ announcements }}" wx:key="id" bindtap="goToDetail" data-id="{{ item.id }}">
+    <view class="announcement-header">
+      <text class="type-tag type-{{ item.type }}">{{ item.type === 'system' ? '系统' : item.type === 'activity' ? '活动' : '更新' }}</text>
+      <text class="publish-time">{{ item.publishTime }}</text>
+    </view>
+    <view class="announcement-title">
+      <text class="unread-dot" wx:if="{{ !item.isRead }}"></text>
+      {{ item.title }}
+    </view>
+    <view class="announcement-summary">{{ item.summary }}</view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{ !loading && announcements.length === 0 }}">
+    {{ noDataText }}
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{ loading }}">
+    {{ t('common.loading') }}
+  </view>
+
+  <!-- 没有更多 -->
+  <view class="no-more" wx:if="{{ !hasMore && announcements.length > 0 }}">
+    {{ noMoreText }}
+  </view>
+</view>

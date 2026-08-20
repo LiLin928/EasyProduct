@@ -1,0 +1,117 @@
+/* pages/announcement/detail.scss —— 公告详情页样式 */
+.announcement-detail {
+  min-height: 100vh;
+  background: #f6f8fa;
+}
+
+.loading-state {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 28rpx;
+}
+
+.detail-content {
+  background: #fff;
+  padding: 32rpx;
+}
+
+.detail-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #262626;
+  line-height: 1.4;
+  margin-bottom: 24rpx;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #e8e8e8;
+}
+
+.type-tag {
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  font-size: 24rpx;
+  color: #fff;
+  margin-right: 16rpx;
+}
+
+.type-system {
+  background: #1890ff;
+}
+
+.type-activity {
+  background: #52c41a;
+}
+
+.type-update {
+  background: #fa8c16;
+}
+
+.publish-time {
+  font-size: 24rpx;
+  color: #8c8c8c;
+}
+
+.detail-body {
+  font-size: 30rpx;
+  color: #262626;
+  line-height: 1.8;
+  margin-bottom: 48rpx;
+}
+
+.attachments {
+  padding-top: 32rpx;
+  border-top: 1rpx solid #e8e8e8;
+}
+
+.attachments-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #262626;
+  margin-bottom: 24rpx;
+}
+
+.attachment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  background: #f6f8fa;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.attachment-info {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.attachment-name {
+  display: block;
+  font-size: 28rpx;
+  color: #262626;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-size {
+  display: block;
+  font-size: 24rpx;
+  color: #8c8c8c;
+}
+
+.download-btn {
+  padding: 8rpx 24rpx;
+  font-size: 26rpx;
+  background: #1890ff;
+  color: #fff;
+  border-radius: 4rpx;
+  border: none;
+}

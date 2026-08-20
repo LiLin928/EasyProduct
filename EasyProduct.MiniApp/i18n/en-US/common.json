@@ -3,5 +3,19 @@
   "button": { "confirm": "OK", "cancel": "Cancel" },
   "loading": "Loading…",
   "loadFailed": "Load failed",
-  "tab": { "home": "Home", "category": "Category", "cart": "Cart", "profile": "Profile" }
+  "tab": { "home": "Home", "category": "Category", "cart": "Cart", "profile": "Profile" },
+  "announcement": {
+    "title": "Announcement Center",
+    "detail": "Announcement Detail",
+    "type": { "system": "System", "activity": "Activity", "update": "Update" },
+    "unread": "Unread",
+    "noData": "No announcements",
+    "publishedAt": "Published at",
+    "attachment": "Attachment",
+    "download": "Download",
+    "markRead": "Mark as read",
+    "pullRefresh": "Pull to refresh",
+    "loadMore": "Pull up to load more",
+    "noMore": "No more data"
+  }
 }

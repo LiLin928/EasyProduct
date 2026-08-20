@@ -3,7 +3,9 @@
     "pages/index/index",
     "pages/category/category",
     "pages/cart/cart",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/announcement/index",
+    "pages/announcement/detail"
   ],
   "window": {
     "navigationBarTitleText": "EasyProduct",
