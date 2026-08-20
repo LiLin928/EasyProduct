@@ -35,5 +35,17 @@
     "title": "资料下载",
     "downloads": "次下载",
     "download": "下载"
+  },
+  "announcement": {
+    "title": "公告中心",
+    "detail": "公告详情",
+    "top": "置顶",
+    "level": {
+      "normal": "普通",
+      "important": "重要",
+      "urgent": "紧急"
+    },
+    "views": "次浏览",
+    "downloadAttachment": "下载附件"
   }
 }

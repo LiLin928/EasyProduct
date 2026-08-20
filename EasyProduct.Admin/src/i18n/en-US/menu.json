@@ -14,5 +14,6 @@
   "workflow": "Workflow",
   "report": "Report",
   "ops": "Ops",
+  "profile": "Profile",
   "notFound": "Not Found"
 }

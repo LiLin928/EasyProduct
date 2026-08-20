@@ -12,6 +12,8 @@ export const routes: RouteRecordRaw[] = [
       { path: 'products/:id', name: 'product-detail', component: () => import('@/views/products/detail.vue'), meta: { title: 'site.products.detail' } },
       { path: 'news', name: 'news', component: () => import('@/views/news/index.vue'), meta: { title: 'site.news.title' } },
       { path: 'news/:id', name: 'news-detail', component: () => import('@/views/news/detail.vue'), meta: { title: 'site.news.detail' } },
+      { path: 'announcement', name: 'announcement', component: () => import('@/views/announcement/index.vue'), meta: { title: 'site.announcement.title' } },
+      { path: 'announcement/:id', name: 'announcement-detail', component: () => import('@/views/announcement/detail.vue'), meta: { title: 'site.announcement.detail' } },
       { path: 'inquiry', name: 'inquiry', component: () => import('@/views/inquiry/index.vue'), meta: { title: 'site.inquiry.title' } },
     ],
   },

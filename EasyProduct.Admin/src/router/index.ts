@@ -13,6 +13,7 @@ export const routes: RouteRecordRaw[] = [
     redirect: '/desktop',
     children: [
       { path: 'desktop', name: 'desktop', component: () => import('@/views/desktop/index.vue'), meta: { title: 'menu.desktop', icon: 'Monitor' } },
+      { path: "profile", name: "profile", component: () => import("@/views/basic/profile/index.vue"), meta: { title: "menu.profile", icon: "User" } },
       ...basicRoutes,
       ...placeholderRoutes,
     ],

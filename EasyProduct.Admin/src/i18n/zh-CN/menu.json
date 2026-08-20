@@ -14,5 +14,6 @@
   "workflow": "工作流",
   "report": "报表管理",
   "ops": "运维日志",
+  "profile": "个人中心",
   "notFound": "页面不存在"
 }

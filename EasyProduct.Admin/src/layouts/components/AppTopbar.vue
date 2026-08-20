@@ -19,7 +19,12 @@
       >
         {{ appStore.theme }}
       </el-button>
-      <span class="app-topbar__user">{{ userStore.realName }}</span>
+      <el-button
+        text
+        @click="router.push('/profile')"
+      >
+        {{ userStore.realName }}
+      </el-button>
       <el-button
         text
         @click="handleLogout"

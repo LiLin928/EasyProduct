@@ -43,11 +43,12 @@ import { siteDownloadRouter } from './routes/site/download.js'
 import { siteAboutRouter } from './routes/site/about.js'
 import { siteContactRouter } from './routes/site/contact.js'
 import { siteInquiryRouter } from './routes/site/inquiry.js'
+import { siteAnnouncementRouter } from './routes/site/announcement.js'
 import { appAuthRouter } from './routes/app/auth.js'
 import { i18nRouter } from './routes/i18n.js'
 
 app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter)
-app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter)
+app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
 app.use('/api/app', appGuard, appAuthRouter)
 app.use('/api/i18n', i18nRouter)
 

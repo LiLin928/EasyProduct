@@ -26,5 +26,26 @@
     "email": "Email",
     "submit": "Submit Inquiry",
     "submitting": "Submitting..."
+  },
+  "videos": {
+    "title": "Video Center",
+    "views": "views"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "downloads": "downloads",
+    "download": "Download"
+  },
+  "announcement": {
+    "title": "Announcements",
+    "detail": "Announcement Detail",
+    "top": "Top",
+    "level": {
+      "normal": "Normal",
+      "important": "Important",
+      "urgent": "Urgent"
+    },
+    "views": "views",
+    "downloadAttachment": "Download Attachment"
   }
 }
