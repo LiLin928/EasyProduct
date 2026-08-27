@@ -30,6 +30,10 @@ export const MENU_TREE = [
       { id: guid(), parentId: '0', name: 'basic-user', path: '/basic/user', titleKey: 'menu.basicUser', icon: 'User', sort: 1, children: [] },
       { id: guid(), parentId: '0', name: 'basic-role', path: '/basic/role', titleKey: 'menu.basicRole', icon: 'UserFilled', sort: 2, children: [] },
       { id: guid(), parentId: '0', name: 'basic-menu', path: '/basic/menu', titleKey: 'menu.basicMenu', icon: 'Menu', sort: 3, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-dept', path: '/basic/dept', titleKey: 'menu.basicDept', icon: 'OfficeBuilding', sort: 4, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-dict', path: '/basic/dict', titleKey: 'menu.basicDict', icon: 'Collection', sort: 5, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-config', path: '/basic/config', titleKey: 'menu.basicConfig', icon: 'Tools', sort: 6, children: [] },
+      { id: guid(), parentId: '0', name: 'basic-announcement', path: '/basic/announcement', titleKey: 'menu.basicAnnouncement', icon: 'Bell', sort: 7, children: [] },
     ]
   },
   { id: guid(), parentId: '0', name: 'product', path: '/product', titleKey: 'menu.product', icon: 'Goods', sort: 3, children: [] },

@@ -42,6 +42,12 @@ export const basicRoutes: RouteRecordRaw[] = [
         name: 'basic-config',
         component: () => import('@/views/basic/config/index.vue'),
         meta: { title: 'menu.basicConfig', icon: 'Tools' }
+      },
+      {
+        path: 'announcement',
+        name: 'basic-announcement',
+        component: () => import('@/views/basic/announcement/index.vue'),
+        meta: { title: 'menu.basicAnnouncement', icon: 'Bell' }
       }
     ]
   }

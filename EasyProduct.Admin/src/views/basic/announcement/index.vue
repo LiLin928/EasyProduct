@@ -212,6 +212,15 @@
       :visible="detailDialog.visible.value"
       @update:visible="detailDialog.visible.value = $event"
     />
+
+    <!-- 编辑弹窗 -->
+    <EditDialog
+      :id="editDialog.payload.value?.id"
+      :visible="editDialog.visible.value"
+      :is-edit="editDialog.payload.value?.isEdit || false"
+      @update:visible="editDialog.visible.value = $event"
+      @success="reload"
+    />
   </div>
 </template>
 
@@ -234,6 +243,7 @@ import type { SearchField } from '@/types/search'
 import BaseTable from '@/components/common/BaseTable.vue'
 import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
 import DetailDialog from './components/DetailDialog.vue'
+import EditDialog from './components/EditDialog.vue'
 
 const { t } = useI18n()
 
