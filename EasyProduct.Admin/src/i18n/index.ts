@@ -3,10 +3,12 @@ import enCommon from './en-US/common.json'
 import enMenu from './en-US/menu.json'
 import enBasic from './en-US/basic.json'
 import enSite from './en-US/site.json'
+import enProduct from './en-US/product.json'
 import zhCommon from './zh-CN/common.json'
 import zhMenu from './zh-CN/menu.json'
 import zhBasic from './zh-CN/basic.json'
 import zhSite from './zh-CN/site.json'
+import zhProduct from './zh-CN/product.json'
 
 export const SUPPORT_LOCALES = ['zh-CN', 'en-US'] as const
 export type Locale = (typeof SUPPORT_LOCALES)[number]
@@ -14,8 +16,8 @@ export type Locale = (typeof SUPPORT_LOCALES)[number]
 const LOCALE_KEY = 'locale'
 
 const messages = {
-  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite },
-  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite },
+  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite, product: zhProduct },
+  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite, product: enProduct },
 }
 
 export const i18n = createI18n({
