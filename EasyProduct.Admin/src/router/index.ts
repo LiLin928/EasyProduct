@@ -9,6 +9,7 @@ import { productRoutes } from './modules/product'
 import { mallRoutes } from './modules/mall'
 import { crmRoutes } from './modules/crm'
 import { opsRoutes } from './modules/ops'
+import { reportRoutes } from './modules/report'
 
 export const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'login', component: () => import('@/views/login/index.vue'), meta: { title: 'common.login.title' } },
@@ -24,8 +25,9 @@ export const routes: RouteRecordRaw[] = [
       ...productRoutes,
       ...mallRoutes,
       ...crmRoutes,
-      ...opsRoutes,
-      ...placeholderRoutes,
+     ...opsRoutes,
+      ...reportRoutes,
+     ...placeholderRoutes,
     ],
   },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/error/404.vue'), meta: { title: 'menu.notFound' } },
