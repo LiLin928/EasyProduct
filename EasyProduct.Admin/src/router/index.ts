@@ -6,6 +6,7 @@ import { placeholderRoutes } from './modules/placeholder'
 import { basicRoutes } from './modules/basic'
 import { siteRoutes } from './modules/site'
 import { productRoutes } from './modules/product'
+import { mallRoutes } from './modules/mall'
 
 export const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'login', component: () => import('@/views/login/index.vue'), meta: { title: 'common.login.title' } },
@@ -19,6 +20,7 @@ export const routes: RouteRecordRaw[] = [
       ...basicRoutes,
       ...siteRoutes,
       ...productRoutes,
+      ...mallRoutes,
       ...placeholderRoutes,
     ],
   },

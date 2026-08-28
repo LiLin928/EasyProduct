@@ -39,4 +39,5 @@
     "oversize": "文件大小不能超过 {size}MB"
   },
   "richText": { "placeholder": "请输入内容" }
+  , "loadFailed": "加载失败"
 }

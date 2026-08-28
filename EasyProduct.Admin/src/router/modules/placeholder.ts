@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-const MODULES = ['mall', 'crm', 'workflow', 'report', 'ops'] as const
+const MODULES = ['crm', 'workflow', 'report', 'ops'] as const
 
 export const placeholderRoutes: RouteRecordRaw[] = MODULES.map((name) => ({
   path: `/${name}`,

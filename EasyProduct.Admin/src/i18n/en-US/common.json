@@ -38,4 +38,5 @@
     "oversize": "File size cannot exceed {size}MB"
   },
   "richText": { "placeholder": "Please enter content" }
+  , "loadFailed": "Failed to load"
 }
