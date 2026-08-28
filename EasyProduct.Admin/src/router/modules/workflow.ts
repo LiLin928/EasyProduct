@@ -37,6 +37,12 @@ export const workflowRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/workflow/instance/index.vue'),
         meta: { title: 'menu.workflowInstance', icon: 'Document' },
       },
+      {
+        path: 'designer',
+        name: 'workflow-designer',
+        component: () => import('@/views/workflow/designer/index.vue'),
+        meta: { title: 'menu.workflowDesigner', icon: 'SetUp' },
+      },
     ],
   },
 ]

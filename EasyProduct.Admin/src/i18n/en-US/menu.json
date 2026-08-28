@@ -69,5 +69,6 @@
   "workflowTodo": "My Approvals",
   "workflowDone": "Completed Tasks",
   "workflowInstance": "Instances",
-  "workflowPublish": "Process Publish"
+  "workflowPublish": "Process Publish",
+  "workflowDesigner": "Process Designer"
 }

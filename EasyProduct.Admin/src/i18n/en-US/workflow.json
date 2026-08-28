@@ -115,5 +115,37 @@
   },
   "done": {
     "title": "Completed Tasks"
+  },
+  "designer": {
+    "back": "Back",
+    "untitled": "Untitled Process",
+    "validate": "Validate",
+    "save": "Save",
+    "saveSuccess": "Saved successfully",
+    "validateSuccess": "Validation passed",
+    "palette": "Node Palette",
+    "nodeStart": "Start",
+    "nodeApproval": "Approval",
+    "nodeCondition": "Condition",
+    "nodeCc": "CC",
+    "nodeEnd": "End",
+    "noAssignee": "No assignee",
+    "connectHint": "Click a target node to connect",
+    "properties": "Properties",
+    "selectNode": "Select a node",
+    "edges": "Edges",
+    "noEdges": "No edges",
+    "propType": "Type",
+    "propName": "Name",
+    "propAssigneeType": "Assignee Type",
+    "propAssigneeName": "Assignee",
+    "propPosition": "Position",
+    "assigneeTypePlaceholder": "Select assignee type",
+    "assigneeNamePlaceholder": "Enter assignee name",
+    "edgeLabelPlaceholder": "Edge label",
+    "assigneeUser": "Specific User",
+    "assigneeRole": "Specific Role",
+    "assigneeDept": "Specific Dept",
+    "assigneeSelf": "Initiator"
   }
 }

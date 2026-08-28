@@ -72,6 +72,51 @@ export const TASK_STATUS_OPTIONS = [
   { value: 'transferred', labelKey: 'workflow.task.statusTransferred' },
 ] as const
 
+// ── 流程设计器 ──
+export type FlowNodeType = 'start' | 'approval' | 'condition' | 'cc' | 'end'
+
+export interface FlowNode {
+  id: string
+  type: FlowNodeType
+  name: string
+  x: number
+  y: number
+  assigneeType?: 'user' | 'role' | 'dept' | 'self'
+  assigneeId?: string
+  assigneeName?: string
+  formFields?: string[]
+}
+
+export interface FlowEdge {
+  id: string
+  source: string
+  target: string
+  label?: string
+  condition?: string
+}
+
+export interface FlowGraph {
+  definitionId: string
+  definitionName: string
+  nodes: FlowNode[]
+  edges: FlowEdge[]
+}
+
+export const FLOW_NODE_TYPE_OPTIONS = [
+  { value: 'start', labelKey: 'workflow.designer.nodeStart', icon: 'Position' },
+  { value: 'approval', labelKey: 'workflow.designer.nodeApproval', icon: 'UserFilled' },
+  { value: 'condition', labelKey: 'workflow.designer.nodeCondition', icon: 'Switch' },
+  { value: 'cc', labelKey: 'workflow.designer.nodeCc', icon: 'Message' },
+  { value: 'end', labelKey: 'workflow.designer.nodeEnd', icon: 'CircleClose' },
+] as const
+
+export const ASSIGNEE_TYPE_OPTIONS = [
+  { value: 'user', labelKey: 'workflow.designer.assigneeUser' },
+  { value: 'role', labelKey: 'workflow.designer.assigneeRole' },
+  { value: 'dept', labelKey: 'workflow.designer.assigneeDept' },
+  { value: 'self', labelKey: 'workflow.designer.assigneeSelf' },
+] as const
+
 // ── 审批历史 ──
 export interface WorkflowHistory {
   id: string

@@ -115,5 +115,37 @@
   },
   "done": {
     "title": "已办事项"
+  },
+  "designer": {
+    "back": "返回",
+    "untitled": "未命名流程",
+    "validate": "校验",
+    "save": "保存",
+    "saveSuccess": "保存成功",
+    "validateSuccess": "校验通过",
+    "palette": "节点面板",
+    "nodeStart": "开始",
+    "nodeApproval": "审批",
+    "nodeCondition": "条件",
+    "nodeCc": "抄送",
+    "nodeEnd": "结束",
+    "noAssignee": "未指定审批人",
+    "connectHint": "请点击目标节点完成连线",
+    "properties": "属性面板",
+    "selectNode": "请选择节点",
+    "edges": "连线列表",
+    "noEdges": "暂无连线",
+    "propType": "类型",
+    "propName": "名称",
+    "propAssigneeType": "审批人类型",
+    "propAssigneeName": "审批人",
+    "propPosition": "位置",
+    "assigneeTypePlaceholder": "请选择审批人类型",
+    "assigneeNamePlaceholder": "请输入审批人名称",
+    "edgeLabelPlaceholder": "连线标签",
+    "assigneeUser": "指定用户",
+    "assigneeRole": "指定角色",
+    "assigneeDept": "指定部门",
+    "assigneeSelf": "发起人"
   }
 }
