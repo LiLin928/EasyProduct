@@ -11,6 +11,8 @@
   "confirm": "确定",
   "cancel": "取消",
   "actions": "操作",
+  "view": "查看",
+  "close": "关闭",
   "tip": "提示",
   "tips": "提示",
   "confirm": { "delete": "确认删除该记录吗？" },

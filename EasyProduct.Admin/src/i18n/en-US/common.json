@@ -10,6 +10,8 @@
   "confirm": "OK",
   "cancel": "Cancel",
   "actions": "Actions",
+  "view": "View",
+  "close": "Close",
   "tip": "Notice",
   "tips": "Notice",
   "confirm": { "delete": "Delete this record?" },

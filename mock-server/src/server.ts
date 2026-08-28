@@ -34,6 +34,14 @@ import { adminConfigRouter } from './routes/admin/config.js'
 import { adminDesktopRouter } from './routes/admin/desktop.js'
 import { adminProfileRouter } from './routes/admin/profile.js'
 import { adminAnnouncementRouter } from './routes/admin/announcement.js'
+import { adminSiteNewsRouter } from './routes/admin/site-news.js'
+import { adminSiteCategoryRouter } from './routes/admin/site-category.js'
+import { adminSiteBannerRouter } from './routes/admin/site-banner.js'
+import { adminSiteVideoRouter } from './routes/admin/site-video.js'
+import { adminSiteDownloadRouter } from './routes/admin/site-download.js'
+import { adminSiteAboutRouter } from './routes/admin/site-about.js'
+import { adminSiteInquiryRouter } from './routes/admin/site-inquiry.js'
+import { adminSiteContactRouter } from './routes/admin/site-contact.js'
 import { siteHomeRouter } from './routes/site/home.js'
 import { siteProductRouter } from './routes/site/product.js'
 import { siteCategoryRouter } from './routes/site/category.js'
@@ -48,7 +56,7 @@ import { appAuthRouter } from './routes/app/auth.js'
 import { appAnnouncementRouter } from './routes/app/announcement.js'
 import { i18nRouter } from './routes/i18n.js'
 
-app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter)
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter)
 app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
 app.use('/api/app', appGuard, appAuthRouter, appAnnouncementRouter)
 app.use('/api/i18n', i18nRouter)

@@ -4,6 +4,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { setupGuards } from './guards'
 import { placeholderRoutes } from './modules/placeholder'
 import { basicRoutes } from './modules/basic'
+import { siteRoutes } from './modules/site'
 
 export const routes: RouteRecordRaw[] = [
   { path: '/login', name: 'login', component: () => import('@/views/login/index.vue'), meta: { title: 'common.login.title' } },
@@ -15,6 +16,7 @@ export const routes: RouteRecordRaw[] = [
       { path: 'desktop', name: 'desktop', component: () => import('@/views/desktop/index.vue'), meta: { title: 'menu.desktop', icon: 'Monitor' } },
       { path: "profile", name: "profile", component: () => import("@/views/basic/profile/index.vue"), meta: { title: "menu.profile", icon: "User" } },
       ...basicRoutes,
+      ...siteRoutes,
       ...placeholderRoutes,
     ],
   },

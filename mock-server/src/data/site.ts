@@ -3,9 +3,36 @@
 import Mock from 'mockjs'
 import { guid, isoTime } from '../helpers/id.js'
 
-export const BANNERS = Mock.mock({
-  'list|3': [{ id: '@guid', title: '@ctitle(8,16)', titleEn: '@title(3,5)', imageUrl: '@image(1920x600)', link: '' }],
-}).list.map((b: Record<string, unknown>) => ({ ...b, id: String(b.id).toLowerCase() }))
+export type BannerStatus = 'enabled' | 'disabled'
+
+export interface SiteBanner {
+  id: string
+  title: string
+  titleEn: string
+  imageUrl: string
+  link: string
+  sort: number
+  status: BannerStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export const BANNERS: SiteBanner[] = Mock.mock({
+  'list|3': [{
+    id: '@guid',
+    title: '@ctitle(8,16)',
+    titleEn: '@title(3,5)',
+    imageUrl: '@image(1920x600)',
+    link: '',
+  }],
+}).list.map((b: Record<string, unknown>, i: number) => ({
+  ...b,
+  id: guid(),
+  sort: i + 1,
+  status: 'enabled' as BannerStatus,
+  createdAt: isoTime(),
+  updatedAt: isoTime(),
+})) as SiteBanner[]
 
 export const NEWS = Mock.mock({
   'list|28': [{
