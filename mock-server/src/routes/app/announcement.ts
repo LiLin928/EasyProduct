@@ -62,6 +62,28 @@ const announcements: AnnouncementData[] = [
 ]
 
 /**
+ * 获取未读公告数量（放在 /:id 之前避免被参数路由吞掉）
+ * GET /api/app/announcements/unread-count
+ */
+appAnnouncementRouter.get('/unread-count', (req: Request, res: Response) => {
+  const memberId = (req as any).member?.id
+  if (!memberId) {
+    return res.json(fail('未授权'))
+  }
+
+  const filtered = announcements.filter((a) => {
+    if (a.targetType === 'global') return true
+    if (a.targetType === 'member') return a.targetIds.includes(memberId)
+    return false
+  })
+
+  const readSet = readStatus.get(memberId) || new Set<string>()
+  const unreadCount = filtered.filter((a) => !readSet.has(a.id)).length
+
+  res.json(ok({ count: unreadCount }))
+})
+
+/**
  * 获取用户公告列表（含阅读状态）
  * GET /api/app/announcements
  */
@@ -179,28 +201,3 @@ appAnnouncementRouter.post('/:id/read', (req: Request, res: Response) => {
   res.json(ok(null, '已标记为已读'))
 })
 
-/**
- * 获取未读公告数量
- * GET /api/app/announcements/unread-count
- */
-appAnnouncementRouter.get('/unread-count', (req: Request, res: Response) => {
-  const memberId = (req as any).member?.id
-  if (!memberId) {
-    return res.json(fail('未授权'))
-  }
-
-  // 过滤：全局公告 + 定向给该会员的公告
-  const filtered = announcements.filter((a) => {
-    if (a.targetType === 'global') return true
-    if (a.targetType === 'member') return a.targetIds.includes(memberId)
-    return false
-  })
-
-  // 获取已读集合
-  const readSet = readStatus.get(memberId) || new Set<string>()
-
-  // 计算未读数量
-  const unreadCount = filtered.filter((a) => !readSet.has(a.id)).length
-
-  res.json(ok({ count: unreadCount }))
-})

@@ -14,11 +14,11 @@ siteProductRouter.get('/product/list', (req, res) => {
 
   let filtered = PRODUCTS
   if (categoryId) {
-    filtered = filtered.filter(p => p.categoryId === categoryId)
+    filtered = filtered.filter((p: (typeof PRODUCTS)[number]) => p.categoryId === categoryId)
   }
   if (keyword) {
     const kw = keyword.toLowerCase()
-    filtered = filtered.filter(p =>
+    filtered = filtered.filter((p: (typeof PRODUCTS)[number]) =>
       p.name.includes(keyword) ||
       p.nameEn.toLowerCase().includes(kw) ||
       p.code.toLowerCase().includes(kw)
@@ -30,7 +30,7 @@ siteProductRouter.get('/product/list', (req, res) => {
 
 // 产品详情
 siteProductRouter.get('/product/:id', (req, res) => {
-  const product = PRODUCTS.find(p => p.id === req.params.id)
+  const product = PRODUCTS.find((p: (typeof PRODUCTS)[number]) => p.id === req.params.id)
   if (!product) {
     res.json(fail('产品不存在', 404))
     return

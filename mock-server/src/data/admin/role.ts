@@ -6,6 +6,7 @@ export interface Role {
   id: string
   name: string
   code: string
+  menuIds: string[]
   status: 'enabled' | 'disabled'
   sort: number
   remark: string
@@ -18,6 +19,7 @@ export const ROLES: Role[] = Mock.mock({
     id: '@guid',
     name: '@ctitle(4,8)',
     code: '@word(4,8)',
+    'menuIds|1-5': ['@guid'],
     status: '@pick(["enabled", "disabled"])',
     'sort|1-10': 1,
     remark: '@csentence(10,20)',
@@ -31,6 +33,7 @@ ROLES.unshift({
   id: guid(),
   name: '超级管理员',
   code: 'super_admin',
+  menuIds: [],
   status: 'enabled',
   sort: 1,
   remark: '拥有所有权限',

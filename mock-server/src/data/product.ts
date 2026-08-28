@@ -39,7 +39,7 @@ export const PRODUCTS = Mock.mock({
   status: 'active',
   createdAt: '@datetime("yyyy-MM-ddTHH:mm:ss")',
   }],
-}).list.map((p) => ({ ...p, id: guid(), createdAt: isoTime() }))
+}).list.map((p: Record<string, unknown>) => ({ ...p, id: guid(), createdAt: isoTime() }))
 
 // ---- SPU / SKU / Channel ----
 

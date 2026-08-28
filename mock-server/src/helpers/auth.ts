@@ -1,6 +1,7 @@
 // src/helpers/auth.ts
 import type { NextFunction, Request, Response } from 'express'
 import { fail } from './envelope.js'
+import { MEMBERS } from '../data/mall.js'
 
 const ADMIN_PUBLIC = ['/api/admin/auth/login']
 const APP_PUBLIC = ['/api/app/auth/wx-login']
@@ -23,6 +24,13 @@ export function appGuard(req: Request, res: Response, next: NextFunction): void 
   if (!header || !header.startsWith('Bearer ')) {
     res.json(fail('请先登录', 401))
     return
+  }
+  // mock 阶段：token 格式为 mock-member-token-{memberId}，解析出固定会员身份
+  const token = header.slice('Bearer '.length)
+  const memberId = token.replace(/^mock-member-token-/, '')
+  const member = MEMBERS.find((m) => m.id === memberId)
+  if (member) {
+    ;(req as any).member = { id: member.id, nickname: member.nickname, level: member.levelName }
   }
   next()
 }

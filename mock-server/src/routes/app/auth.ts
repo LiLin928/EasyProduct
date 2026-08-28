@@ -1,7 +1,7 @@
 // src/routes/app/auth.ts
 import { Router } from 'express'
 import { fail, ok } from '../../helpers/envelope.js'
-import { guid } from '../../helpers/id.js'
+import { MEMBERS } from '../../data/mall.js'
 
 export const appAuthRouter = Router()
 
@@ -9,8 +9,15 @@ export const appAuthRouter = Router()
 appAuthRouter.post('/auth/wx-login', (req, res) => {
   const { code } = req.body as { code?: string }
   if (!code) return res.json(fail('code 不能为空'))
+  const member = MEMBERS[0]
   res.json(ok({
-    memberToken: guid(),
-    member: { id: guid(), nickName: '演示会员', avatar: '', level: 'normal', points: 0 },
+    memberToken: `mock-member-token-${member.id}`,
+    member: {
+      id: member.id,
+      nickName: member.nickname,
+      avatar: member.avatar,
+      level: member.levelName,
+      points: member.points,
+    },
   }))
 })

@@ -93,11 +93,23 @@ import { siteInquiryRouter } from './routes/site/inquiry.js'
 import { siteAnnouncementRouter } from './routes/site/announcement.js'
 import { appAuthRouter } from './routes/app/auth.js'
 import { appAnnouncementRouter } from './routes/app/announcement.js'
+import { appProductRouter } from './routes/app/product.js'
+import { appCartRouter } from './routes/app/cart.js'
+import { appOrderRouter } from './routes/app/order.js'
+import { appPaymentRouter } from './routes/app/payment.js'
+import { appMemberRouter } from './routes/app/member.js'
 import { i18nRouter } from './routes/i18n.js'
 
 app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter, adminCrmReversalRouter, adminOpsOperateLogRouter, adminOpsLoginLogRouter, adminOpsTaskRouter, adminOpsTaskLogRouter, adminOpsLogQueryRouter, adminRptDatasourceRouter, adminRptDefinitionRouter, adminRptColumnTemplateRouter, adminWfMyApplyRouter, adminWfTodoRouter, adminWfDoneRouter, adminWfInstanceRouter, adminWfDefinitionRouter, adminWfDesignerRouter)
 app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
-app.use('/api/app', appGuard, appAuthRouter, appAnnouncementRouter)
+app.use('/api/app', appGuard)
+app.use('/api/app', appAuthRouter)
+app.use('/api/app/announcements', appAnnouncementRouter)
+app.use('/api/app', appProductRouter)
+app.use('/api/app/cart', appCartRouter)
+app.use('/api/app/orders', appOrderRouter)
+app.use('/api/app/payment', appPaymentRouter)
+app.use('/api/app/member', appMemberRouter)
 app.use('/api/i18n', i18nRouter)
 
 app.listen(PORT, () => {
@@ -106,4 +118,3 @@ app.listen(PORT, () => {
 })
 
 export { adminGuard, appGuard }
-
