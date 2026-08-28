@@ -49,9 +49,10 @@
           width="100"
         >
           <template #default="{ row }">
-            <el-tag :type="row.status === 'enabled' ? 'success' : 'danger'">
-              {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
-            </el-tag>
+            <BaseStatusTag
+              :value="row.status"
+              :options="ENABLED_DISABLED_STATUS"
+            />
           </template>
         </el-table-column>
         <el-table-column
@@ -129,6 +130,8 @@ import type { Role } from '@/types/basic'
 import type { SearchField } from '@/types/search'
 import BaseTable from '@/components/common/BaseTable.vue'
 import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
+import { ENABLED_DISABLED_STATUS } from '@/constants/status'
 import RoleForm from './components/RoleForm.vue'
 import MenuAssign from './components/MenuAssign.vue'
 
@@ -229,7 +232,7 @@ const handleDelete = async (row: Role): Promise<void> => {
     await deleteRole(row.id)
     ElMessage.success(t('common.deleteSuccess'))
     reload()
-  } catch (error) {
+  } catch {
     // 用户取消或请求失败
   }
 }

@@ -217,7 +217,7 @@
     <EditDialog
       :id="editDialog.payload.value?.id"
       :visible="editDialog.visible.value"
-      :is-edit="editDialog.payload.value?.isEdit || false"
+      :is-edit="editDialog.isEdit.value"
       @update:visible="editDialog.visible.value = $event"
       @success="reload"
     />
@@ -326,6 +326,9 @@ const handleSelectionChange = (val: unknown[]): void => {
 
 // 详情弹窗
 const detailDialog = useDialog<Announcement>()
+
+// 编辑弹窗
+const editDialog = useDialog<Announcement>()
 
 // 新增公告
 const handleAdd = (): void => {

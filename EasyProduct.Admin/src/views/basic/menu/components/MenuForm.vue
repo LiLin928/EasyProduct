@@ -1,134 +1,132 @@
 <template>
-  <el-dialog
-    :model-value="visible"
+  <BaseFormDialog
+    :visible="visible"
     :title="isEdit ? t('basic.menu.edit') : t('basic.menu.add')"
+    :model="model"
+    :rules="rules"
+    :loading="loading"
     width="600px"
-    @update:model-value="handleClose"
+    @update:visible="handleClose"
+    @submit="handleSubmit"
   >
-    <el-form
-      ref="formRef"
-      :model="model"
-      :rules="rules"
-      label-width="100px"
+    <el-form-item
+      :label="t('basic.menu.parent')"
+      prop="parentId"
     >
-      <el-form-item
-        :label="t('basic.menu.parent')"
-        prop="parentId"
+      <el-cascader
+        v-model="model.parentId"
+        :options="menuTreeData"
+        :props="{
+          label: 'title',
+          value: 'id',
+          children: 'children',
+          checkStrictly: true,
+          emitPath: false
+        }"
+        :placeholder="t('common.selectPlaceholder')"
+        clearable
+        filterable
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.name')"
+      prop="name"
+    >
+      <el-input
+        v-model="model.name"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.path')"
+      prop="path"
+    >
+      <el-input
+        v-model="model.path"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.titleKey')"
+      prop="titleKey"
+    >
+      <el-input
+        v-model="model.titleKey"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.icon')"
+      prop="icon"
+    >
+      <el-input
+        v-model="model.icon"
+        readonly
+        @click="iconSelectVisible = true"
       >
-        <el-cascader
-          v-model="model.parentId"
-          :options="menuTreeData"
-          :props="{
-            label: 'title',
-            value: 'id',
-            children: 'children',
-            checkStrictly: true,
-            emitPath: false
-          }"
-          :placeholder="t('common.selectPlaceholder')"
-          clearable
-          filterable
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.name')"
-        prop="name"
-      >
-        <el-input
-          v-model="model.name"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.path')"
-        prop="path"
-      >
-        <el-input
-          v-model="model.path"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.titleKey')"
-        prop="titleKey"
-      >
-        <el-input
-          v-model="model.titleKey"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.icon')"
-        prop="icon"
-      >
-        <el-input
-          v-model="model.icon"
-          readonly
-          @click="iconSelectVisible = true"
-        >
-          <template #prefix>
-            <el-icon v-if="model.icon">
-              <component :is="model.icon" />
-            </el-icon>
-          </template>
-          <template #suffix>
-            <el-icon
-              class="el-input__icon"
-              style="cursor: pointer"
-            >
-              <Search />
-            </el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.sort')"
-        prop="sort"
-      >
-        <el-input-number
-          v-model="model.sort"
-          :min="1"
-          :max="999"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.permission')"
-        prop="permission"
-      >
-        <el-input
-          v-model="model.permission"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.component')"
-        prop="component"
-      >
-        <el-input
-          v-model="model.component"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.visible')"
-        prop="visible"
-      >
-        <el-switch v-model="model.visible" />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.menu.status')"
-        prop="status"
-      >
-        <el-radio-group v-model="model.status">
-          <el-radio value="enabled">
-            {{ t('common.status.enabled') }}
-          </el-radio>
-          <el-radio value="disabled">
-            {{ t('common.status.disabled') }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-    </el-form>
+        <template #prefix>
+          <el-icon v-if="model.icon">
+            <component :is="model.icon" />
+          </el-icon>
+        </template>
+        <template #suffix>
+          <el-icon
+            class="el-input__icon"
+            style="cursor: pointer"
+          >
+            <Search />
+          </el-icon>
+        </template>
+      </el-input>
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.sort')"
+      prop="sort"
+    >
+      <el-input-number
+        v-model="model.sort"
+        :min="1"
+        :max="999"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.permission')"
+      prop="permission"
+    >
+      <el-input
+        v-model="model.permission"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.component')"
+      prop="component"
+    >
+      <el-input
+        v-model="model.component"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.visible')"
+      prop="visible"
+    >
+      <el-switch v-model="model.visible" />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.menu.status')"
+      prop="status"
+    >
+      <el-radio-group v-model="model.status">
+        <el-radio value="enabled">
+          {{ t('common.status.enabled') }}
+        </el-radio>
+        <el-radio value="disabled">
+          {{ t('common.status.disabled') }}
+        </el-radio>
+      </el-radio-group>
+    </el-form-item>
+
     <template #footer>
       <el-button @click="handleClose">
         {{ t('common.cancel') }}
@@ -140,23 +138,24 @@
       >
         {{ t('common.confirm') }}
       </el-button>
-    </template>
 
-    <!-- 图标选择器 -->
-    <IconSelectDialog
-      v-model="model.icon"
-      v-model:visible="iconSelectVisible"
-    />
-  </el-dialog>
+      <!-- 图标选择器（嵌在 footer 旁，保持原有交互） -->
+      <IconSelectDialog
+        v-model="model.icon"
+        v-model:visible="iconSelectVisible"
+      />
+    </template>
+  </BaseFormDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Search } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import { createMenu, updateMenu, getMenuDetail } from '@/api/basic/menu'
 import type { Menu, MenuCreateParams } from '@/types/basic'
+import BaseFormDialog from '@/components/common/BaseFormDialog.vue'
 import IconSelectDialog from './IconSelectDialog.vue'
 
 interface Props {
@@ -174,7 +173,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const formRef = ref<FormInstance>()
 const loading = ref(false)
 const iconSelectVisible = ref(false)
 
@@ -280,7 +278,6 @@ const resetForm = (): void => {
     visible: true,
     status: 'enabled'
   })
-  formRef.value?.clearValidate()
 }
 
 // 监听 payload 变化，填充表单
@@ -303,7 +300,7 @@ watch(
           visible: detail.visible,
           status: detail.status
         })
-      } catch (error) {
+      } catch {
         // 加载失败
       }
     } else if (payload && payload.parentId) {
@@ -324,11 +321,8 @@ const handleClose = (): void => {
   resetForm()
 }
 
-// 提交表单
+// 提交表单（验证由 BaseFormDialog 处理，但此处 IconSelectDialog 需要 footer slot，所以自定义 footer）
 const handleSubmit = async (): Promise<void> => {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
-
   loading.value = true
   try {
     if (props.isEdit && props.payload?.id) {

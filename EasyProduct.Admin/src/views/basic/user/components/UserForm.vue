@@ -1,128 +1,114 @@
 <template>
-  <el-dialog
-    :model-value="visible"
+  <BaseFormDialog
+    :visible="visible"
     :title="isEdit ? t('basic.user.edit') : t('basic.user.add')"
+    :model="model"
+    :rules="rules"
+    :loading="loading"
     width="600px"
-    @update:model-value="handleClose"
+    @update:visible="handleClose"
+    @submit="handleSubmit"
   >
-    <el-form
-      ref="formRef"
-      :model="model"
-      :rules="rules"
-      label-width="100px"
+    <el-form-item
+      :label="t('basic.user.userName')"
+      prop="userName"
     >
-      <el-form-item
-        :label="t('basic.user.userName')"
-        prop="userName"
+      <el-input
+        v-model="model.userName"
+        :placeholder="t('common.inputPlaceholder')"
+        :disabled="isEdit"
+      />
+    </el-form-item>
+    <el-form-item
+      v-if="!isEdit"
+      :label="t('basic.user.password')"
+      prop="password"
+    >
+      <el-input
+        v-model="model.password"
+        type="password"
+        show-password
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.realName')"
+      prop="realName"
+    >
+      <el-input
+        v-model="model.realName"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.email')"
+      prop="email"
+    >
+      <el-input
+        v-model="model.email"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.phone')"
+      prop="phone"
+    >
+      <el-input
+        v-model="model.phone"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.status')"
+      prop="status"
+    >
+      <el-radio-group v-model="model.status">
+        <el-radio value="enabled">
+          {{ t('common.status.enabled') }}
+        </el-radio>
+        <el-radio value="disabled">
+          {{ t('common.status.disabled') }}
+        </el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.dept')"
+      prop="deptId"
+    >
+      <el-input
+        v-model="model.deptId"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.user.roles')"
+      prop="roleIds"
+    >
+      <el-select
+        v-model="model.roleIds"
+        multiple
+        :placeholder="t('common.selectPlaceholder')"
       >
-        <el-input
-          v-model="model.userName"
-          :placeholder="t('common.inputPlaceholder')"
-          :disabled="isEdit"
+        <el-option
+          :label="t('basic.user.roleSuper')"
+          value="1"
         />
-      </el-form-item>
-      <el-form-item
-        v-if="!isEdit"
-        :label="t('basic.user.password')"
-        prop="password"
-      >
-        <el-input
-          v-model="model.password"
-          type="password"
-          show-password
-          :placeholder="t('common.inputPlaceholder')"
+        <el-option
+          :label="t('basic.user.roleNormal')"
+          value="2"
         />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.realName')"
-        prop="realName"
-      >
-        <el-input
-          v-model="model.realName"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.email')"
-        prop="email"
-      >
-        <el-input
-          v-model="model.email"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.phone')"
-        prop="phone"
-      >
-        <el-input
-          v-model="model.phone"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.status')"
-        prop="status"
-      >
-        <el-radio-group v-model="model.status">
-          <el-radio value="enabled">
-            {{ t('common.status.enabled') }}
-          </el-radio>
-          <el-radio value="disabled">
-            {{ t('common.status.disabled') }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.dept')"
-        prop="deptId"
-      >
-        <el-input
-          v-model="model.deptId"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.user.roles')"
-        prop="roleIds"
-      >
-        <el-select
-          v-model="model.roleIds"
-          multiple
-          :placeholder="t('common.selectPlaceholder')"
-        >
-          <el-option
-            :label="t('basic.user.roleSuper')"
-            value="1"
-          />
-          <el-option
-            :label="t('basic.user.roleNormal')"
-            value="2"
-          />
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="handleClose">
-        {{ t('common.cancel') }}
-      </el-button>
-      <el-button
-        type="primary"
-        :loading="loading"
-        @click="handleSubmit"
-      >
-        {{ t('common.confirm') }}
-      </el-button>
-    </template>
-  </el-dialog>
+      </el-select>
+    </el-form-item>
+  </BaseFormDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import { createUser, updateUser, getUserDetail } from '@/api/basic/user'
 import type { User, UserCreateParams, UserUpdateParams } from '@/types/basic'
+import BaseFormDialog from '@/components/common/BaseFormDialog.vue'
 
 interface Props {
   visible: boolean
@@ -138,7 +124,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const formRef = ref<FormInstance>()
 const loading = ref(false)
 
 // 表单模型
@@ -180,7 +165,6 @@ const resetForm = (): void => {
     deptId: '',
     roleIds: []
   })
-  formRef.value?.clearValidate()
 }
 
 // 监听 payload 变化，填充表单
@@ -200,7 +184,7 @@ watch(
           deptId: detail.deptId,
           roleIds: detail.roleIds
         })
-      } catch (error) {
+      } catch {
         // 加载失败
       }
     } else {
@@ -217,11 +201,8 @@ const handleClose = (): void => {
   resetForm()
 }
 
-// 提交表单
+// 提交表单（验证由 BaseFormDialog 处理）
 const handleSubmit = async (): Promise<void> => {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
-
   loading.value = true
   try {
     if (props.isEdit && props.payload) {

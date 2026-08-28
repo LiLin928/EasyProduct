@@ -1,98 +1,83 @@
 <!-- src/views/basic/dict/components/DictTypeFormDialog.vue -->
 <template>
-  <el-dialog
-    :model-value="modelValue"
+  <BaseFormDialog
+    :visible="modelValue"
     :title="isEdit ? t('basic.dict.type.form.editTitle') : t('basic.dict.type.form.addTitle')"
+    :model="formData"
+    :rules="formRules"
+    :loading="saving"
     width="500px"
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:visible="emit('update:modelValue', $event)"
     @close="handleClose"
+    @submit="handleSave"
   >
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+    <!-- 类型名称 -->
+    <el-form-item
+      :label="t('basic.dict.type.form.name')"
+      prop="name"
     >
-      <!-- 类型名称 -->
-      <el-form-item
-        :label="t('basic.dict.type.form.name')"
-        prop="name"
-      >
-        <el-input
-          v-model="formData.name"
-          maxlength="100"
-          show-word-limit
-          :placeholder="t('basic.dict.type.form.namePlaceholder')"
-        />
-      </el-form-item>
+      <el-input
+        v-model="formData.name"
+        maxlength="100"
+        show-word-limit
+        :placeholder="t('basic.dict.type.form.namePlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 类型编码 -->
-      <el-form-item
-        :label="t('basic.dict.type.form.code')"
-        prop="code"
-      >
-        <el-input
-          v-model="formData.code"
-          maxlength="50"
-          show-word-limit
-          :placeholder="t('basic.dict.type.form.codePlaceholder')"
-          :disabled="isEdit"
-        />
-      </el-form-item>
+    <!-- 类型编码 -->
+    <el-form-item
+      :label="t('basic.dict.type.form.code')"
+      prop="code"
+    >
+      <el-input
+        v-model="formData.code"
+        maxlength="50"
+        show-word-limit
+        :placeholder="t('basic.dict.type.form.codePlaceholder')"
+        :disabled="isEdit"
+      />
+    </el-form-item>
 
-      <!-- 状态 -->
-      <el-form-item
-        :label="t('basic.dict.type.form.status')"
-        prop="status"
-      >
-        <el-radio-group v-model="formData.status">
-          <el-radio value="enabled">
-            {{ t('common.status.enabled') }}
-          </el-radio>
-          <el-radio value="disabled">
-            {{ t('common.status.disabled') }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
+    <!-- 状态 -->
+    <el-form-item
+      :label="t('basic.dict.type.form.status')"
+      prop="status"
+    >
+      <el-radio-group v-model="formData.status">
+        <el-radio value="enabled">
+          {{ t('common.status.enabled') }}
+        </el-radio>
+        <el-radio value="disabled">
+          {{ t('common.status.disabled') }}
+        </el-radio>
+      </el-radio-group>
+    </el-form-item>
 
-      <!-- 备注 -->
-      <el-form-item
-        :label="t('basic.dict.type.form.remark')"
-        prop="remark"
-      >
-        <el-input
-          v-model="formData.remark"
-          type="textarea"
-          :rows="3"
-          maxlength="500"
-          show-word-limit
-          :placeholder="t('basic.dict.type.form.remarkPlaceholder')"
-        />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <el-button @click="emit('update:modelValue', false)">
-        {{ t('common.cancel') }}
-      </el-button>
-      <el-button
-        type="primary"
-        :loading="saving"
-        @click="handleSave"
-      >
-        {{ t('common.button.confirm') }}
-      </el-button>
-    </template>
-  </el-dialog>
+    <!-- 备注 -->
+    <el-form-item
+      :label="t('basic.dict.type.form.remark')"
+      prop="remark"
+    >
+      <el-input
+        v-model="formData.remark"
+        type="textarea"
+        :rows="3"
+        maxlength="500"
+        show-word-limit
+        :placeholder="t('basic.dict.type.form.remarkPlaceholder')"
+      />
+    </el-form-item>
+  </BaseFormDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import { useLocale } from '@/composables/useLocale'
 import { getDictTypeList, createDictType, updateDictType } from '@/api/basic/dict'
 import type { DictTypeCreateParams } from '@/types/basic'
+import BaseFormDialog from '@/components/common/BaseFormDialog.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -106,7 +91,6 @@ const emit = defineEmits<{
 
 const { t } = useLocale()
 
-const formRef = ref<FormInstance | null>(null)
 const saving = ref(false)
 
 // 是否是编辑模式
@@ -160,7 +144,7 @@ const loadDetail = async (id: string) => {
       formData.status = type.status
       formData.remark = type.remark || ''
     }
-  } catch (error) {
+  } catch {
     ElMessage.error(t('common.error.request'))
   }
 }
@@ -176,19 +160,10 @@ const resetForm = () => {
 // 关闭弹窗
 const handleClose = () => {
   resetForm()
-  formRef.value?.resetFields()
 }
 
-// 保存
+// 保存（验证由 BaseFormDialog 处理）
 const handleSave = async () => {
-  if (!formRef.value) return
-
-  try {
-    await formRef.value.validate()
-  } catch {
-    return
-  }
-
   saving.value = true
   try {
     if (isEdit.value) {
@@ -204,7 +179,7 @@ const handleSave = async () => {
     }
     emit('update:modelValue', false)
     emit('success')
-  } catch (error) {
+  } catch {
     ElMessage.error(t('common.error.request'))
   } finally {
     saving.value = false

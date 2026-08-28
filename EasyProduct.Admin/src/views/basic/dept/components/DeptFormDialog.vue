@@ -1,161 +1,146 @@
 <!-- src/views/basic/dept/components/DeptFormDialog.vue -->
 <template>
-  <el-dialog
-    :model-value="modelValue"
+  <BaseFormDialog
+    :visible="modelValue"
     :title="isEdit ? t('dept.form.editTitle') : t('dept.form.addTitle')"
+    :model="formData"
+    :rules="formRules"
+    :loading="saving"
     width="500px"
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:visible="emit('update:modelValue', $event)"
     @close="handleClose"
+    @submit="handleSave"
   >
-    <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="formRules"
-      label-width="100px"
+    <!-- 上级部门 -->
+    <el-form-item
+      :label="t('dept.form.parent')"
+      prop="parentId"
     >
-      <!-- 上级部门 -->
-      <el-form-item
-        :label="t('dept.form.parent')"
-        prop="parentId"
-      >
-        <el-tree-select
-          v-model="formData.parentId"
-          :data="treeDataForSelect"
-          :props="treeSelectProps"
-          check-strictly
-          clearable
-          :placeholder="t('dept.form.parentPlaceholder')"
-          style="width: 100%"
-        />
-      </el-form-item>
+      <el-tree-select
+        v-model="formData.parentId"
+        :data="treeDataForSelect"
+        :props="treeSelectProps"
+        check-strictly
+        clearable
+        :placeholder="t('dept.form.parentPlaceholder')"
+        style="width: 100%"
+      />
+    </el-form-item>
 
-      <!-- 部门名称 -->
-      <el-form-item
-        :label="t('dept.form.name')"
-        prop="name"
-      >
-        <el-input
-          v-model="formData.name"
-          maxlength="100"
-          show-word-limit
-          :placeholder="t('dept.form.namePlaceholder')"
-        />
-      </el-form-item>
+    <!-- 部门名称 -->
+    <el-form-item
+      :label="t('dept.form.name')"
+      prop="name"
+    >
+      <el-input
+        v-model="formData.name"
+        maxlength="100"
+        show-word-limit
+        :placeholder="t('dept.form.namePlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 部门编码 -->
-      <el-form-item
-        :label="t('dept.form.code')"
-        prop="code"
-      >
-        <el-input
-          v-model="formData.code"
-          maxlength="50"
-          show-word-limit
-          :placeholder="t('dept.form.codePlaceholder')"
-        />
-      </el-form-item>
+    <!-- 部门编码 -->
+    <el-form-item
+      :label="t('dept.form.code')"
+      prop="code"
+    >
+      <el-input
+        v-model="formData.code"
+        maxlength="50"
+        show-word-limit
+        :placeholder="t('dept.form.codePlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 排序 -->
-      <el-form-item
-        :label="t('dept.form.sort')"
-        prop="sort"
-      >
-        <el-input-number
-          v-model="formData.sort"
-          :min="0"
-          :max="999"
-        />
-      </el-form-item>
+    <!-- 排序 -->
+    <el-form-item
+      :label="t('dept.form.sort')"
+      prop="sort"
+    >
+      <el-input-number
+        v-model="formData.sort"
+        :min="0"
+        :max="999"
+      />
+    </el-form-item>
 
-      <!-- 状态 -->
-      <el-form-item
-        :label="t('dept.form.status')"
-        prop="status"
-      >
-        <el-radio-group v-model="formData.status">
-          <el-radio value="enabled">
-            {{ t('common.status.enabled') }}
-          </el-radio>
-          <el-radio value="disabled">
-            {{ t('common.status.disabled') }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
+    <!-- 状态 -->
+    <el-form-item
+      :label="t('dept.form.status')"
+      prop="status"
+    >
+      <el-radio-group v-model="formData.status">
+        <el-radio value="enabled">
+          {{ t('common.status.enabled') }}
+        </el-radio>
+        <el-radio value="disabled">
+          {{ t('common.status.disabled') }}
+        </el-radio>
+      </el-radio-group>
+    </el-form-item>
 
-      <!-- 部门负责人 -->
-      <el-form-item
-        :label="t('dept.form.leaderName')"
-        prop="leaderName"
-      >
-        <el-input
-          v-model="formData.leaderName"
-          maxlength="50"
-          :placeholder="t('dept.form.leaderNamePlaceholder')"
-        />
-      </el-form-item>
+    <!-- 部门负责人 -->
+    <el-form-item
+      :label="t('dept.form.leaderName')"
+      prop="leaderName"
+    >
+      <el-input
+        v-model="formData.leaderName"
+        maxlength="50"
+        :placeholder="t('dept.form.leaderNamePlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 联系电话 -->
-      <el-form-item
-        :label="t('dept.form.phone')"
-        prop="phone"
-      >
-        <el-input
-          v-model="formData.phone"
-          maxlength="20"
-          :placeholder="t('dept.form.phonePlaceholder')"
-        />
-      </el-form-item>
+    <!-- 联系电话 -->
+    <el-form-item
+      :label="t('dept.form.phone')"
+      prop="phone"
+    >
+      <el-input
+        v-model="formData.phone"
+        maxlength="20"
+        :placeholder="t('dept.form.phonePlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 邮箱 -->
-      <el-form-item
-        :label="t('dept.form.email')"
-        prop="email"
-      >
-        <el-input
-          v-model="formData.email"
-          maxlength="100"
-          :placeholder="t('dept.form.emailPlaceholder')"
-        />
-      </el-form-item>
+    <!-- 邮箱 -->
+    <el-form-item
+      :label="t('dept.form.email')"
+      prop="email"
+    >
+      <el-input
+        v-model="formData.email"
+        maxlength="100"
+        :placeholder="t('dept.form.emailPlaceholder')"
+      />
+    </el-form-item>
 
-      <!-- 描述 -->
-      <el-form-item
-        :label="t('dept.form.description')"
-        prop="description"
-      >
-        <el-input
-          v-model="formData.description"
-          type="textarea"
-          :rows="3"
-          maxlength="500"
-          show-word-limit
-          :placeholder="t('dept.form.descriptionPlaceholder')"
-        />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <el-button @click="emit('update:modelValue', false)">
-        {{ t('common.cancel') }}
-      </el-button>
-      <el-button
-        type="primary"
-        :loading="saving"
-        @click="handleSave"
-      >
-        {{ t('common.button.confirm') }}
-      </el-button>
-    </template>
-  </el-dialog>
+    <!-- 描述 -->
+    <el-form-item
+      :label="t('dept.form.description')"
+      prop="description"
+    >
+      <el-input
+        v-model="formData.description"
+        type="textarea"
+        :rows="3"
+        maxlength="500"
+        show-word-limit
+        :placeholder="t('dept.form.descriptionPlaceholder')"
+      />
+    </el-form-item>
+  </BaseFormDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import { useLocale } from '@/composables/useLocale'
 import { getDeptDetail, createDept, updateDept } from '@/api/basic/dept'
 import type { Dept, DeptCreateParams, DeptUpdateParams } from '@/types/basic'
+import BaseFormDialog from '@/components/common/BaseFormDialog.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -171,7 +156,6 @@ const emit = defineEmits<{
 
 const { t } = useLocale()
 
-const formRef = ref<FormInstance | null>(null)
 const saving = ref(false)
 
 // 是否是编辑模式
@@ -274,7 +258,7 @@ const loadDetail = async (id: string) => {
       formData.email = dept.email || ''
       formData.description = dept.description || ''
     }
-  } catch (error) {
+  } catch {
     ElMessage.error(t('common.error.request'))
   }
 }
@@ -295,19 +279,10 @@ const resetForm = () => {
 // 关闭弹窗
 const handleClose = () => {
   resetForm()
-  formRef.value?.resetFields()
 }
 
-// 保存
+// 保存（验证由 BaseFormDialog 处理）
 const handleSave = async () => {
-  if (!formRef.value) return
-
-  try {
-    await formRef.value.validate()
-  } catch {
-    return
-  }
-
   saving.value = true
   try {
     if (isEdit.value) {
@@ -330,7 +305,7 @@ const handleSave = async () => {
     }
     emit('update:modelValue', false)
     emit('success')
-  } catch (error) {
+  } catch {
     ElMessage.error(t('common.error.request'))
   } finally {
     saving.value = false

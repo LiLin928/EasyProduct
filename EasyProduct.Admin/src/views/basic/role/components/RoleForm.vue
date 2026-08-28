@@ -1,91 +1,77 @@
 <template>
-  <el-dialog
-    :model-value="visible"
+  <BaseFormDialog
+    :visible="visible"
     :title="isEdit ? t('basic.role.edit') : t('basic.role.add')"
+    :model="model"
+    :rules="rules"
+    :loading="loading"
     width="600px"
-    @update:model-value="handleClose"
+    @update:visible="handleClose"
+    @submit="handleSubmit"
   >
-    <el-form
-      ref="formRef"
-      :model="model"
-      :rules="rules"
-      label-width="100px"
+    <el-form-item
+      :label="t('basic.role.name')"
+      prop="name"
     >
-      <el-form-item
-        :label="t('basic.role.name')"
-        prop="name"
-      >
-        <el-input
-          v-model="model.name"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.role.code')"
-        prop="code"
-      >
-        <el-input
-          v-model="model.code"
-          :placeholder="t('common.inputPlaceholder')"
-          :disabled="isEdit"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.role.sort')"
-        prop="sort"
-      >
-        <el-input-number
-          v-model="model.sort"
-          :min="1"
-          :max="999"
-        />
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.role.status')"
-        prop="status"
-      >
-        <el-radio-group v-model="model.status">
-          <el-radio value="enabled">
-            {{ t('common.status.enabled') }}
-          </el-radio>
-          <el-radio value="disabled">
-            {{ t('common.status.disabled') }}
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item
-        :label="t('basic.role.remark')"
-        prop="remark"
-      >
-        <el-input
-          v-model="model.remark"
-          type="textarea"
-          :rows="3"
-          :placeholder="t('common.inputPlaceholder')"
-        />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="handleClose">
-        {{ t('common.cancel') }}
-      </el-button>
-      <el-button
-        type="primary"
-        :loading="loading"
-        @click="handleSubmit"
-      >
-        {{ t('common.confirm') }}
-      </el-button>
-    </template>
-  </el-dialog>
+      <el-input
+        v-model="model.name"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.role.code')"
+      prop="code"
+    >
+      <el-input
+        v-model="model.code"
+        :placeholder="t('common.inputPlaceholder')"
+        :disabled="isEdit"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.role.sort')"
+      prop="sort"
+    >
+      <el-input-number
+        v-model="model.sort"
+        :min="1"
+        :max="999"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.role.status')"
+      prop="status"
+    >
+      <el-radio-group v-model="model.status">
+        <el-radio value="enabled">
+          {{ t('common.status.enabled') }}
+        </el-radio>
+        <el-radio value="disabled">
+          {{ t('common.status.disabled') }}
+        </el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item
+      :label="t('basic.role.remark')"
+      prop="remark"
+    >
+      <el-input
+        v-model="model.remark"
+        type="textarea"
+        :rows="3"
+        :placeholder="t('common.inputPlaceholder')"
+      />
+    </el-form-item>
+  </BaseFormDialog>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import { createRole, updateRole, getRoleDetail } from '@/api/basic/role'
 import type { Role, RoleCreateParams } from '@/types/basic'
+import BaseFormDialog from '@/components/common/BaseFormDialog.vue'
 
 interface Props {
   visible: boolean
@@ -101,7 +87,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const formRef = ref<FormInstance>()
 const loading = ref(false)
 
 // 表单模型
@@ -132,7 +117,6 @@ const resetForm = (): void => {
     remark: '',
     menuIds: []
   })
-  formRef.value?.clearValidate()
 }
 
 // 监听 payload 变化，填充表单
@@ -151,7 +135,7 @@ watch(
           remark: detail.remark,
           menuIds: detail.menuIds || []
         })
-      } catch (error) {
+      } catch {
         // 加载失败
       }
     } else {
@@ -168,11 +152,8 @@ const handleClose = (): void => {
   resetForm()
 }
 
-// 提交表单
+// 提交表单（验证由 BaseFormDialog 处理）
 const handleSubmit = async (): Promise<void> => {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
-
   loading.value = true
   try {
     if (props.isEdit && props.payload) {

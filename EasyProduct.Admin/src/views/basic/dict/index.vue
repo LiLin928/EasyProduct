@@ -51,12 +51,10 @@
               align="center"
             >
               <template #default="{ row }">
-                <el-tag
-                  :type="row.status === 'enabled' ? 'success' : 'danger'"
-                  size="small"
-                >
-                  {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
-                </el-tag>
+                <BaseStatusTag
+                  :value="row.status"
+                  :options="ENABLED_DISABLED_STATUS"
+                />
               </template>
             </el-table-column>
             <el-table-column
@@ -139,12 +137,10 @@
                 align="center"
               >
                 <template #default="{ row }">
-                  <el-tag
-                    :type="row.status === 'enabled' ? 'success' : 'danger'"
-                    size="small"
-                  >
-                    {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
-                  </el-tag>
+                  <BaseStatusTag
+                    :value="row.status"
+                    :options="ENABLED_DISABLED_STATUS"
+                  />
                 </template>
               </el-table-column>
               <el-table-column
@@ -211,6 +207,8 @@ import {
   deleteDictData
 } from '@/api/basic/dict'
 import type { DictType, DictData } from '@/types/basic'
+import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
+import { ENABLED_DISABLED_STATUS } from '@/constants/status'
 import DictTypeFormDialog from './components/DictTypeFormDialog.vue'
 import DictDataFormDialog from './components/DictDataFormDialog.vue'
 
@@ -257,7 +255,7 @@ const loadTypeList = async (): Promise<void> => {
   try {
     const result = await getDictTypeList({ pageIndex: 1, pageSize: 1000 })
     typeList.value = result.list
-  } catch (error) {
+  } catch {
     // 错误已在拦截器处理
   } finally {
     typeLoading.value = false
@@ -273,7 +271,7 @@ const loadDataList = async (typeCode: string): Promise<void> => {
   try {
     const result = await getDictDataList({ typeCode, pageIndex: 1, pageSize: 1000 })
     dataList.value = result.list
-  } catch (error) {
+  } catch {
     dataList.value = []
   } finally {
     dataLoading.value = false
@@ -333,7 +331,7 @@ const handleDeleteType = async (type: DictType): Promise<void> => {
       dataList.value = []
     }
     loadTypeList()
-  } catch (error) {
+  } catch {
     // 用户取消或请求失败
   }
 }
@@ -383,7 +381,7 @@ const handleDeleteData = async (data: DictData): Promise<void> => {
     if (currentType.value) {
       loadDataList(currentType.value.code)
     }
-  } catch (error) {
+  } catch {
     // 用户取消或请求失败
   }
 }

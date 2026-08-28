@@ -250,7 +250,7 @@ const loadRoleList = async () => {
     const res = await getRoleList({ pageIndex: 1, pageSize: 1000 })
     roleList.value = res.list
   } catch (error) {
-    console.error('加载角色列表失败:', error)
+    console.error('Failed to load role list:', error)
   }
 }
 
@@ -266,7 +266,7 @@ const loadAnnouncementDetail = async () => {
     model.targetRoleIds = data.targetRoleIds || []
     model.content = data.content
   } catch (error) {
-    console.error('加载公告详情失败:', error)
+    console.error('Failed to load announcement detail:', error)
   }
 }
 
@@ -299,7 +299,7 @@ const handleSaveDraft = async () => {
     emit('success')
     handleClose()
   } catch (error) {
-    console.error('保存失败:', error)
+    console.error('Failed to save:', error)
   } finally {
     draftLoading.value = false
   }
@@ -334,7 +334,7 @@ const handlePublish = async () => {
     emit('success')
     handleClose()
   } catch (error) {
-    console.error('发布失败:', error)
+    console.error('Failed to publish:', error)
   } finally {
     publishLoading.value = false
   }

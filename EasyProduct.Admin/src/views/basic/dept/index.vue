@@ -185,12 +185,10 @@
                 align="center"
               >
                 <template #default="{ row }">
-                  <el-tag
-                    :type="row.status === 'enabled' ? 'success' : 'danger'"
-                    size="small"
-                  >
-                    {{ row.status === 'enabled' ? t('common.status.enabled') : t('common.status.disabled') }}
-                  </el-tag>
+                  <BaseStatusTag
+                    :value="row.status"
+                    :options="ENABLED_DISABLED_STATUS"
+                  />
                 </template>
               </el-table-column>
               <el-table-column
@@ -242,6 +240,8 @@ import { useLocale } from '@/composables/useLocale'
 import { getDeptTree, getDeptUsers, deleteDept } from '@/api/basic/dept'
 import type { Dept, User } from '@/types/basic'
 import DeptFormDialog from './components/DeptFormDialog.vue'
+import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
+import { ENABLED_DISABLED_STATUS } from '@/constants/status'
 
 const { t } = useLocale()
 
