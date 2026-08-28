@@ -53,5 +53,11 @@
   "crmPayment": "收付款管理",
   "crmArap": "应收应付台账",
   "crmFixedAsset": "固定资产管理",
-  "crmReversal": "冲销管理"
+  "crmReversal": "冲销管理",
+  "opsRoot": "运维管理",
+  "opsOperateLog": "操作日志",
+  "opsLoginLog": "登录日志",
+  "opsTask": "定时任务",
+  "opsTaskLog": "任务日志",
+  "opsLogQuery": "日志查询"
 }

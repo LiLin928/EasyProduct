@@ -53,5 +53,11 @@
   "crmPayment": "Payments",
   "crmArap": "AR/AP",
   "crmFixedAsset": "Fixed Assets",
-  "crmReversal": "Reversals"
+  "crmReversal": "Reversals",
+  "opsRoot": "Operations",
+  "opsOperateLog": "Operation Logs",
+  "opsLoginLog": "Login Logs",
+  "opsTask": "Scheduled Tasks",
+  "opsTaskLog": "Task Logs",
+  "opsLogQuery": "Log Query"
 }
