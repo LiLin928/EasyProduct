@@ -463,3 +463,49 @@ export const ASSET_CATEGORY_OPTIONS = [
   { value: 'it', labelKey: 'crm.fixedAsset.categoryIT' },
   { value: 'furniture', labelKey: 'crm.fixedAsset.categoryFurniture' },
 ] as const
+// ── 冲销 ──
+export type ReversalType = 'mall_refund' | 'sales_return' | 'purchase_return' | 'document_void'
+export type ReversalStatus = 'draft' | 'submitted' | 'approved' | 'rejected' | 'executed'
+
+export interface ReversalItem {
+  id: string
+  reversalId: string
+  skuCode: string
+  skuName: string
+  spec: string
+  unit: string
+  quantity: number
+  amount: number
+  reason: string
+}
+
+export interface Reversal {
+  id: string
+  reversalNo: string
+  type: ReversalType
+  sourceOrderType: string
+  sourceOrderNo: string
+  partyName: string
+  amount: number
+  reason: string
+  operator: string
+  status: ReversalStatus
+  items: ReversalItem[]
+  createdAt: string
+  updatedAt: string
+}
+
+export const REVERSAL_TYPE_OPTIONS = [
+  { value: 'mall_refund', labelKey: 'crm.reversal.typeMallRefund' },
+  { value: 'sales_return', labelKey: 'crm.reversal.typeSalesReturn' },
+  { value: 'purchase_return', labelKey: 'crm.reversal.typePurchaseReturn' },
+  { value: 'document_void', labelKey: 'crm.reversal.typeDocumentVoid' },
+] as const
+
+export const REVERSAL_STATUS_OPTIONS = [
+  { value: 'draft', labelKey: 'crm.reversal.statusDraft' },
+  { value: 'submitted', labelKey: 'crm.reversal.statusSubmitted' },
+  { value: 'approved', labelKey: 'crm.reversal.statusApproved' },
+  { value: 'rejected', labelKey: 'crm.reversal.statusRejected' },
+  { value: 'executed', labelKey: 'crm.reversal.statusExecuted' },
+] as const

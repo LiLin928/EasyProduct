@@ -52,5 +52,6 @@
   "crmInvoice": "发票管理",
   "crmPayment": "收付款管理",
   "crmArap": "应收应付台账",
-  "crmFixedAsset": "固定资产管理"
+  "crmFixedAsset": "固定资产管理",
+  "crmReversal": "冲销管理"
 }
