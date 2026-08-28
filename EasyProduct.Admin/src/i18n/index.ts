@@ -5,12 +5,14 @@ import enBasic from './en-US/basic.json'
 import enSite from './en-US/site.json'
 import enProduct from './en-US/product.json'
 import enMall from './en-US/mall.json'
+import enCrm from './en-US/crm.json'
 import zhCommon from './zh-CN/common.json'
 import zhMenu from './zh-CN/menu.json'
 import zhBasic from './zh-CN/basic.json'
 import zhSite from './zh-CN/site.json'
 import zhProduct from './zh-CN/product.json'
 import zhMall from './zh-CN/mall.json'
+import zhCrm from './zh-CN/crm.json'
 
 export const SUPPORT_LOCALES = ['zh-CN', 'en-US'] as const
 export type Locale = (typeof SUPPORT_LOCALES)[number]
@@ -18,8 +20,8 @@ export type Locale = (typeof SUPPORT_LOCALES)[number]
 const LOCALE_KEY = 'locale'
 
 const messages = {
-  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite, product: zhProduct, mall: zhMall },
-  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite, product: enProduct, mall: enMall },
+  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite, product: zhProduct, mall: zhMall, crm: zhCrm },
+  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite, product: enProduct, mall: enMall, crm: enCrm },
 }
 
 export const i18n = createI18n({
