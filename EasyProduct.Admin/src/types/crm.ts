@@ -313,7 +313,153 @@ export const PURCHASE_ORDER_STATUS_OPTIONS = [
    { value: 'high', labelKey: 'crm.stockAlert.typeHigh' },
  ] as const
 
- export const STOCK_ALERT_STATUS_OPTIONS = [
-   { value: 'pending', labelKey: 'crm.stockAlert.statusPending' },
-   { value: 'resolved', labelKey: 'crm.stockAlert.statusResolved' },
- ] as const
+export const STOCK_ALERT_STATUS_OPTIONS = [
+  { value: 'pending', labelKey: 'crm.stockAlert.statusPending' },
+  { value: 'resolved', labelKey: 'crm.stockAlert.statusResolved' },
+] as const
+
+// ── 发票 ──
+export type InvoiceType = 'output' | 'input'
+export type InvoiceStatus = 'draft' | 'issued' | 'voided'
+
+export interface Invoice {
+  id: string
+  invoiceNo: string
+  type: InvoiceType
+  orderType: 'sales' | 'purchase'
+  orderNo: string
+  partyName: string
+  amount: number
+  taxRate: number
+  taxAmount: number
+  total: number
+  issueDate: string
+  status: InvoiceStatus
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+export const INVOICE_TYPE_OPTIONS = [
+  { value: 'output', labelKey: 'crm.invoice.typeOutput' },
+  { value: 'input', labelKey: 'crm.invoice.typeInput' },
+] as const
+
+export const INVOICE_STATUS_OPTIONS = [
+  { value: 'draft', labelKey: 'crm.invoice.statusDraft' },
+  { value: 'issued', labelKey: 'crm.invoice.statusIssued' },
+  { value: 'voided', labelKey: 'crm.invoice.statusVoided' },
+] as const
+
+// ── 收付款 ──
+export type PaymentType = 'receipt' | 'payment'
+export type PaymentMethod = 'cash' | 'bank' | 'wechat'
+export type PaymentStatus = 'draft' | 'confirmed' | 'voided'
+
+export interface Payment {
+  id: string
+  paymentNo: string
+  type: PaymentType
+  orderType: 'sales' | 'purchase'
+  orderNo: string
+  partyName: string
+  amount: number
+  method: PaymentMethod
+  status: PaymentStatus
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+export const PAYMENT_TYPE_OPTIONS = [
+  { value: 'receipt', labelKey: 'crm.payment.typeReceipt' },
+  { value: 'payment', labelKey: 'crm.payment.typePayment' },
+] as const
+
+export const PAYMENT_METHOD_OPTIONS = [
+  { value: 'cash', labelKey: 'crm.payment.methodCash' },
+  { value: 'bank', labelKey: 'crm.payment.methodBank' },
+  { value: 'wechat', labelKey: 'crm.payment.methodWechat' },
+] as const
+
+export const PAYMENT_STATUS_OPTIONS = [
+  { value: 'draft', labelKey: 'crm.payment.statusDraft' },
+  { value: 'confirmed', labelKey: 'crm.payment.statusConfirmed' },
+  { value: 'voided', labelKey: 'crm.payment.statusVoided' },
+] as const
+
+// ── 应收应付台账 ──
+export type ArapAging = '0-30' | '31-60' | '61-90' | '90+'
+export type ArapStatus = 'settled' | 'unsettled'
+
+export interface Arap {
+  id: string
+  orderType: 'sales' | 'purchase'
+  orderNo: string
+  partyName: string
+  receivable: number
+  received: number
+  balance: number
+  aging: ArapAging
+  status: ArapStatus
+  createdAt: string
+}
+
+export interface ArapSummary {
+  totalReceivable: number
+  totalPayable: number
+  totalBalance: number
+}
+
+export const ARAP_AGING_OPTIONS = [
+  { value: '0-30', labelKey: 'crm.arap.aging0to30' },
+  { value: '31-60', labelKey: 'crm.arap.aging31to60' },
+  { value: '61-90', labelKey: 'crm.arap.aging61to90' },
+  { value: '90+', labelKey: 'crm.arap.aging90plus' },
+] as const
+
+export const ARAP_STATUS_OPTIONS = [
+  { value: 'settled', labelKey: 'crm.arap.statusSettled' },
+  { value: 'unsettled', labelKey: 'crm.arap.statusUnsettled' },
+] as const
+
+// ── 固定资产 ──
+export type FixedAssetStatus = 'active' | 'scrapped'
+
+export interface FixedAsset {
+  id: string
+  assetNo: string
+  name: string
+  category: string
+  originalValue: number
+  purchaseDate: string
+  depreciationMethod: 'straight-line'
+  salvageValue: number
+  usefulYears: number
+  currentValue: number
+  status: FixedAssetStatus
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AssetDepreciation {
+  id: string
+  assetId: string
+  period: string
+  depreciationAmount: number
+  accumulatedDepreciation: number
+  currentValue: number
+  createdAt: string
+}
+
+export const FIXED_ASSET_STATUS_OPTIONS = [
+  { value: 'active', labelKey: 'crm.fixedAsset.statusActive' },
+  { value: 'scrapped', labelKey: 'crm.fixedAsset.statusScrapped' },
+] as const
+
+export const ASSET_CATEGORY_OPTIONS = [
+  { value: 'electronic', labelKey: 'crm.fixedAsset.categoryElectronic' },
+  { value: 'it', labelKey: 'crm.fixedAsset.categoryIT' },
+  { value: 'furniture', labelKey: 'crm.fixedAsset.categoryFurniture' },
+] as const
