@@ -91,3 +91,48 @@ export const TAX_RATE_STATUS_OPTIONS = [
   { value: 'active', labelKey: 'crm.taxRate.statusActive' },
   { value: 'inactive', labelKey: 'crm.taxRate.statusInactive' },
 ] as const
+
+// ── 销售订单 ──
+export type SalesOrderStatus = 'draft' | 'confirmed' | 'shipped' | 'completed' | 'cancelled'
+
+export interface SalesOrderItem {
+  id: string
+  orderId: string
+  productName: string
+  spec: string
+  price: number
+  quantity: number
+  taxRateCode: string
+  taxRate: number
+  amount: number
+  taxAmount: number
+  totalAmount: number
+}
+
+export interface SalesOrder {
+  id: string
+  orderNo: string
+  customerId: string
+  customerName: string
+  salesPersonName: string
+  currencyCode: string
+  currencySymbol: string
+  paymentTerms: string
+  deliveryDate: string
+  status: SalesOrderStatus
+  items: SalesOrderItem[]
+  subtotalAmount: number
+  taxAmount: number
+  totalAmount: number
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+export const SALES_ORDER_STATUS_OPTIONS = [
+  { value: 'draft', labelKey: 'crm.salesOrder.statusDraft' },
+  { value: 'confirmed', labelKey: 'crm.salesOrder.statusConfirmed' },
+  { value: 'shipped', labelKey: 'crm.salesOrder.statusShipped' },
+  { value: 'completed', labelKey: 'crm.salesOrder.statusCompleted' },
+  { value: 'cancelled', labelKey: 'crm.salesOrder.statusCancelled' },
+] as const

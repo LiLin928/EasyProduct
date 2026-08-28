@@ -37,6 +37,7 @@
   "crmSupplier": "Suppliers",
   "crmCurrency": "Currencies",
   "crmTaxRate": "Tax Rates",
+  "crmSalesOrder": "Sales Orders",
   "workflow": "Workflow",
   "report": "Report",
   "ops": "Ops",
