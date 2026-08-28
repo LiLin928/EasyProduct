@@ -68,5 +68,6 @@
   "workflowMyApply": "My Applications",
   "workflowTodo": "My Approvals",
   "workflowDone": "Completed Tasks",
-  "workflowInstance": "Instances"
+  "workflowInstance": "Instances",
+  "workflowPublish": "Process Publish"
 }

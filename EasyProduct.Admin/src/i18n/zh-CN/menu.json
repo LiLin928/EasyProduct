@@ -68,5 +68,6 @@
   "workflowMyApply": "我的申请",
   "workflowTodo": "待我审批",
   "workflowDone": "已办事项",
-  "workflowInstance": "流程实例"
+  "workflowInstance": "流程实例",
+  "workflowPublish": "流程发布"
 }

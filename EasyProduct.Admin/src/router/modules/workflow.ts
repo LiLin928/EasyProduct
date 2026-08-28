@@ -14,6 +14,12 @@ export const workflowRoutes: RouteRecordRaw[] = [
         meta: { title: 'menu.workflowMyApply', icon: 'EditPen' },
       },
       {
+        path: 'publish',
+        name: 'workflow-publish',
+        component: () => import('@/views/workflow/publish/index.vue'),
+        meta: { title: 'menu.workflowPublish', icon: 'Promotion' },
+      },
+      {
         path: 'todo',
         name: 'workflow-todo',
         component: () => import('@/views/workflow/todo/index.vue'),
