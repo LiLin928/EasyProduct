@@ -291,6 +291,37 @@ export interface DesktopTodo {
   createTime: string
 }
 
+/** 工作台经营概览 */
+export interface DashboardOverview {
+  salesAmount: number
+  purchaseAmount: number
+  profitAmount: number
+  trend: { month: string; sales: number; purchase: number; profit: number }[]
+}
+
+/** 工作台 KPI */
+export interface DashboardKpi {
+  customerGrowth: { month: string; value: number }[]
+  orderConversion: { name: string; value: number }[]
+  inventoryTurnover: { month: string; value: number }[]
+}
+
+/** 工作台待办计数 */
+export interface DashboardTodoCount {
+  pendingApproval: number
+  processingOrder: number
+  lowStockAlert: number
+}
+
+/** 工作台预警 */
+export interface DashboardAlert {
+  id: string
+  type: 'stock' | 'ar' | 'order'
+  title: string
+  level: 'warning' | 'danger'
+  createdAt: string
+}
+
 // ==================== 个人中心 ====================
 
 /** 当前用户信息（个人中心用） */

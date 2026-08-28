@@ -260,6 +260,29 @@
       "title": "标题",
       "type": "类型",
       "createTime": "时间"
+    },
+    "widget": {
+      "overview": "经营概览",
+      "salesAmount": "销售额",
+      "purchaseAmount": "采购额",
+      "profitAmount": "利润",
+      "kpiCustomerGrowth": "客户增长",
+      "kpiOrderConversion": "订单转化",
+      "kpiInventoryTurnover": "库存周转",
+      "todoCount": "待办计数",
+      "todoApproval": "待审批",
+      "todoOrder": "处理中订单",
+      "todoStock": "库存预警",
+      "alerts": "预警列表",
+      "alertType": "类型",
+      "alertType_stock": "库存",
+      "alertType_ar": "应收",
+      "alertType_order": "订单",
+      "alertLevel": "级别",
+      "alertLevel_warning": "警告",
+      "alertLevel_danger": "紧急",
+      "alertTitle": "标题",
+      "alertTime": "时间"
     }
   },
   "profile": {

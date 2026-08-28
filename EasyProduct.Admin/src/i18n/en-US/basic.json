@@ -260,6 +260,29 @@
       "title": "Title",
       "type": "Type",
       "createTime": "Time"
+    },
+    "widget": {
+      "overview": "Business Overview",
+      "salesAmount": "Sales",
+      "purchaseAmount": "Purchase",
+      "profitAmount": "Profit",
+      "kpiCustomerGrowth": "Customer Growth",
+      "kpiOrderConversion": "Order Conversion",
+      "kpiInventoryTurnover": "Inventory Turnover",
+      "todoCount": "Todo Count",
+      "todoApproval": "Pending Approval",
+      "todoOrder": "Processing Orders",
+      "todoStock": "Low Stock Alert",
+      "alerts": "Alerts",
+      "alertType": "Type",
+      "alertType_stock": "Stock",
+      "alertType_ar": "AR",
+      "alertType_order": "Order",
+      "alertLevel": "Level",
+      "alertLevel_warning": "Warning",
+      "alertLevel_danger": "Critical",
+      "alertTitle": "Title",
+      "alertTime": "Time"
     }
   },
   "profile": {
