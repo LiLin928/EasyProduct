@@ -37,6 +37,12 @@ export const crmRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/crm/sales-order/index.vue'),
         meta: { title: 'menu.crmSalesOrder', icon: 'ShoppingCart' },
       },
+      {
+        path: 'purchase-order',
+        name: 'crm-purchase-order',
+        component: () => import('@/views/crm/purchase-order/index.vue'),
+        meta: { title: 'menu.crmPurchaseOrder', icon: 'ShoppingBag' },
+      },
     ],
   },
 ]

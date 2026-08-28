@@ -38,6 +38,7 @@
   "crmCurrency": "Currencies",
   "crmTaxRate": "Tax Rates",
   "crmSalesOrder": "Sales Orders",
+  "crmPurchaseOrder": "Purchase Orders",
   "workflow": "Workflow",
   "report": "Report",
   "ops": "Ops",

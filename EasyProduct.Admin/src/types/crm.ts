@@ -136,3 +136,48 @@ export const SALES_ORDER_STATUS_OPTIONS = [
   { value: 'completed', labelKey: 'crm.salesOrder.statusCompleted' },
   { value: 'cancelled', labelKey: 'crm.salesOrder.statusCancelled' },
 ] as const
+
+// ── 采购订单 ──
+export type PurchaseOrderStatus = 'draft' | 'confirmed' | 'received' | 'completed' | 'cancelled'
+
+export interface PurchaseOrderItem {
+  id: string
+  orderId: string
+  productName: string
+  spec: string
+  price: number
+  quantity: number
+  taxRateCode: string
+  taxRate: number
+  amount: number
+  taxAmount: number
+  totalAmount: number
+}
+
+export interface PurchaseOrder {
+  id: string
+  orderNo: string
+  supplierId: string
+  supplierName: string
+  buyerName: string
+  currencyCode: string
+  currencySymbol: string
+  paymentTerms: string
+  deliveryDate: string
+  status: PurchaseOrderStatus
+  items: PurchaseOrderItem[]
+  subtotalAmount: number
+  taxAmount: number
+  totalAmount: number
+  remark: string
+  createdAt: string
+  updatedAt: string
+}
+
+export const PURCHASE_ORDER_STATUS_OPTIONS = [
+  { value: 'draft', labelKey: 'crm.purchaseOrder.statusDraft' },
+  { value: 'confirmed', labelKey: 'crm.purchaseOrder.statusConfirmed' },
+  { value: 'received', labelKey: 'crm.purchaseOrder.statusReceived' },
+  { value: 'completed', labelKey: 'crm.purchaseOrder.statusCompleted' },
+  { value: 'cancelled', labelKey: 'crm.purchaseOrder.statusCancelled' },
+] as const

@@ -38,6 +38,7 @@
   "crmCurrency": "币种管理",
   "crmTaxRate": "税率管理",
   "crmSalesOrder": "销售订单",
+  "crmPurchaseOrder": "采购订单",
   "workflow": "工作流",
   "report": "报表管理",
   "ops": "运维日志",
