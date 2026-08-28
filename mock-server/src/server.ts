@@ -45,6 +45,12 @@ import { adminSiteContactRouter } from './routes/admin/site-contact.js'
 import { adminProductCategoryRouter } from './routes/admin/product-category.js'
 import { adminProductSpuRouter } from './routes/admin/product-spu.js'
 import { adminProductChannelRouter } from './routes/admin/product-channel.js'
+import { adminMallMemberRouter } from './routes/admin/mall-member.js'
+import { adminMallLevelRouter } from './routes/admin/mall-level.js'
+import { adminMallPointsRouter } from './routes/admin/mall-points.js'
+import { adminMallCouponRouter } from './routes/admin/mall-coupon.js'
+import { adminMallOrderRouter } from './routes/admin/mall-order.js'
+import { adminMallPaymentRouter } from './routes/admin/mall-payment.js'
 import { siteHomeRouter } from './routes/site/home.js'
 import { siteProductRouter } from './routes/site/product.js'
 import { siteCategoryRouter } from './routes/site/category.js'
@@ -59,7 +65,7 @@ import { appAuthRouter } from './routes/app/auth.js'
 import { appAnnouncementRouter } from './routes/app/announcement.js'
 import { i18nRouter } from './routes/i18n.js'
 
- app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter)
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter)
 app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
 app.use('/api/app', appGuard, appAuthRouter, appAnnouncementRouter)
 app.use('/api/i18n', i18nRouter)
