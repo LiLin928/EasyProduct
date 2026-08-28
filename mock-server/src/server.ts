@@ -66,6 +66,7 @@ import { adminCrmInvoiceRouter } from './routes/admin/crm-invoice.js'
 import { adminCrmPaymentRouter } from './routes/admin/crm-payment.js'
 import { adminCrmArapRouter } from './routes/admin/crm-arap.js'
 import { adminCrmFixedAssetRouter } from './routes/admin/crm-fixed-asset.js'
+import { adminCrmReversalRouter } from './routes/admin/crm-reversal.js'
 import { siteHomeRouter } from './routes/site/home.js'
 import { siteProductRouter } from './routes/site/product.js'
 import { siteCategoryRouter } from './routes/site/category.js'
@@ -80,7 +81,7 @@ import { appAuthRouter } from './routes/app/auth.js'
 import { appAnnouncementRouter } from './routes/app/announcement.js'
 import { i18nRouter } from './routes/i18n.js'
 
-app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter)
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter, adminCrmReversalRouter)
 app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
 app.use('/api/app', appGuard, appAuthRouter, appAnnouncementRouter)
 app.use('/api/i18n', i18nRouter)
