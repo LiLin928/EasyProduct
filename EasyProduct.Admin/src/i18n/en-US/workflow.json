@@ -1,0 +1,100 @@
+{
+  "definition": {
+    "statusDraft": "Draft",
+    "statusPublished": "Published",
+    "statusDisabled": "Disabled",
+    "name": "Process Name",
+    "code": "Process Code",
+    "category": "Category",
+    "version": "Version"
+  },
+  "instance": {
+    "statusRunning": "Running",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "statusCancelled": "Cancelled",
+    "title": "Title",
+    "definitionName": "Process",
+    "definitionCode": "Code",
+    "businessId": "Business ID",
+    "businessType": "Business Type",
+    "applicantName": "Applicant",
+    "currentNode": "Current Node",
+    "status": "Status",
+    "createdAt": "Created At",
+    "finishedAt": "Finished At",
+    "detail": "Instance Detail",
+    "history": "Approval History",
+    "searchTitle": "Title",
+    "searchStatus": "Status",
+    "searchApplicant": "Applicant",
+    "searchDefinition": "Process"
+  },
+  "task": {
+    "statusPending": "Pending",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "statusTransferred": "Transferred",
+    "instanceTitle": "Title",
+    "definitionName": "Process",
+    "nodeName": "Node",
+    "applicantName": "Applicant",
+    "comment": "Comment",
+    "status": "Status",
+    "createdAt": "Created At",
+    "finishedAt": "Finished At",
+    "approve": "Approve",
+    "reject": "Reject",
+    "transfer": "Transfer",
+    "searchInstanceTitle": "Title",
+    "searchDefinition": "Process",
+    "searchStatus": "Status"
+  },
+  "history": {
+    "actionSubmit": "Submit",
+    "actionApprove": "Approve",
+    "actionReject": "Reject",
+    "actionTransfer": "Transfer",
+    "actionCancel": "Cancel",
+    "nodeName": "Node",
+    "assigneeName": "Approver",
+    "action": "Action",
+    "comment": "Comment",
+    "createdAt": "Time"
+  },
+  "myApply": {
+    "title": "My Applications",
+    "add": "New Application",
+    "cancel": "Cancel",
+    "cancelConfirm": "Are you sure to cancel this application?",
+    "cancelSuccess": "Cancelled successfully",
+    "searchTitle": "Title",
+    "searchStatus": "Status",
+    "searchBusinessType": "Business Type",
+    "form": {
+      "definition": "Process Definition",
+      "definitionPlaceholder": "Select a process definition",
+      "title": "Title",
+      "titlePlaceholder": "Enter application title",
+      "businessType": "Business Type",
+      "businessTypePlaceholder": "Enter business type",
+      "formData": "Form Data",
+      "formDataPlaceholder": "Enter form data"
+    }
+  },
+  "todo": {
+    "title": "My Approvals",
+    "approveSuccess": "Approved successfully",
+    "rejectSuccess": "Rejected successfully",
+    "transferSuccess": "Transferred successfully",
+    "approveConfirm": "Are you sure to approve this application?",
+    "rejectConfirm": "Are you sure to reject this application?",
+    "commentRequired": "Please enter a comment",
+    "commentPlaceholder": "Enter your comment",
+    "approveBtn": "Approve",
+    "rejectBtn": "Reject"
+  },
+  "done": {
+    "title": "Completed Tasks"
+  }
+}

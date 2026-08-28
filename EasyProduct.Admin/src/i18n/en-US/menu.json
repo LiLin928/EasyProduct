@@ -63,5 +63,10 @@
   "opsLoginLog": "Login Logs",
   "opsTask": "Scheduled Tasks",
   "opsTaskLog": "Task Logs",
-  "opsLogQuery": "Log Query"
+  "opsLogQuery": "Log Query",
+  "workflowRoot": "Workflow",
+  "workflowMyApply": "My Applications",
+  "workflowTodo": "My Approvals",
+  "workflowDone": "Completed Tasks",
+  "workflowInstance": "Instances"
 }

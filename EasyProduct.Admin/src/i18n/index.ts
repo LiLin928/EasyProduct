@@ -8,6 +8,7 @@ import enMall from './en-US/mall.json'
 import enCrm from './en-US/crm.json'
 import enOps from './en-US/ops.json'
 import enReport from './en-US/report.json'
+import enWorkflow from './en-US/workflow.json'
 import zhCommon from './zh-CN/common.json'
 import zhMenu from './zh-CN/menu.json'
 import zhBasic from './zh-CN/basic.json'
@@ -17,6 +18,7 @@ import zhMall from './zh-CN/mall.json'
 import zhCrm from './zh-CN/crm.json'
 import zhOps from './zh-CN/ops.json'
 import zhReport from './zh-CN/report.json'
+import zhWorkflow from './zh-CN/workflow.json'
 
 export const SUPPORT_LOCALES = ['zh-CN', 'en-US'] as const
 export type Locale = (typeof SUPPORT_LOCALES)[number]
@@ -24,8 +26,8 @@ export type Locale = (typeof SUPPORT_LOCALES)[number]
 const LOCALE_KEY = 'locale'
 
 const messages = {
-  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite, product: zhProduct, mall: zhMall, crm: zhCrm, ops: zhOps, report: zhReport },
-  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite, product: enProduct, mall: enMall, crm: enCrm, ops: enOps, report: enReport },
+  'zh-CN': { common: zhCommon, menu: zhMenu, basic: zhBasic, site: zhSite, product: zhProduct, mall: zhMall, crm: zhCrm, ops: zhOps, report: zhReport, workflow: zhWorkflow },
+  'en-US': { common: enCommon, menu: enMenu, basic: enBasic, site: enSite, product: enProduct, mall: enMall, crm: enCrm, ops: enOps, report: enReport, workflow: enWorkflow },
 }
 
 export const i18n = createI18n({
@@ -62,3 +64,4 @@ export function setLocale(locale: Locale): void {
 
 /** 供非组件上下文（如 utils/request）使用的翻译函数 */
 export const tStandalone = (key: string): string => i18n.global.t(key)
+

@@ -63,5 +63,10 @@
   "opsLoginLog": "登录日志",
   "opsTask": "定时任务",
   "opsTaskLog": "任务日志",
-  "opsLogQuery": "日志查询"
+  "opsLogQuery": "日志查询",
+  "workflowRoot": "工作流管理",
+  "workflowMyApply": "我的申请",
+  "workflowTodo": "待我审批",
+  "workflowDone": "已办事项",
+  "workflowInstance": "流程实例"
 }
