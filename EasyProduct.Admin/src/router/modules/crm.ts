@@ -43,6 +43,37 @@ export const crmRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/crm/purchase-order/index.vue'),
         meta: { title: 'menu.crmPurchaseOrder', icon: 'ShoppingBag' },
       },
+
+      {
+        path: 'warehouse',
+        name: 'crm-warehouse',
+        component: () => import('@/views/crm/warehouse/index.vue'),
+        meta: { title: 'menu.crmWarehouse', icon: 'House' },
+      },
+      {
+        path: 'stock',
+        name: 'crm-stock',
+        component: () => import('@/views/crm/stock/index.vue'),
+        meta: { title: 'menu.crmStock', icon: 'Box' },
+      },
+      {
+        path: 'stock-record',
+        name: 'crm-stock-record',
+        component: () => import('@/views/crm/stock-record/index.vue'),
+        meta: { title: 'menu.crmStockRecord', icon: 'Sort' },
+      },
+      {
+        path: 'stock-check',
+        name: 'crm-stock-check',
+        component: () => import('@/views/crm/stock-check/index.vue'),
+        meta: { title: 'menu.crmStockCheck', icon: 'Scale' },
+      },
+      {
+        path: 'stock-alert',
+        name: 'crm-stock-alert',
+        component: () => import('@/views/crm/stock-alert/index.vue'),
+        meta: { title: 'menu.crmStockAlert', icon: 'Warning' },
+      },
     ],
   },
 ]

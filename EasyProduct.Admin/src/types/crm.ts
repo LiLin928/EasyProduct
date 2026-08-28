@@ -178,6 +178,142 @@ export const PURCHASE_ORDER_STATUS_OPTIONS = [
   { value: 'draft', labelKey: 'crm.purchaseOrder.statusDraft' },
   { value: 'confirmed', labelKey: 'crm.purchaseOrder.statusConfirmed' },
   { value: 'received', labelKey: 'crm.purchaseOrder.statusReceived' },
-  { value: 'completed', labelKey: 'crm.purchaseOrder.statusCompleted' },
-  { value: 'cancelled', labelKey: 'crm.purchaseOrder.statusCancelled' },
+ { value: 'completed', labelKey: 'crm.purchaseOrder.statusCompleted' },
+ { value: 'cancelled', labelKey: 'crm.purchaseOrder.statusCancelled' },
 ] as const
+
+ // ── 仓库 ──
+ export interface Warehouse {
+   id: string
+   code: string
+   name: string
+   address: string
+   manager: string
+   phone: string
+   status: 'active' | 'inactive'
+   remark: string
+   createdAt: string
+   updatedAt: string
+ }
+
+ export const WAREHOUSE_STATUS_OPTIONS = [
+   { value: 'active', labelKey: 'crm.warehouse.statusActive' },
+   { value: 'inactive', labelKey: 'crm.warehouse.statusInactive' },
+ ] as const
+
+ // ── 库存 ──
+ export interface Stock {
+   id: string
+   warehouseId: string
+   warehouseName: string
+   skuCode: string
+   skuName: string
+   spec: string
+   unit: string
+   available: number
+   locked: number
+   total: number
+   minLimit: number
+   maxLimit: number
+   updatedAt: string
+ }
+
+ // ── 出入库流水 ──
+ export type StockRecordType = 'in' | 'out'
+ export type StockRecordSourceType = 'purchase_in' | 'sales_out' | 'mall_out' | 'check_adjust' | 'reversal_return'
+
+ export interface StockRecord {
+   id: string
+   warehouseId: string
+   warehouseName: string
+   skuCode: string
+   skuName: string
+   spec: string
+   unit: string
+   type: StockRecordType
+   sourceType: StockRecordSourceType
+   sourceOrderNo: string
+   quantity: number
+   operator: string
+   remark: string
+   createdAt: string
+ }
+
+ export const STOCK_RECORD_SOURCE_OPTIONS = [
+   { value: 'purchase_in', labelKey: 'crm.stockRecord.sourcePurchaseIn' },
+   { value: 'sales_out', labelKey: 'crm.stockRecord.sourceSalesOut' },
+   { value: 'mall_out', labelKey: 'crm.stockRecord.sourceMallOut' },
+   { value: 'check_adjust', labelKey: 'crm.stockRecord.sourceCheckAdjust' },
+   { value: 'reversal_return', labelKey: 'crm.stockRecord.sourceReversalReturn' },
+ ] as const
+
+ export const STOCK_RECORD_TYPE_MAP: Record<string, { label: string; type: '' | 'success' | 'warning' | 'info' | 'danger' }> = {
+   in: { label: 'crm.stockRecord.typeIn', type: 'success' },
+   out: { label: 'crm.stockRecord.typeOut', type: 'warning' },
+ }
+
+ // ── 盘点 ──
+ export type StockCheckStatus = 'draft' | 'counting' | 'completed'
+
+ export interface StockCheckItem {
+   id: string
+   checkId: string
+   skuCode: string
+   skuName: string
+   spec: string
+   unit: string
+   systemQty: number
+   countedQty: number
+   diff: number
+ }
+
+ export interface StockCheck {
+   id: string
+   checkNo: string
+   warehouseId: string
+   warehouseName: string
+   checker: string
+   checkDate: string
+   status: StockCheckStatus
+   remark: string
+   items: StockCheckItem[]
+   createdAt: string
+   updatedAt: string
+ }
+
+ export const STOCK_CHECK_STATUS_OPTIONS = [
+   { value: 'draft', labelKey: 'crm.stockCheck.statusDraft' },
+   { value: 'counting', labelKey: 'crm.stockCheck.statusCounting' },
+   { value: 'completed', labelKey: 'crm.stockCheck.statusCompleted' },
+ ] as const
+
+ // ── 库存预警 ──
+ export type StockAlertType = 'low' | 'high'
+ export type StockAlertStatus = 'pending' | 'resolved'
+
+ export interface StockAlert {
+   id: string
+   warehouseId: string
+   warehouseName: string
+   skuCode: string
+   skuName: string
+   spec: string
+   available: number
+   minLimit: number
+   maxLimit: number
+   alertType: StockAlertType
+   status: StockAlertStatus
+   createdAt: string
+   resolvedAt: string | null
+   remark: string
+ }
+
+ export const STOCK_ALERT_TYPE_OPTIONS = [
+   { value: 'low', labelKey: 'crm.stockAlert.typeLow' },
+   { value: 'high', labelKey: 'crm.stockAlert.typeHigh' },
+ ] as const
+
+ export const STOCK_ALERT_STATUS_OPTIONS = [
+   { value: 'pending', labelKey: 'crm.stockAlert.statusPending' },
+   { value: 'resolved', labelKey: 'crm.stockAlert.statusResolved' },
+ ] as const
