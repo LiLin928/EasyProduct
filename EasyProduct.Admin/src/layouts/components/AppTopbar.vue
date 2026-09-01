@@ -1,11 +1,8 @@
 <template>
   <div class="app-topbar">
-    <el-button
-      text
-      @click="appStore.toggleSidebar()"
-    >
-      {{ appStore.sidebarCollapsed ? '>' : '<' }}
-    </el-button>
+    <div class="app-topbar__left">
+      <!-- 面包屑或标题区域 -->
+    </div>
     <div class="app-topbar__right">
       <el-switch
         :model-value="appStore.locale === 'zh-CN'"
@@ -13,12 +10,6 @@
         :inactive-text="t('common.locale.enUS')"
         @change="handleLocaleChange"
       />
-      <el-button
-        text
-        @click="appStore.toggleTheme()"
-      >
-        {{ appStore.theme }}
-      </el-button>
       <el-button
         text
         @click="router.push('/profile')"
@@ -62,11 +53,17 @@ const handleLogout = () => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
+
+  &__left {
+    display: flex;
+    align-items: center;
+  }
 
   &__right {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: -md;
   }
 
   &__user {

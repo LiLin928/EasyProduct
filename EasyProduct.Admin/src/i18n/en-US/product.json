@@ -163,5 +163,21 @@
       "toggleSuccess": "Publish status updated successfully",
       "sortSuccess": "Sort updated successfully"
     }
+  },
+  "spec": {
+    "removeGroup": "Remove Spec",
+    "addGroup": "Add Spec",
+    "title": "Specs Management",
+    "addValue": "Add Spec Value"
+  },
+  "sku": {
+    "specValues": "Spec Combination",
+    "stock": "Stock",
+    "b2bPrice": "B2B Price",
+    "title": "SKU Management",
+    "costPrice": "Cost Price",
+    "barcode": "Barcode",
+    "memberPrice": "Member Price",
+    "retailPrice": "Retail Price"
   }
 }

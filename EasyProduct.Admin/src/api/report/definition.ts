@@ -15,16 +15,19 @@ export const getDefinitionList = (params: DefinitionQuery) =>
   get<PageResult<ReportDefinition>>('/api/admin/rpt/definition/list', params)
 
 export const getDefinitionById = (id: string) =>
-  get<ReportDefinition>(`/api/admin/rpt/definition/${id}`)
+  get<ReportDefinition>("/api/admin/rpt/definition/" + id)
+
+export const getDefinitionByCode = (code: string) =>
+  get<ReportDefinition>("/api/admin/rpt/definition/code/" + code)
 
 export const createDefinition = (data: Partial<ReportDefinition>) =>
   post<{ id: string }>('/api/admin/rpt/definition', data)
 
 export const updateDefinition = (id: string, data: Partial<ReportDefinition>) =>
-  put<null>(`/api/admin/rpt/definition/${id}`, data)
+  put<null>("/api/admin/rpt/definition/" + id, data)
 
 export const deleteDefinition = (id: string) =>
-  del<null>(`/api/admin/rpt/definition/${id}`)
+  del<null>("/api/admin/rpt/definition/" + id)
 
 export const previewDefinition = (id: string) =>
-  post<{ columns: Array<{ field: string; label: string }>; rows: Record<string, unknown>[] }>(`/api/admin/rpt/definition/${id}/preview`)
+  post<{ columns: Array<{ field: string; label: string }>; rows: Record<string, unknown>[] }>("/api/admin/rpt/definition/" + id + "/preview")

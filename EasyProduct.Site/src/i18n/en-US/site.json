@@ -1,6 +1,11 @@
 {
-  "home": { "newsTitle": "News", "moreNews": "More" },
-  "notFound": { "back": "Back to Home" },
+  "home": {
+    "newsTitle": "News",
+    "moreNews": "More"
+  },
+  "notFound": {
+    "back": "Back to Home"
+  },
   "products": {
     "title": "Products",
     "detail": "Product Detail",
@@ -47,5 +52,20 @@
     },
     "views": "views",
     "downloadAttachment": "Download Attachment"
+  },
+  "contact": {
+    "companyName": "Company Name",
+    "content": "Message",
+    "workingHours": "Working Hours",
+    "email": "Email",
+    "phone": "Phone",
+    "contactName": "Contact Person",
+    "form": "Contact Form",
+    "address": "Address",
+    "success": "Submitted successfully, we will contact you soon",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "info": "Contact Information",
+    "title": "Contact Us"
   }
 }

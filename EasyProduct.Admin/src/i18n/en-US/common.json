@@ -1,44 +1,89 @@
 {
-  "app": { "name": "EasyProduct" },
-  "button": { "add": "Add", "edit": "Edit", "delete": "Delete", "search": "Search", "reset": "Reset", "confirm": "OK", "cancel": "Cancel" },
+  "app": {
+    "name": "EasyProduct"
+  },
+  "button": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "batchDelete": "Batch Delete",
+    "search": "Search",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
   "add": "Add",
   "edit": "Edit",
   "delete": "Delete",
   "batchDelete": "Batch Delete",
   "search": "Search",
   "reset": "Reset",
-  "confirm": "OK",
+  "confirm": "Confirm",
   "cancel": "Cancel",
   "actions": "Actions",
   "view": "View",
+  "detail": "Detail",
   "close": "Close",
-  "tip": "Notice",
-  "tips": "Notice",
-  "confirm": { "delete": "Delete this record?" },
-  "deleteConfirm": "Delete this record?",
+  "tip": "Tip",
+  "tips": "Tips",
+  "message": {
+    "confirmDelete": "Are you sure you want to delete this record?"
+  },
+  "deleteConfirm": "Are you sure you want to delete this record?",
   "deleteSuccess": "Deleted successfully",
-"success": "Success",
-"yes": "Yes",
-"no": "No",
-"required": "Required",
-  "inputPlaceholder": "Please input",
+  "success": "Operation successful",
+  "yes": "Yes",
+  "no": "No",
+  "required": "This field is required",
+  "inputPlaceholder": "Please enter",
   "selectPlaceholder": "Please select",
   "startDate": "Start Date",
   "endDate": "End Date",
-  "emailFormat": "Invalid email format",
-  "status": { "enabled": "Enabled", "disabled": "Disabled" },
-  "dict": { "customerType": { "b2b": "B2B Customer", "retail": "Retail Member" } },
-  "login": { "title": "Sign In", "userName": "Username", "password": "Password", "submit": "Sign In", "logout": "Sign Out" },
-  "pager": { "total": "{total} items" },
-  "placeholder": "Coming soon",
-  "locale": { "zhCN": "中文", "enUS": "EN" },
-  "error": { "tokenExpired": "Session expired, please sign in again", "forbidden": "Permission denied", "network": "Network error", "request": "Request failed" },
+  "emailFormat": "Please enter a valid email address",
+  "status": {
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "dict": {
+    "customerType": {
+      "b2b": "B2B Customer",
+      "retail": "Retail Member"
+    }
+  },
+  "login": {
+    "title": "Login",
+    "userName": "Username",
+    "password": "Password",
+    "submit": "Login",
+    "logout": "Logout"
+  },
+  "pager": {
+    "total": "Total {total} items"
+  },
+  "placeholder": "Module under construction",
+  "comingSoon": "Coming Soon",
+  "locale": {
+    "zhCN": "中文",
+    "enUS": "EN"
+  },
+  "error": {
+    "tokenExpired": "Session expired, please log in again",
+    "forbidden": "No permission",
+    "network": "Network error",
+    "request": "Request failed"
+  },
   "upload": {
     "clickToUpload": "Click to upload",
-    "reupload": "Re-upload",
+    "reupload": "Reupload",
     "remove": "Remove",
     "oversize": "File size cannot exceed {size}MB"
   },
-  "richText": { "placeholder": "Please enter content" }
-  , "loadFailed": "Failed to load"
+  "richText": {
+    "placeholder": "Please enter content"
+  },
+  "loadFailed": "Failed to load",
+  "tagsView": {
+    "closeOthers": "Close Others",
+    "closeAll": "Close All"
+  }
 }

@@ -75,8 +75,6 @@
               v-model="row.visible"
               :active-text="t('basic.menu.visibleLabel')"
               :inactive-text="t('basic.menu.hiddenLabel')"
-              :loading="isMenuLoading(row.id, 'visible')"
-              :before-change="() => !isMenuLoading(row.id, 'visible')"
               @change="handleVisibleChange(row)"
             />
           </template>
@@ -94,8 +92,6 @@
               inactive-value="disabled"
               :active-text="t('basic.menu.enabled')"
               :inactive-text="t('basic.menu.disabled')"
-              :loading="isMenuLoading(row.id, 'status')"
-              :before-change="() => !isMenuLoading(row.id, 'status')"
               @change="handleStatusChange(row)"
             />
           </template>
@@ -173,20 +169,6 @@ const { t } = useI18n()
 const loading = ref(false)
 const menuTree = ref<Menu[]>([])
 const isExpandAll = ref(true)
-
-// 菜单操作 loading 状态（防止重复提交）
-const menuLoadingMap = ref<Record<string, { status?: boolean; visible?: boolean }>>({})
-
-const isMenuLoading = (id: string, type: 'status' | 'visible') => {
-  return menuLoadingMap.value[id]?.[type] || false
-}
-
-const setMenuLoading = (id: string, type: 'status' | 'visible', value: boolean) => {
-  if (!menuLoadingMap.value[id]) {
-    menuLoadingMap.value[id] = {}
-  }
-  menuLoadingMap.value[id][type] = value
-}
 
 // 搜索字段配置
 const searchFields: SearchField[] = [
@@ -295,32 +277,20 @@ const handleCollapseAll = (): void => {
 
 // 状态切换
 const handleStatusChange = async (row: Menu): Promise<void> => {
-  // 防止重复提交
-  if (isMenuLoading(row.id, 'status')) return
-  
   const oldStatus = row.status === 'enabled' ? 'disabled' : 'enabled'
-  setMenuLoading(row.id, 'status', true)
-  
   try {
-    await updateMenuStatus(row.id, row.status as 'enabled' | 'disabled')
+    await updateMenuStatus(row.id, row.status)
     ElMessage.success(t('basic.menu.updateSuccess'))
   } catch (error) {
     // 恢复原值
     row.status = oldStatus
     ElMessage.error(t('basic.menu.updateFailed'))
-  } finally {
-    setMenuLoading(row.id, 'status', false)
   }
 }
 
 // 可见性切换
 const handleVisibleChange = async (row: Menu): Promise<void> => {
-  // 防止重复提交
-  if (isMenuLoading(row.id, 'visible')) return
-  
   const oldVisible = !row.visible
-  setMenuLoading(row.id, 'visible', true)
-  
   try {
     await updateMenuVisible(row.id, row.visible)
     ElMessage.success(t('basic.menu.updateSuccess'))
@@ -328,8 +298,6 @@ const handleVisibleChange = async (row: Menu): Promise<void> => {
     // 恢复原值
     row.visible = oldVisible
     ElMessage.error(t('basic.menu.updateFailed'))
-  } finally {
-    setMenuLoading(row.id, 'visible', false)
   }
 }
 

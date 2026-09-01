@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -9,11 +9,8 @@ import {
   Delete,
   RefreshLeft,
   MagicStick,
-  VideoPlay,
-  Aim
 } from '@element-plus/icons-vue'
 import { useWorkflowEditorStore } from '@/stores/workflowEditor'
-import { useWorkflowExecutionStore } from '@/stores/workflowExecution'
 import WorkflowCanvas from './components/WorkflowCanvas.vue'
 import NodePalette from './components/NodePalette.vue'
 import type { NodeType } from '@/types/workflow'
@@ -22,14 +19,11 @@ import { NODE_TYPES } from '@/types/workflow'
 const route = useRoute()
 const router = useRouter()
 const editorStore = useWorkflowEditorStore()
-const execStore = useWorkflowExecutionStore()
 
 const loading = ref(false)
 const saving = ref(false)
 const publishing = ref(false)
-const executing = ref(false)
 
-// 节点配置表单
 const configForm = ref({
   name: '',
   assigneeType: 'user',
@@ -65,18 +59,17 @@ async function loadWorkflow(id: string) {
     await editorStore.load(id)
   } catch (error) {
     ElMessage.error('加载流程失败')
-    router.push('/workflow/designer')
+    router.push('/workflow/publish')
   } finally {
     loading.value = false
   }
 }
 
 function goBack() {
-  router.push('/workflow/designer')
+  router.push('/workflow/publish')
 }
 
 async function handleSave() {
-  // If name is empty or default, prompt user
   if (!editorStore.name.trim() || editorStore.name === '新流程') {
     try {
       const result = await ElMessageBox.prompt('请输入流程名称', '保存流程', {
@@ -135,26 +128,6 @@ async function handleValidate() {
   ElMessage.success('流程验证通过')
 }
 
-async function handleExecute(deAim = false) {
-  if (!editorStore.id) {
-    ElMessage.warning('请先保存流程')
-    return
-  }
-  executing.value = true
-  execStore.startExecution(deAim)
-
-  // 模拟执行
-  for (const node of editorStore.nodes) {
-    execStore.updateNodeState(node.id, 'running')
-    await new Promise(resolve => setTimeout(resolve, 800))
-    execStore.updateNodeState(node.id, 'success', Math.floor(Math.random() * 2000) + 500)
-  }
-
-  execStore.completeExecution(true)
-  executing.value = false
-  ElMessage.success('执行完成')
-}
-
 function handleDeleteNode() {
   if (selectedNode.value) {
     ElMessageBox.confirm('确定删除该节点吗？', '提示', {
@@ -169,7 +142,6 @@ function handleDeleteNode() {
   }
 }
 
-// 保存节点配置
 function saveNodeConfig() {
   if (selectedNode.value) {
     editorStore.updateNode(selectedNode.value.id, {
@@ -183,8 +155,6 @@ function saveNodeConfig() {
   }
 }
 
-// 监听选中节点变化，更新表单
-import { watch } from 'vue'
 watch(selectedNode, (node) => {
   if (node) {
     configForm.value = {
@@ -196,12 +166,12 @@ watch(selectedNode, (node) => {
       serviceUrl: node.data?.config?.serviceUrl || ''
     }
   }
-}, { immediate: true })
+})
 </script>
 
 <template>
   <div class="workflow-designer">
-    <!-- 顶部工具栏 -->
+    <!-- 工具栏 -->
     <div class="designer-toolbar">
       <div class="toolbar-left">
         <el-button
@@ -210,13 +180,15 @@ watch(selectedNode, (node) => {
         >
           返回
         </el-button>
-        <span class="workflow-name">{{ editorStore.name }}</span>
+        <div class="workflow-name">
+          {{ editorStore.name }}
+        </div>
         <el-tag
           v-if="editorStore.status === 'published'"
           type="success"
           size="small"
         >
-          已发布
+          已发布 v{{ editorStore.version }}
         </el-tag>
         <el-tag
           v-else
@@ -224,14 +196,6 @@ watch(selectedNode, (node) => {
           size="small"
         >
           草稿
-        </el-tag>
-        <span class="version">v{{ editorStore.version }}</span>
-        <el-tag
-          v-if="editorStore.dirty"
-          type="warning"
-          size="small"
-        >
-          未保存
         </el-tag>
       </div>
       <div class="toolbar-right">
@@ -256,23 +220,6 @@ watch(selectedNode, (node) => {
         </el-button>
         <el-divider direction="vertical" />
         <el-button
-          :icon="VideoPlay"
-          type="primary"
-          :loading="executing"
-          @click="handleExecute(false)"
-        >
-          执行
-        </el-button>
-        <el-button
-          :icon="Aim"
-          type="warning"
-          :loading="executing"
-          @click="handleExecute(true)"
-        >
-          调试
-        </el-button>
-        <el-divider direction="vertical" />
-        <el-button
           :icon="Check"
           type="primary"
           :loading="saving"
@@ -281,8 +228,10 @@ watch(selectedNode, (node) => {
           保存
         </el-button>
         <el-button
+          :icon="CircleCheck"
           type="success"
           :loading="publishing"
+          :disabled="editorStore.status === 'published'"
           @click="handlePublish"
         >
           发布
@@ -290,31 +239,22 @@ watch(selectedNode, (node) => {
       </div>
     </div>
 
-    <!-- 主内容区 -->
-    <div
-      v-loading="loading"
-      class="designer-main"
-    >
+    <!-- 主体区域 -->
+    <div class="designer-main">
       <NodePalette />
-
-      <!-- 画布 -->
       <div class="canvas-wrapper">
         <WorkflowCanvas />
       </div>
-
-      <!-- 右侧属性面板 -->
       <div class="properties-panel">
         <div class="panel-header">
-          <h4>属性配置</h4>
+          <h4>节点配置</h4>
         </div>
-
         <div
           v-if="!selectedNode"
           class="panel-empty"
         >
           请选择节点进行配置
         </div>
-
         <div
           v-else
           class="panel-content"
@@ -331,12 +271,9 @@ watch(selectedNode, (node) => {
                 {{ nodeTypeInfo?.name }}
               </el-tag>
             </el-form-item>
-
             <el-form-item label="节点名称">
               <el-input v-model="configForm.name" />
             </el-form-item>
-
-            <!-- 审批节点配置 -->
             <template v-if="selectedNode.type === 'approval'">
               <el-form-item label="审批类型">
                 <el-select
@@ -367,20 +304,16 @@ watch(selectedNode, (node) => {
                 />
               </el-form-item>
             </template>
-
-            <!-- 条件节点配置 -->
             <template v-if="selectedNode.type === 'condition'">
               <el-form-item label="条件表达式">
                 <el-input
                   v-model="configForm.condition"
                   type="textarea"
-                  rows="3"
+                  :rows="3"
                   placeholder="例如: days > 3"
                 />
               </el-form-item>
             </template>
-
-            <!-- 延迟节点配置 -->
             <template v-if="selectedNode.type === 'delay'">
               <el-form-item label="延迟时间">
                 <el-input-number
@@ -391,8 +324,6 @@ watch(selectedNode, (node) => {
                 <span class="unit">秒</span>
               </el-form-item>
             </template>
-
-            <!-- 服务节点配置 -->
             <template v-if="selectedNode.type === 'service'">
               <el-form-item label="服务地址">
                 <el-input
@@ -401,7 +332,6 @@ watch(selectedNode, (node) => {
                 />
               </el-form-item>
             </template>
-
             <el-form-item>
               <el-button
                 type="primary"
@@ -426,10 +356,16 @@ watch(selectedNode, (node) => {
 
 <style scoped lang="scss">
 .workflow-designer {
-  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   background: #f5f7fa;
+  overflow: hidden;
 }
 
 .designer-toolbar {
@@ -440,6 +376,7 @@ watch(selectedNode, (node) => {
   padding: 0 16px;
   background: #fff;
   border-bottom: 1px solid #ebeef5;
+  flex-shrink: 0;
 
   .toolbar-left {
     display: flex;
@@ -469,12 +406,14 @@ watch(selectedNode, (node) => {
   flex: 1;
   display: flex;
   overflow: hidden;
+  min-height: 0;
 }
 
 .canvas-wrapper {
   flex: 1;
   position: relative;
   overflow: hidden;
+  min-height: 0;
 }
 
 .properties-panel {
@@ -483,10 +422,13 @@ watch(selectedNode, (node) => {
   border-left: 1px solid #ebeef5;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
 
   .panel-header {
     padding: 12px 16px;
     border-bottom: 1px solid #ebeef5;
+    flex-shrink: 0;
 
     h4 {
       margin: 0;
@@ -507,12 +449,51 @@ watch(selectedNode, (node) => {
   .panel-content {
     flex: 1;
     padding: 16px;
-    overflow-y: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    :deep(.el-form) {
+      width: 100%;
+      overflow: visible;
+    }
+
+    :deep(.el-form-item) {
+      margin-bottom: 8px;
+    }
+
+    :deep(.el-textarea__inner) {
+      resize: none;
+    }
   }
 }
 
 .unit {
   margin-left: 8px;
   color: #909399;
+}
+
+/* 彻底隐藏所有滚动条 */
+:deep(.panel-content),
+:deep(.panel-content *),
+:deep(.el-form),
+:deep(.el-form-item__content),
+:deep(.el-textarea),
+:deep(.el-input),
+:deep(.el-select),
+:deep(.el-scrollbar),
+:deep(.el-scrollbar__bar) {
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+  }
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+:deep(.el-scrollbar__bar.is-vertical),
+:deep(.el-scrollbar__bar.is-horizontal) {
+  display: none !important;
 }
 </style>

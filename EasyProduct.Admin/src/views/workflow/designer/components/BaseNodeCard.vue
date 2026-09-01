@@ -11,10 +11,10 @@ const props = defineProps<{
 
 const editorStore = useWorkflowEditorStore()
 
-// 节点类型配置
-const nodeConfig: Record<NodeType, { color: string; bgColor: string; icon: string; borderRadius?: string }> = {
-  start: { color: '#334155', bgColor: '#f1f5f9', icon: 'VideoPlay', borderRadius: '8px' },
-  end: { color: '#334155', bgColor: '#f1f5f9', icon: 'VideoPause', borderRadius: '8px' },
+// 节点类型配置 - 轻微圆角
+const nodeConfig: Record<NodeType, { color: string; bgColor: string; icon: string }> = {
+  start: { color: '#334155', bgColor: '#f1f5f9', icon: 'VideoPlay' },
+  end: { color: '#334155', bgColor: '#f1f5f9', icon: 'VideoPause' },
   approval: { color: '#409EFF', bgColor: '#ecf5ff', icon: 'User' },
   condition: { color: '#CA8A04', bgColor: '#fefce8', icon: 'Share' },
   cc: { color: '#909399', bgColor: '#f4f4f5', icon: 'Message' },
@@ -31,8 +31,8 @@ const config = computed(() => nodeConfig[props.node.type as NodeType] || nodeCon
 const handleStyle = {
   background: '#fff',
   border: '2px solid #409eff',
-  width: '10px',
-  height: '10px'
+  width: '12px',
+  height: '12px'
 }
 
 // 打开节点配置
@@ -47,8 +47,7 @@ function openConfig() {
     :class="{ selected: props.selected }"
     :style="{
       borderColor: config.color,
-      backgroundColor: config.bgColor,
-      borderRadius: config.borderRadius || '8px'
+      backgroundColor: config.bgColor
     }"
   >
     <!-- 设置按钮 -->
@@ -57,7 +56,7 @@ function openConfig() {
       @click.stop="openConfig"
       @mousedown.stop
     >
-      <el-icon :size="14">
+      <el-icon :size="16">
         <Setting />
       </el-icon>
     </div>
@@ -66,7 +65,7 @@ function openConfig() {
     <div class="node-header">
       <el-icon
         :style="{ color: config.color }"
-        :size="14"
+        :size="18"
       >
         <component :is="config.icon" />
       </el-icon>
@@ -123,12 +122,13 @@ function openConfig() {
 <style lang="scss" scoped>
 .base-node-card {
   position: relative;
-  width: 100px;
-  min-width: 100px;
-  max-width: 120px;
-  padding: 3px 6px;
+  width: 140px;
+  min-width: 140px;
+  max-width: 160px;
+  padding: 8px 12px;
   border-width: 2px;
   border-style: solid;
+  border-radius: 4px; // 轻微圆角
   cursor: pointer;
   transition: all 0.2s;
 
@@ -137,7 +137,7 @@ function openConfig() {
   }
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   &:hover .node-settings-btn {
@@ -147,14 +147,14 @@ function openConfig() {
 
 .node-settings-btn {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 20px;
-  height: 20px;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 4px; // 轻微圆角
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s, background 0.15s;
@@ -170,12 +170,12 @@ function openConfig() {
 .node-header {
   display: flex;
   align-items: center;
-  gap: 2px;
-  margin-bottom: 0;
+  gap: 8px;
+  margin-bottom: 6px;
 
   .node-name {
     flex: 1;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 500;
     color: #303133;
     overflow: hidden;
@@ -187,18 +187,18 @@ function openConfig() {
 .node-rows {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .node-row {
   display: flex;
-  gap: 6px;
-  font-size: 8px;
+  gap: 8px;
+  font-size: 11px;
   line-height: 1.4;
 
   .row-key {
     color: #909399;
-    min-width: 40px;
+    min-width: 48px;
   }
 
   .row-value {

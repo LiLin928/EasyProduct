@@ -163,5 +163,21 @@
       "toggleSuccess": "上架状态更新成功",
       "sortSuccess": "排序更新成功"
     }
+  },
+  "spec": {
+    "addValue": "添加规格值",
+    "addGroup": "添加规格",
+    "title": "规格管理",
+    "removeGroup": "删除规格"
+  },
+  "sku": {
+    "title": "SKU 管理",
+    "specValues": "规格组合",
+    "memberPrice": "会员价",
+    "costPrice": "成本价",
+    "barcode": "条码",
+    "retailPrice": "零售价",
+    "stock": "库存",
+    "b2bPrice": "B2B 价"
   }
 }

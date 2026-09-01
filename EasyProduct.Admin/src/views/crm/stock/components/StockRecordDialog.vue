@@ -7,8 +7,14 @@
     append-to-body
     @update:model-value="handleClose"
   >
-    <div v-if="stockInfo" class="stock-info">
-      <el-descriptions :column="4" border>
+    <div
+      v-if="stockInfo"
+      class="stock-info"
+    >
+      <el-descriptions
+        :column="4"
+        border
+      >
         <el-descriptions-item :label="t('crm.stock.warehouse')">
           {{ stockInfo.warehouseName }}
         </el-descriptions-item>

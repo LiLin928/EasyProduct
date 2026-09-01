@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="definition-page">
     <BaseSearchForm
       :fields="searchFields"
@@ -75,7 +75,7 @@
         />
         <el-table-column
           :label="t('common.actions')"
-          width="220"
+          width="280"
           fixed="right"
         >
           <template #default="{ row }">
@@ -85,6 +85,13 @@
               @click="handlePreview(row)"
             >
               {{ t('report.definition.preview') }}
+            </el-button>
+            <el-button
+              link
+              type="primary"
+              @click="openPreviewPage(row)"
+            >
+              {{ t('report.definition.previewNewWindow') }}
             </el-button>
             <el-button
               link
@@ -119,26 +126,25 @@
       width="900px"
       append-to-body
     >
-      <el-table
+      <ReportChartRenderer
         v-if="previewData"
-        :data="previewData.rows"
-        border
-        max-height="400"
+        :chart-type="previewChartType"
+        :columns="previewData.columns"
+        :rows="previewData.rows"
+      />
+      <div
+        v-else
+        class="empty-preview"
       >
-        <el-table-column
-          v-for="col in previewData.columns"
-          :key="col.field"
-          :prop="col.field"
-          :label="col.label"
-          min-width="120"
-        />
-      </el-table>
+        <el-empty :description="t('report.definition.noData')" />
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { useCrud } from '@/composables/useCrud'
@@ -149,8 +155,10 @@ import BaseTable from '@/components/common/BaseTable.vue'
 import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
 import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
 import DefinitionFormDialog from './components/DefinitionFormDialog.vue'
+import ReportChartRenderer from './components/ReportChartRenderer.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const CHART_TYPE_MAP: Record<string, { label: string; type: '' | 'success' | 'warning' | 'info' | 'danger' }> = {
   table: { label: 'report.definition.chartTable', type: 'info' },
@@ -175,12 +183,7 @@ const searchFields = computed<SearchField[]>(() => [
   ] },
 ])
 
-const {
-  loading, list, total, query, searchModel,
-  handleSearch, handleReset, handlePageChange,
-  formDialog, openCreate, openEdit,
-  handleDelete, reload,
-} = useCrud<ReportDefinition>(getDefinitionList, {
+const { loading, list, total, query, searchModel, handleSearch, handleReset, handlePageChange, formDialog, openCreate, openEdit, handleDelete, reload } = useCrud<ReportDefinition>(getDefinitionList, {
   defaultSearchModel: { name: '', code: '', status: '' },
   deleteFn: deleteDefinition,
   deleteConfirmText: t('report.definition.deleteConfirm'),
@@ -188,19 +191,25 @@ const {
 
 const previewVisible = ref(false)
 const previewData = ref<{ columns: Array<{ field: string; label: string }>; rows: Record<string, unknown>[] } | null>(null)
+const previewChartType = ref<'table' | 'line' | 'bar' | 'pie'>('table')
 
 const handlePreview = async (row: ReportDefinition) => {
   try {
     const data = await previewDefinition(row.id)
     previewData.value = data
+    previewChartType.value = row.chartType
     previewVisible.value = true
-  } catch {
-    ElMessage.error(t('common.error'))
-  }
+  } catch { ElMessage.error(t('common.error')) }
+}
+
+const openPreviewPage = (row: ReportDefinition) => {
+  router.push({ name: 'report-definition-preview', params: { id: row.id }, query: { from: 'definition' } })
 }
 </script>
 
 <style scoped lang="scss">
 .definition-page {
+  &__table { margin-top: 16px; }
+  .empty-preview { padding: 40px 0; }
 }
 </style>

@@ -1,6 +1,11 @@
 {
-  "home": { "newsTitle": "新闻动态", "moreNews": "查看更多" },
-  "notFound": { "back": "返回首页" },
+  "home": {
+    "newsTitle": "新闻动态",
+    "moreNews": "查看更多"
+  },
+  "notFound": {
+    "back": "返回首页"
+  },
   "products": {
     "title": "产品中心",
     "detail": "产品详情",
@@ -47,5 +52,20 @@
     },
     "views": "次浏览",
     "downloadAttachment": "下载附件"
+  },
+  "contact": {
+    "info": "联系信息",
+    "success": "提交成功，我们会尽快与您联系",
+    "submit": "提交留言",
+    "workingHours": "工作时间",
+    "submitting": "提交中...",
+    "form": "留言表单",
+    "email": "邮箱",
+    "address": "地址",
+    "phone": "电话",
+    "contactName": "联系人",
+    "title": "联系我们",
+    "companyName": "公司名称",
+    "content": "留言内容"
   }
 }

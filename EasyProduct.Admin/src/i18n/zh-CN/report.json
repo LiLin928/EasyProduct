@@ -53,7 +53,12 @@
     "statusArchived": "已归档",
     "createdAt": "创建时间",
     "preview": "预览",
+    "previewNewWindow": "新窗口预览",
     "previewTitle": "报表预览",
+    "previewTitleWithName": "报表预览 - {{name}}",
+    "noData": "暂无数据",
+    "missingParam": "缺少报表ID或编码参数",
+    "notFound": "报表不存在",
     "deleteConfirm": "确认删除该报表定义吗？",
     "sqlTemplate": "SQL模板",
     "columns": "列配置",
@@ -72,7 +77,8 @@
       "statusPlaceholder": "请选择状态",
       "sqlPlaceholder": "请输入SQL查询语句",
       "remarkPlaceholder": "请输入备注"
-    }
+    },
+    "switchChart": "切换图表"
   },
   "columnTemplate": {
     "add": "新增列模板",

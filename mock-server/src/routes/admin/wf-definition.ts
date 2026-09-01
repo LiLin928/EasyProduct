@@ -24,6 +24,38 @@ adminWfDefinitionRouter.get('/wf/definition/list', (req, res) => {
   res.json(ok(paginate(filtered, pageIndex, pageSize)))
 })
 
+// 获取流程定义详情
+adminWfDefinitionRouter.get('/wf/definition/detail', (req, res) => {
+  const id = req.query.id as string
+  if (!id) { res.json(fail('id required')); return }
+  
+  const def = DEFINITIONS.find(d => d.id === id)
+  if (!def) { res.json(fail('definition not found', 404)); return }
+  
+  // 返回完整的流程数据（包含 nodes 和 edges）
+  res.json(ok({
+    ...def,
+    // 如果没有节点数据，提供默认节点
+    nodes: (def as any).nodes || [
+      {
+        id: 'node-start',
+        type: 'start',
+        name: '开始',
+        position: { x: 100, y: 200 },
+        data: { rows: [] }
+      },
+      {
+        id: 'node-end',
+        type: 'end',
+        name: '结束',
+        position: { x: 400, y: 200 },
+        data: { rows: [] }
+      }
+    ],
+    edges: (def as any).edges || []
+  }))
+})
+
 // 新建流程定义
 adminWfDefinitionRouter.post('/wf/definition', (req, res) => {
   const body = req.body
@@ -79,7 +111,7 @@ adminWfDefinitionRouter.post('/wf/definition/:id/publish', (req, res) => {
   def.status = 'published'
   def.version += 1
   def.updatedAt = isoTime()
-  res.json(ok(null, 'published'))
+  res.json(ok({ status: def.status, version: def.version }, 'published'))
 })
 
 // 停用流程定义
@@ -89,5 +121,20 @@ adminWfDefinitionRouter.post('/wf/definition/:id/disable', (req, res) => {
   if (def.status !== 'published') { res.json(fail('only published definition can be disabled')); return }
   def.status = 'disabled'
   def.updatedAt = isoTime()
-  res.json(ok(null, 'disabled'))
+  res.json(ok({ status: def.status }, 'disabled'))
+})
+
+// 保存流程图
+adminWfDefinitionRouter.post('/wf/definition/:id/graph', (req, res) => {
+  const def = DEFINITIONS.find(d => d.id === req.params.id)
+  if (!def) { res.json(fail('definition not found', 404)); return }
+  
+  const body = req.body
+  // 更新流程图数据
+  ;(def as any).nodes = body.nodes
+  ;(def as any).edges = body.edges
+  if (body.name) def.name = body.name
+  def.updatedAt = isoTime()
+  
+  res.json(ok(null, 'saved'))
 })

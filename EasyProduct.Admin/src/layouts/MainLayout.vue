@@ -7,6 +7,7 @@
       <el-header class="main-layout__header">
         <AppTopbar />
       </el-header>
+      <TagsView />
       <el-main class="main-layout__body">
         <router-view />
       </el-main>
@@ -17,6 +18,7 @@
 <script setup lang="ts">
 import AppSidebar from './components/AppSidebar.vue'
 import AppTopbar from './components/AppTopbar.vue'
+import TagsView from './components/TagsView.vue'
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
@@ -31,10 +33,11 @@ const appStore = useAppStore()
     align-items: center;
     border-bottom: 1px solid var(--ep-border);
     background: var(--ep-bg-card);
+    height: 56px;
   }
 
   &__body {
-    padding: $spacing-md;
+    padding: 12px;
   }
 }
 </style>

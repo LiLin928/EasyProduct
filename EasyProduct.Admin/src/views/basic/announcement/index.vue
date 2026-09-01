@@ -332,15 +332,13 @@ const editDialog = useDialog<Announcement>()
 
 // 新增公告
 const handleAdd = (): void => {
-  // TODO: 跳转到新增页面或打开新增弹窗
-  ElMessage.info(t('common.comingSoon'))
+  editDialog.open()
 }
 
 // 编辑公告
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const handleEdit = (row: Announcement): void => {
-  // TODO: 跳转到编辑页面或打开编辑弹窗，使用 row 参数
-  ElMessage.info(t('common.comingSoon'))
+  editDialog.open(row)
 }
 
 // 查看公告

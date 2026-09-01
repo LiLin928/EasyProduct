@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { WfNode, WfEdge, NodeType, Workflow } from '@/types/workflow'
 import { NODE_TYPES } from '@/types/workflow'
-import * as workflowApi from '@/api/workflow'
+import { getDefinitionDetail, saveDefinitionGraph, publishDefinition } from '@/api/workflow/definition'
 
 export const useWorkflowEditorStore = defineStore('workflowEditor', () => {
   // 流程基本信息
@@ -142,40 +142,33 @@ export const useWorkflowEditorStore = defineStore('workflowEditor', () => {
   // 保存流程
   async function save(): Promise<boolean> {
     if (!id.value) {
-      // 新建流程
-      const res = await workflowApi.createWorkflow({
-        name: name.value,
-        nodes: nodes.value,
-        edges: edges.value
-      })
-      if (res.code === 200 && res.data) {
-        id.value = res.data.id
-        dirty.value = false
-        return true
-      }
+      // 新建流程需要先有ID，这里不应该发生，因为编辑时必须有ID
+      console.error('Cannot save: no workflow id')
       return false
     }
 
-    // 更新流程
-    const res = await workflowApi.updateWorkflow(id.value, {
+    // 更新流程图
+    await saveDefinitionGraph(id.value, {
       name: name.value,
       nodes: nodes.value,
       edges: edges.value
     })
-    if (res.code === 200) {
-      dirty.value = false
-      return true
-    }
-    return false
+    dirty.value = false
+    return true
   }
 
   // 发布流程
   async function publish(): Promise<boolean> {
     if (!id.value) return false
-    const res = await workflowApi.publishWorkflow(id.value)
-    if (res.code === 200 && res.data) {
-      status.value = res.data.status
-      version.value = res.data.version
+    // 先保存
+    const saved = await save()
+    if (!saved) return false
+    
+    // 调用发布API
+    const res = await publishDefinition(id.value)
+    if (res) {
+      status.value = 'published'
+      version.value = res.version || version.value + 1
       dirty.value = false
       return true
     }
@@ -184,12 +177,11 @@ export const useWorkflowEditorStore = defineStore('workflowEditor', () => {
 
   // 加载流程
   async function load(workflowId: string): Promise<boolean> {
-    const res = await workflowApi.getWorkflowDetail(workflowId)
-    if (res.code === 200 && res.data) {
-      const wf = res.data
+    const wf = await getDefinitionDetail(workflowId)
+    if (wf) {
       id.value = wf.id
       name.value = wf.name
-      status.value = wf.status
+      status.value = wf.status as 'draft' | 'published'
       version.value = wf.version
       nodes.value = wf.nodes || []
       edges.value = wf.edges || []

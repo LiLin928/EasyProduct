@@ -3,7 +3,6 @@ import { ref, watch, markRaw } from 'vue'
 import { VueFlow, useVueFlow, type Node, type Edge } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { MiniMap } from '@vue-flow/minimap'
 import { useWorkflowEditorStore } from '@/stores/workflowEditor'
 import BaseNodeCard from './BaseNodeCard.vue'
 import AddButtonEdge from './AddButtonEdge.vue'
@@ -13,7 +12,6 @@ import { NODE_TYPES } from '@/types/workflow'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 import '@vue-flow/controls/dist/style.css'
-import '@vue-flow/minimap/dist/style.css'
 
 const editorStore = useWorkflowEditorStore()
 const edgeTypes = {
@@ -25,7 +23,7 @@ const { onConnect, onNodeDragStop, onNodeDoubleClick, onNodesChange } = useVueFl
 const nodes = ref<Node[]>([])
 const edges = ref<Edge[]>([])
 
-// 同步 Store 数据�?VueFlow
+// 同步 Store 数据到 VueFlow
 watch(
   () => editorStore.nodes,
   (storeNodes) => {
@@ -120,7 +118,7 @@ function handleDragOver(event: DragEvent) {
     <VueFlow
       v-model:nodes="nodes"
       v-model:edges="edges"
-      :default-zoom="0.7"
+      :default-zoom="0.5"
       :min-zoom="0.2"
       :max-zoom="4"
       :delete-key-code="['Backspace', 'Delete']"
@@ -133,7 +131,6 @@ function handleDragOver(event: DragEvent) {
         :size="1"
       />
       <Controls />
-      <MiniMap />
 
       <!-- 节点模板注册 -->
       <template
@@ -151,6 +148,8 @@ function handleDragOver(event: DragEvent) {
 .workflow-canvas {
   width: 100%;
   height: 100%;
+  min-height: 0;
+  flex: 1;
 }
 
 .vue-flow-canvas {
@@ -158,9 +157,9 @@ function handleDragOver(event: DragEvent) {
 }
 
 :deep(.vue-flow__node) {
-  width: 100px;
-  min-width: 80px;
-  max-width: 120px;
+  width: 140px;
+  min-width: 120px;
+  max-width: 160px;
   padding: 0;
   border: none;
   background: transparent;

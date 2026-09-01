@@ -25,7 +25,9 @@
     "publishConfirm": "确认发布该流程定义吗？发布后版本号将递增",
     "disableConfirm": "确认停用该流程定义吗？停用后将无法发起申请",
     "publishSuccess": "发布成功",
-    "disableSuccess": "停用成功"
+    "disableSuccess": "停用成功",
+    "status": "状态",
+    "design": "设计"
   },
   "instance": {
     "statusRunning": "运行中",

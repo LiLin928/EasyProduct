@@ -25,7 +25,9 @@
     "publishConfirm": "Are you sure to publish this process definition? The version number will increment.",
     "disableConfirm": "Are you sure to disable this process definition? New applications will not be allowed after disabling.",
     "publishSuccess": "Published successfully",
-    "disableSuccess": "Disabled successfully"
+    "disableSuccess": "Disabled successfully",
+    "status": "Status",
+    "design": "Design"
   },
   "instance": {
     "statusRunning": "Running",
