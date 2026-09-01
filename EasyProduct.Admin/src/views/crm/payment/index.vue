@@ -278,3 +278,4 @@ const handleDelete = async (row: Payment) => {
 <style scoped lang="scss">
 .payment-page {
 }
+</style>

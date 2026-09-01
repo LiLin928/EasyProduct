@@ -141,3 +141,4 @@ const openDetail = (row: WorkflowInstance) => {
 <style scoped lang="scss">
 .instance-page {
 }
+</style>

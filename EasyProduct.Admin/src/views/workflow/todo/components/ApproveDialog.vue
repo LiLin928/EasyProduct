@@ -6,7 +6,11 @@
     append-to-body
     @update:model-value="handleClose"
   >
-    <el-form :model="form" label-width="80px" :disabled="loading">
+    <el-form
+      :model="form"
+      label-width="80px"
+      :disabled="loading"
+    >
       <el-form-item :label="t('workflow.task.comment')">
         <el-input
           v-model="form.comment"

@@ -278,3 +278,4 @@ const handleDelete = async (row: Reversal) => {
 <style scoped lang="scss">
 .reversal-page {
 }
+</style>

@@ -1,6 +1,6 @@
 {
   "category": {
-    "title": "Product Categories",
+    "title": "Product Category",
     "list": "Category List",
     "add": "Add Category",
     "addChild": "Add Subcategory",
@@ -16,22 +16,44 @@
     "statusDisabled": "Disabled",
     "createdAt": "Created At",
     "updatedAt": "Updated At",
-    "rootName": "Root",
+    "rootName": "Root Category",
+    "tree": {
+      "title": "Category Tree",
+      "addRoot": "Add Root Category",
+      "searchPlaceholder": "Search category name",
+      "addChild": "Add",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "detail": {
+      "selectCategory": "Please select a category",
+      "selectCategoryTip": "Please select a category from the left to view details",
+      "name": "Category Name",
+      "nameEn": "English Name",
+      "parent": "Parent Category",
+      "sort": "Sort",
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    },
+    "subcategory": {
+      "title": "Subcategory List"
+    },
     "form": {
       "addTitle": "Add Category",
       "editTitle": "Edit Category",
-      "namePlaceholder": "Enter category name",
-      "nameRequired": "Category name is required",
-      "nameEnPlaceholder": "Enter English name",
-      "parentIdPlaceholder": "Select parent category",
-      "sortPlaceholder": "Enter sort order",
+      "namePlaceholder": "Please enter category name",
+      "nameRequired": "Please enter category name",
+      "nameEnPlaceholder": "Please enter English name",
+      "parentIdPlaceholder": "Please select parent category",
+      "sortPlaceholder": "Please enter sort order",
       "statusRequired": "Please select status"
     },
     "message": {
       "createSuccess": "Created successfully",
       "updateSuccess": "Updated successfully",
       "deleteSuccess": "Deleted successfully",
-      "hasChildren": "Cannot delete category with subcategories"
+      "hasChildren": "This category has subcategories and cannot be deleted"
     }
   },
   "spu": {
@@ -45,7 +67,7 @@
     "name": "Product Name",
     "nameEn": "English Name",
     "category": "Category",
-    "type": "Product Type",
+    "type": "Type",
     "typeTicket": "Ticket",
     "typeMaterial": "Material",
     "mainImage": "Main Image",
@@ -53,7 +75,7 @@
     "description": "Description",
     "unit": "Unit",
     "brand": "Brand",
-    "specs": "Specifications",
+    "specs": "Specs",
     "status": "Status",
     "statusActive": "Active",
     "statusInactive": "Inactive",
@@ -67,34 +89,34 @@
     "form": {
       "addTitle": "Add Product",
       "editTitle": "Edit Product",
-      "codePlaceholder": "Enter product code",
-      "codeRequired": "Product code is required",
-      "namePlaceholder": "Enter product name",
-      "nameRequired": "Product name is required",
-      "nameEnPlaceholder": "Enter English name",
-      "categoryPlaceholder": "Select category",
-      "categoryRequired": "Category is required",
-      "typePlaceholder": "Select product type",
-      "typeRequired": "Product type is required",
-      "unitPlaceholder": "Enter unit",
-      "brandPlaceholder": "Enter brand",
-      "descriptionPlaceholder": "Enter description",
-      "mainImagePlaceholder": "Upload main image",
-      "imagesPlaceholder": "Upload image gallery"
+      "codePlaceholder": "Please enter product code",
+      "codeRequired": "Please enter product code",
+      "namePlaceholder": "Please enter product name",
+      "nameRequired": "Please enter product name",
+      "nameEnPlaceholder": "Please enter English name",
+      "categoryPlaceholder": "Please select category",
+      "categoryRequired": "Please select category",
+      "typePlaceholder": "Please select type",
+      "typeRequired": "Please select type",
+      "unitPlaceholder": "Please enter unit",
+      "brandPlaceholder": "Please enter brand",
+      "descriptionPlaceholder": "Please enter description",
+      "mainImagePlaceholder": "Please upload main image",
+      "imagesPlaceholder": "Please upload image gallery"
     },
     "spec": {
-      "title": "Specification Management",
+      "title": "Specs Management",
       "addGroup": "Add Spec",
       "groupName": "Spec Name",
-      "groupNamePlaceholder": "Enter spec name (e.g. Color)",
-      "groupNameRequired": "Spec name is required",
-      "addValue": "Add Value",
-      "valuePlaceholder": "Enter spec value",
-      "valueRequired": "Spec value cannot be empty",
+      "groupNamePlaceholder": "Please enter spec name (e.g., Color)",
+      "groupNameRequired": "Please enter spec name",
+      "addValue": "Add Spec Value",
+      "valuePlaceholder": "Please enter spec value",
+      "valueRequired": "Spec value is required",
       "removeGroup": "Remove Spec",
       "removeValue": "Remove Value",
-      "empty": "No specs yet. Adding specs will auto-generate SKUs.",
-      "changeConfirm": "Changing specs will regenerate SKUs. Existing SKU price/stock data will be preserved, but SKUs not in the new combinations will be deleted. Confirm?"
+      "empty": "No specs yet. SKUs will be auto-generated after adding specs.",
+      "changeConfirm": "Modifying specs will regenerate SKUs. Existing SKU price/stock data will be preserved, SKUs not in the new combination will be deleted. Continue?"
     },
     "sku": {
       "title": "SKU Management",
@@ -109,8 +131,8 @@
       "statusActive": "Active",
       "statusInactive": "Inactive",
       "batchSave": "Batch Save",
-      "batchSaveSuccess": "SKUs batch saved successfully",
-      "empty": "Add specs first, the system will auto-generate SKUs"
+      "batchSaveSuccess": "SKUs saved successfully",
+      "empty": "Please add specs first. SKUs will be auto-generated by the system."
     },
     "message": {
       "createSuccess": "Created successfully",
@@ -121,7 +143,7 @@
   },
   "channel": {
     "title": "Channel Publishing",
-    "list": "Channel Publishing List",
+    "list": "Channel List",
     "spuName": "Product Name",
     "spuCode": "Product Code",
     "mainImage": "Main Image",
@@ -130,12 +152,12 @@
     "typeB2b": "B2B",
     "published": "Published",
     "unpublished": "Unpublished",
-    "togglePublish": "Publish/Unpublish",
+    "togglePublish": "Toggle Publish",
     "sort": "Sort",
     "setSort": "Set Sort",
     "searchSpuName": "Product Name",
     "searchChannel": "Channel",
-    "searchPublished": "Published",
+    "searchPublished": "Publish Status",
     "sortPlaceholder": "Sort",
     "message": {
       "toggleSuccess": "Publish status updated successfully",

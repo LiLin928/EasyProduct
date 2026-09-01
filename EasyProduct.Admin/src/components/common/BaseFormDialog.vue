@@ -19,10 +19,16 @@
     >
       <slot />
     </el-form>
-    <template v-if="$slots.footer" #footer>
+    <template
+      v-if="$slots.footer"
+      #footer
+    >
       <slot name="footer" />
     </template>
-    <template v-else #footer>
+    <template
+      v-else
+      #footer
+    >
       <el-button @click="handleCancel">
         {{ t(cancelText) }}
       </el-button>

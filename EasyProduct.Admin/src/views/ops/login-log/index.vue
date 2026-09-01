@@ -131,3 +131,4 @@ const handleReset = () => {
 <style scoped lang="scss">
 .login-log-page {
 }
+</style>

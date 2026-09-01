@@ -3,7 +3,7 @@ import { request } from '../utils/request'
 import type { PageResult } from '../types/api.types'
 import type { UserAnnouncement, AnnouncementQuery, UnreadCountResult } from '../types/announcement'
 
-const BASE_URL = '/app/announcements'
+const BASE_URL = '/announcements'
 
 /** 获取用户公告列表（含阅读状态） */
 export function getUserAnnouncementList(params: AnnouncementQuery): Promise<PageResult<UserAnnouncement>> {

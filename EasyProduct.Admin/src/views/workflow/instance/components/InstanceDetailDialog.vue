@@ -7,7 +7,10 @@
     @update:model-value="handleClose"
   >
     <template v-if="instance">
-      <el-descriptions :column="2" border>
+      <el-descriptions
+        :column="2"
+        border
+      >
         <el-descriptions-item :label="t('workflow.instance.title')">
           {{ instance.title }}
         </el-descriptions-item>
@@ -27,7 +30,10 @@
           {{ instance.currentNode || '-' }}
         </el-descriptions-item>
         <el-descriptions-item :label="t('workflow.instance.status')">
-          <BaseStatusTag :value="instance.status" :options="INSTANCE_STATUS_MAP" />
+          <BaseStatusTag
+            :value="instance.status"
+            :options="INSTANCE_STATUS_MAP"
+          />
         </el-descriptions-item>
         <el-descriptions-item :label="t('workflow.instance.createdAt')">
           {{ instance.createdAt }}
@@ -50,12 +56,20 @@
         >
           <div class="history-item">
             <span class="history-item__node">{{ h.nodeName }}</span>
-            <el-tag :type="getActionTagType(h.action)" size="small">
+            <el-tag
+              :type="getActionTagType(h.action)"
+              size="small"
+            >
               {{ t(getActionLabel(h.action)) }}
             </el-tag>
             <span class="history-item__assignee">{{ h.assigneeName }}</span>
           </div>
-          <p v-if="h.comment" class="history-item__comment">{{ h.comment }}</p>
+          <p
+            v-if="h.comment"
+            class="history-item__comment"
+          >
+            {{ h.comment }}
+          </p>
         </el-timeline-item>
       </el-timeline>
     </template>
@@ -166,3 +180,4 @@ watch(() => props.visible, async (val) => {
     color: var(--el-text-color-regular);
   }
 }
+</style>

@@ -294,7 +294,10 @@
     "maxLimit": "最高库存",
     "updatedAt": "更新时间",
     "searchWarehouse": "仓库",
-    "searchKeyword": "商品编码/名称"
+    "searchKeyword": "商品编码/名称",
+      "viewRecord": "查看记录",
+      "record": "出入库记录",
+      "recordHistory": "出入库流水"
   },
   "stockRecord": {
     "warehouse": "仓库",
@@ -378,7 +381,10 @@
     "searchWarehouse": "仓库",
     "searchAlertType": "预警类型",
     "searchStatus": "状态",
-    "searchKeyword": "商品编码/名称"
+    "searchKeyword": "商品编码/名称",
+      "viewRecord": "查看记录",
+      "record": "出入库记录",
+      "recordHistory": "出入库流水"
   },
   "invoice": {
     "title": "发票管理",
@@ -567,3 +573,4 @@
     "totalAmount": "冲销总额"
   }
 }
+

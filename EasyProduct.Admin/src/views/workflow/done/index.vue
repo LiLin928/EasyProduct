@@ -114,3 +114,4 @@ const handleReset = () => {
 <style scoped lang="scss">
 .done-page {
 }
+</style>

@@ -62,7 +62,10 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="isEdit">
+        <el-col
+          v-if="isEdit"
+          :span="12"
+        >
           <el-form-item
             :label="t('site.category.status')"
             prop="status"

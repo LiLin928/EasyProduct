@@ -133,3 +133,4 @@ const handleReset = () => {
 <style scoped lang="scss">
 .task-log-page {
 }
+</style>

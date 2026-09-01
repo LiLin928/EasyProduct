@@ -4,8 +4,69 @@ import { ok, fail, paginate } from '../../helpers/envelope.js'
 import { guid, isoTime } from '../../helpers/id.js'
 import { CUSTOMERS } from '../../data/crm.js'
 import { SALES_ORDERS, type SalesOrder, type SalesOrderItem } from '../../data/crm-sales.js'
+import { STOCKS, STOCK_RECORDS, type StockRecord, WAREHOUSES } from '../../data/crm-inventory.js'
 
 export const adminCrmSalesOrderRouter = Router()
+
+/**
+ * 检查库存是否充足
+ * @returns {boolean} 是否充足
+ */
+function checkStockAvailability(order: SalesOrder): { available: boolean; insufficientItems: string[] } {
+  const insufficientItems: string[] = []
+
+  for (const item of order.items) {
+    const stock = STOCKS.find(s => s.warehouseId === item.warehouseId && s.skuCode === item.skuCode)
+    if (!stock || stock.available < item.quantity) {
+      const availableQty = stock?.available ?? 0
+      insufficientItems.push(`${item.skuName}(需${item.quantity}, 可用${availableQty})`)
+    }
+  }
+
+  return {
+    available: insufficientItems.length === 0,
+    insufficientItems,
+  }
+}
+
+/**
+ * 处理销售出库
+ * 当销售订单状态变更为 shipped 时，自动创建出库记录并扣减库存
+ */
+function processSalesOutbound(order: SalesOrder): void {
+  const operator = 'System'
+  const remark = `销售出库 - 订单: ${order.orderNo}`
+
+  for (const item of order.items) {
+    // 1. 创建出库记录
+    const warehouse = WAREHOUSES.find(w => w.id === item.warehouseId) ?? WAREHOUSES[0]
+    const record: StockRecord = {
+      id: guid(),
+      warehouseId: item.warehouseId,
+      warehouseName: warehouse?.name ?? '深圳主仓',
+      skuCode: item.skuCode,
+      skuName: item.skuName,
+      spec: item.spec,
+      unit: '个',
+      type: 'out',
+      sourceType: 'sales_out',
+      sourceOrderNo: order.orderNo,
+      quantity: item.quantity,
+      operator,
+      remark,
+      createdAt: isoTime(),
+    }
+    STOCK_RECORDS.unshift(record)
+
+    // 2. 扣减库存
+    const stock = STOCKS.find(s => s.warehouseId === item.warehouseId && s.skuCode === item.skuCode)
+    if (stock) {
+      stock.available = Math.max(0, stock.available - item.quantity)
+      stock.total = Math.max(0, stock.total - item.quantity)
+      stock.updatedAt = isoTime()
+    }
+  }
+}
 
 // ── 客户下拉 ──
 adminCrmSalesOrderRouter.get('/crm/sales-order/customer/options', (_req, res) => {
@@ -45,6 +106,7 @@ adminCrmSalesOrderRouter.post('/crm/sales-order', (req, res) => {
   const cust = CUSTOMERS.find(c => c.id === body.customerId)
   if (!cust) { res.json(fail('customer not found', 404)); return }
 
+  const defaultWarehouseId = WAREHOUSES[0]?.id ?? ''
   const id = guid()
   const items: SalesOrderItem[] = (body.items ?? []).map((it: SalesOrderItem) => {
     const amount = +(it.price * it.quantity).toFixed(2)
@@ -52,6 +114,8 @@ adminCrmSalesOrderRouter.post('/crm/sales-order', (req, res) => {
     return {
       id: guid(),
       orderId: id,
+      skuCode: it.skuCode ?? '',
+      skuName: it.skuName ?? it.productName ?? '',
       productName: it.productName,
       spec: it.spec || '',
       price: it.price,
@@ -61,6 +125,7 @@ adminCrmSalesOrderRouter.post('/crm/sales-order', (req, res) => {
       amount,
       taxAmount,
       totalAmount: +(amount + taxAmount).toFixed(2),
+      warehouseId: it.warehouseId ?? defaultWarehouseId,
     }
   })
   const subtotal = +items.reduce((s, i) => s + i.amount, 0).toFixed(2)
@@ -74,7 +139,7 @@ adminCrmSalesOrderRouter.post('/crm/sales-order', (req, res) => {
     customerName: cust.name,
     salesPersonName: body.salesPersonName || cust.salesPersonName || '',
     currencyCode: body.currencyCode || 'CNY',
-    currencySymbol: body.currencySymbol || 'Y',
+    currencySymbol: body.currencySymbol || '¥',
     paymentTerms: body.paymentTerms || 'Net 30',
     deliveryDate: body.deliveryDate || isoTime(7).slice(0, 10),
     status: 'draft',
@@ -97,6 +162,7 @@ adminCrmSalesOrderRouter.put('/crm/sales-order/:id', (req, res) => {
   if (order.status !== 'draft') { res.json(fail('only draft orders can be edited')); return }
 
   const body = req.body
+  const defaultWarehouseId = WAREHOUSES[0]?.id ?? ''
   if (body.salesPersonName !== undefined) order.salesPersonName = body.salesPersonName
   if (body.paymentTerms !== undefined) order.paymentTerms = body.paymentTerms
   if (body.deliveryDate !== undefined) order.deliveryDate = body.deliveryDate
@@ -109,6 +175,9 @@ adminCrmSalesOrderRouter.put('/crm/sales-order/:id', (req, res) => {
         ...it,
         id: it.id || guid(),
         orderId: order.id,
+        skuCode: it.skuCode ?? '',
+        skuName: it.skuName ?? it.productName ?? '',
+        warehouseId: it.warehouseId ?? defaultWarehouseId,
         amount,
         taxAmount,
         totalAmount: +(amount + taxAmount).toFixed(2),
@@ -139,6 +208,17 @@ adminCrmSalesOrderRouter.put('/crm/sales-order/:id/status', (req, res) => {
     res.json(fail(`cannot transition from ${order.status} to ${newStatus}`))
     return
   }
+
+  // 当状态变为 shipped 时，检查库存并执行出库
+  if (newStatus === 'shipped') {
+    const stockCheck = checkStockAvailability(order)
+    if (!stockCheck.available) {
+      res.json(fail(`库存不足: ${stockCheck.insufficientItems.join(', ')}`))
+      return
+    }
+    processSalesOutbound(order)
+  }
+
   order.status = newStatus
   order.updatedAt = isoTime()
   res.json(ok(null, 'status updated'))

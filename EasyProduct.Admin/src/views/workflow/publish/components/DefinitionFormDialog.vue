@@ -13,14 +13,20 @@
       label-width="100px"
       :disabled="submitting"
     >
-      <el-form-item :label="t('workflow.definition.name')" prop="name">
+      <el-form-item
+        :label="t('workflow.definition.name')"
+        prop="name"
+      >
         <el-input
           v-model="form.name"
           :placeholder="t('workflow.definition.namePlaceholder')"
         />
       </el-form-item>
 
-      <el-form-item :label="t('workflow.definition.code')" prop="code">
+      <el-form-item
+        :label="t('workflow.definition.code')"
+        prop="code"
+      >
         <el-input
           v-model="form.code"
           :placeholder="t('workflow.definition.codePlaceholder')"
@@ -28,14 +34,20 @@
         />
       </el-form-item>
 
-      <el-form-item :label="t('workflow.definition.category')" prop="category">
+      <el-form-item
+        :label="t('workflow.definition.category')"
+        prop="category"
+      >
         <el-input
           v-model="form.category"
           :placeholder="t('workflow.definition.categoryPlaceholder')"
         />
       </el-form-item>
 
-      <el-form-item :label="t('workflow.definition.description')" prop="description">
+      <el-form-item
+        :label="t('workflow.definition.description')"
+        prop="description"
+      >
         <el-input
           v-model="form.description"
           type="textarea"
@@ -112,9 +124,9 @@ watch(() => props.visible, (val) => {
   if (val) {
     if (props.isEdit && props.rowData) {
       form.name = props.rowData.name
-      form.code = props.rowData.code
-      form.category = props.rowData.category
-      form.description = props.rowData.description
+      form.code = props.rowData.code ?? ''
+      form.category = props.rowData.category ?? ''
+      form.description = props.rowData.description ?? ''
     } else {
       resetForm()
     }

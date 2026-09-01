@@ -243,3 +243,4 @@ const openDetail = (row: LogQuery) => {
   max-height: 200px;
   overflow-y: auto;
 }
+</style>

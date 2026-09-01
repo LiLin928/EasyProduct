@@ -98,6 +98,8 @@ export type SalesOrderStatus = 'draft' | 'confirmed' | 'shipped' | 'completed' |
 export interface SalesOrderItem {
   id: string
   orderId: string
+  skuCode?: string
+  skuName?: string
   productName: string
   spec: string
   price: number
@@ -107,6 +109,7 @@ export interface SalesOrderItem {
   amount: number
   taxAmount: number
   totalAmount: number
+  warehouseId?: string
 }
 
 export interface SalesOrder {
@@ -143,6 +146,8 @@ export type PurchaseOrderStatus = 'draft' | 'confirmed' | 'received' | 'complete
 export interface PurchaseOrderItem {
   id: string
   orderId: string
+  skuCode?: string
+  skuName?: string
   productName: string
   spec: string
   price: number
@@ -152,6 +157,7 @@ export interface PurchaseOrderItem {
   amount: number
   taxAmount: number
   totalAmount: number
+  warehouseId?: string
 }
 
 export interface PurchaseOrder {
@@ -509,3 +515,4 @@ export const REVERSAL_STATUS_OPTIONS = [
   { value: 'rejected', labelKey: 'crm.reversal.statusRejected' },
   { value: 'executed', labelKey: 'crm.reversal.statusExecuted' },
 ] as const
+

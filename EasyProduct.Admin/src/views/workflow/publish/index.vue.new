@@ -1,0 +1,203 @@
+<template>
+  <div class="publish-page">
+    <BaseSearchForm
+      :fields="searchFields"
+      :model="searchModel"
+      @search="handleSearch"
+      @reset="handleReset"
+    >
+      <template #toolbar>
+        <el-button
+          type="primary"
+          @click="openCreate"
+        >
+          {{ t('workflow.definition.add') }}
+        </el-button>
+      </template>
+    </BaseSearchForm>
+
+    <el-card class="publish-page__table">
+      <BaseTable
+        :loading="loading"
+        :data="list"
+        :total="total"
+        :current-page="query.pageIndex"
+        :page-size="query.pageSize"
+        @page-change="handlePageChange"
+      >
+        <el-table-column
+          prop="name"
+          :label="t('workflow.definition.name')"
+          min-width="180"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="code"
+          :label="t('workflow.definition.code')"
+          width="140"
+        />
+        <el-table-column
+          prop="category"
+          :label="t('workflow.definition.category')"
+          width="100"
+        />
+        <el-table-column
+          prop="description"
+          :label="t('workflow.definition.description')"
+          min-width="200"
+          show-overflow-tooltip
+        />
+        <el-table-column
+          prop="status"
+          :label="t('workflow.definition.status')"
+          width="100"
+          align="center"
+        >
+          <template #default="{ row }">
+            <BaseStatusTag
+              :value="row.status"
+              :options="DEFINITION_STATUS_MAP"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="version"
+          :label="t('workflow.definition.version')"
+          width="80"
+          align="center"
+        />
+        <el-table-column
+          prop="updatedAt"
+          :label="t('workflow.definition.updatedAt')"
+          width="170"
+        />
+        <el-table-column
+          :label="t('common.actions')"
+          width="200"
+          fixed="right"
+        >
+          <template #default="{ row }">
+            <el-button
+              v-if="row.status === 'draft'"
+              link
+              type="primary"
+              @click="openEdit(row)"
+            >
+              {{ t('common.edit') }}
+            </el-button>
+            <el-button
+              v-if="row.status === 'draft'"
+              link
+              type="success"
+              @click="handlePublish(row)"
+            >
+              {{ t('workflow.definition.publish') }}
+            </el-button>
+            <el-button
+              v-if="row.status === 'published'"
+              link
+              type="warning"
+              @click="handleDisable(row)"
+            >
+              {{ t('workflow.definition.disable') }}
+            </el-button>
+            <el-button
+              v-if="row.status !== 'published'"
+              link
+              type="danger"
+              @click="handleDelete(row)"
+            >
+              {{ t('common.delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </BaseTable>
+    </el-card>
+
+    <DefinitionFormDialog
+      :visible="formDialog.visible.value"
+      :is-edit="formDialog.isEdit.value"
+      :row-data="formDialog.payload.value"
+      @update:visible="formDialog.visible.value = $event"
+      @success="reload"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useCrud } from '@/composables/useCrud'
+import {
+  getDefinitionList,
+  deleteDefinition,
+  publishDefinition,
+  disableDefinition,
+} from '@/api/workflow/definition'
+import type { WorkflowDefinition } from '@/types/workflow'
+import type { SearchField } from '@/types/search'
+import BaseTable from '@/components/common/BaseTable.vue'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
+import DefinitionFormDialog from './components/DefinitionFormDialog.vue'
+
+const { t } = useI18n()
+const router = useRouter()
+
+const DEFINITION_STATUS_MAP: Record<string, { label: string; type: '' | 'success' | 'warning' | 'info' | 'danger' }> = {
+  draft: { label: 'workflow.definition.statusDraft', type: 'info' },
+  published: { label: 'workflow.definition.statusPublished', type: 'success' },
+  disabled: { label: 'workflow.definition.statusDisabled', type: 'danger' },
+}
+
+const searchFields = computed<SearchField[]>(() => [
+  { prop: 'name', label: 'workflow.definition.searchName', type: 'input' },
+  { prop: 'code', label: 'workflow.definition.searchCode', type: 'input' },
+  { prop: 'category', label: 'workflow.definition.searchCategory', type: 'input' },
+  { prop: 'status', label: 'workflow.definition.searchStatus', type: 'select', options: [
+    { label: 'workflow.definition.statusDraft', value: 'draft' },
+    { label: 'workflow.definition.statusPublished', value: 'published' },
+    { label: 'workflow.definition.statusDisabled', value: 'disabled' },
+  ] },
+])
+
+const {
+  loading, list, total, query, searchModel,
+  handleSearch, handleReset, handlePageChange,
+  formDialog, openCreate, openEdit,
+  handleDelete, reload,
+} = useCrud<WorkflowDefinition>(getDefinitionList, {
+  defaultSearchModel: { name: '', code: '', category: '', status: '' },
+  deleteFn: deleteDefinition,
+  deleteConfirmText: t('workflow.definition.deleteConfirm'),
+})
+
+const handlePublish = async (row: WorkflowDefinition) => {
+  try {
+    await ElMessageBox.confirm(t('workflow.definition.publishConfirm'), t('common.tips'), { type: 'warning' })
+  } catch {
+    return
+  }
+  await publishDefinition(row.id)
+  ElMessage.success(t('workflow.definition.publishSuccess'))
+  reload()
+}
+
+const handleDisable = async (row: WorkflowDefinition) => {
+  try {
+    await ElMessageBox.confirm(t('workflow.definition.disableConfirm'), t('common.tips'), { type: 'warning' })
+  } catch {
+    return
+  }
+  await disableDefinition(row.id)
+  ElMessage.success(t('workflow.definition.disableSuccess'))
+  reload()
+}
+</script>
+
+<style scoped lang="scss">
+.publish-page {
+}
+</style>

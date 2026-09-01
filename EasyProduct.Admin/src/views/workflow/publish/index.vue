@@ -44,7 +44,7 @@
         <el-table-column
           prop="description"
           :label="t('workflow.definition.description')"
-          min-width="200"
+          min-width="240"
           show-overflow-tooltip
         />
         <el-table-column
@@ -73,10 +73,17 @@
         />
         <el-table-column
           :label="t('common.actions')"
-          width="200"
+          width="240"
           fixed="right"
         >
           <template #default="{ row }">
+            <el-button
+              link
+              type="info"
+              @click="handleDesign(row)"
+            >
+              {{ t('workflow.definition.design') }}
+            </el-button>
             <el-button
               v-if="row.status === 'draft'"
               link
@@ -127,6 +134,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCrud } from '@/composables/useCrud'
 import {
@@ -143,6 +151,7 @@ import BaseStatusTag from '@/components/common/BaseStatusTag.vue'
 import DefinitionFormDialog from './components/DefinitionFormDialog.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const DEFINITION_STATUS_MAP: Record<string, { label: string; type: '' | 'success' | 'warning' | 'info' | 'danger' }> = {
   draft: { label: 'workflow.definition.statusDraft', type: 'info' },
@@ -172,6 +181,10 @@ const {
   deleteConfirmText: t('workflow.definition.deleteConfirm'),
 })
 
+const handleDesign = (row: WorkflowDefinition) => {
+  router.push('/workflow/designer/' + row.id)
+}
+
 const handlePublish = async (row: WorkflowDefinition) => {
   try {
     await ElMessageBox.confirm(t('workflow.definition.publishConfirm'), t('common.tips'), { type: 'warning' })
@@ -198,3 +211,4 @@ const handleDisable = async (row: WorkflowDefinition) => {
 <style scoped lang="scss">
 .publish-page {
 }
+</style>

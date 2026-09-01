@@ -114,3 +114,4 @@ const openApprove = (row: WorkflowTask) => {
 <style scoped lang="scss">
 .todo-page {
 }
+</style>

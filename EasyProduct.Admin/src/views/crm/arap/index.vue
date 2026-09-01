@@ -276,3 +276,4 @@ onMounted(() => {
 .text-danger {
   color: var(--el-color-danger);
 }
+</style>

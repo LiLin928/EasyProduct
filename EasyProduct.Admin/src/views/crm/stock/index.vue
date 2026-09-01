@@ -82,62 +82,93 @@
           :label="t('crm.stock.updatedAt')"
           width="160"
         />
+        <el-table-column
+          :label="t('common.actions')"
+          width="120"
+          fixed="right"
+        >
+          <template #default="{ row }">
+            <el-button
+              link
+              type="primary"
+              @click="openStockRecord(row)"
+            >
+              {{ t('crm.stock.viewRecord') }}
+            </el-button>
+          </template>
+        </el-table-column>
       </BaseTable>
     </el-card>
+
+    <StockRecordDialog
+      :visible="recordDialogVisible"
+      :stock-info="selectedStock"
+      @update:visible="recordDialogVisible = $event"
+    />
   </div>
 </template>
 
- <script setup lang="ts">
- import { ref, computed, onMounted } from 'vue'
- import { useI18n } from 'vue-i18n'
- import { useTable } from '@/composables/useTable'
- import { useSearch } from '@/composables/useSearch'
- import { getStockList } from '@/api/crm/stock'
- import { getWarehouseOptions } from '@/api/crm/warehouse'
- import type { Stock } from '@/types/crm'
- import type { SearchField } from '@/types/search'
- import BaseTable from '@/components/common/BaseTable.vue'
- import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useTable } from '@/composables/useTable'
+import { useSearch } from '@/composables/useSearch'
+import { getStockList } from '@/api/crm/stock'
+import { getWarehouseOptions } from '@/api/crm/warehouse'
+import type { Stock } from '@/types/crm'
+import type { SearchField } from '@/types/search'
+import BaseTable from '@/components/common/BaseTable.vue'
+import BaseSearchForm from '@/components/common/BaseSearchForm.vue'
+import StockRecordDialog from './components/StockRecordDialog.vue'
 
- const { t } = useI18n()
+const { t } = useI18n()
 
- const warehouseOptions = ref<Array<{ id: string; name: string; code: string }>>([])
- onMounted(async () => {
-   try {
-     warehouseOptions.value = await getWarehouseOptions()
-   } catch {
-     // ignore
-   }
- })
+const warehouseOptions = ref<Array<{ id: string; name: string; code: string }>>([])
+onMounted(async () => {
+  try {
+    warehouseOptions.value = await getWarehouseOptions()
+  } catch {
+    // ignore
+  }
+})
 
- const searchFields = computed<SearchField[]>(() => [
-   {
-     prop: 'warehouseId',
-     label: 'crm.stock.searchWarehouse',
-     type: 'select',
-     options: warehouseOptions.value.map(w => ({ label: w.name, value: w.id })),
-   },
-   { prop: 'keyword', label: 'crm.stock.searchKeyword', type: 'input' },
- ])
+const searchFields = computed<SearchField[]>(() => [
+  {
+    prop: 'warehouseId',
+    label: 'crm.stock.searchWarehouse',
+    type: 'select',
+    options: warehouseOptions.value.map(w => ({ label: w.name, value: w.id })),
+  },
+  { prop: 'keyword', label: 'crm.stock.searchKeyword', type: 'input' },
+])
 
- const { loading, list, total, query, handleSearch: tableSearch, handleReset: tableReset, handlePageChange } = useTable<Stock>(getStockList)
- const { searchModel, resetModel, getSearchParams } = useSearch({
-   defaultModel: { warehouseId: '', keyword: '' },
- })
+const { loading, list, total, query, handleSearch: tableSearch, handleReset: tableReset, handlePageChange } = useTable<Stock>(getStockList)
+const { searchModel, resetModel, getSearchParams } = useSearch({
+  defaultModel: { warehouseId: '', keyword: '' },
+})
 
- const handleSearch = () => {
-   Object.assign(query, getSearchParams())
-   void tableSearch()
- }
+const handleSearch = () => {
+  Object.assign(query, getSearchParams())
+  void tableSearch()
+}
 
- const handleReset = () => {
-   resetModel()
-   void tableReset()
- }
- </script>
+const handleReset = () => {
+  resetModel()
+  void tableReset()
+}
 
- <style scoped lang="scss">
- .stock-page {
-   .text-primary { color: var(--el-color-primary); font-weight: 600; }
- }
- </style>
+// 库存记录弹窗
+const recordDialogVisible = ref(false)
+const selectedStock = ref<Stock | null>(null)
+
+const openStockRecord = (row: Stock) => {
+  selectedStock.value = row
+  recordDialogVisible.value = true
+}
+</script>
+
+<style scoped lang="scss">
+.stock-page {
+  .text-primary { color: var(--el-color-primary); font-weight: 600; }
+}
+</style>

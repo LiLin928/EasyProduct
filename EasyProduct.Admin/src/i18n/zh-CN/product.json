@@ -17,6 +17,28 @@
     "createdAt": "创建时间",
     "updatedAt": "更新时间",
     "rootName": "顶级分类",
+    "tree": {
+      "title": "分类树",
+      "addRoot": "新增根分类",
+      "searchPlaceholder": "搜索分类名称",
+      "addChild": "新增",
+      "edit": "编辑",
+      "delete": "删除"
+    },
+    "detail": {
+      "selectCategory": "请选择分类",
+      "selectCategoryTip": "请在左侧选择一个分类查看详情",
+      "name": "分类名称",
+      "nameEn": "英文名称",
+      "parent": "上级分类",
+      "sort": "排序",
+      "status": "状态",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间"
+    },
+    "subcategory": {
+      "title": "子分类列表"
+    },
     "form": {
       "addTitle": "新增分类",
       "editTitle": "编辑分类",

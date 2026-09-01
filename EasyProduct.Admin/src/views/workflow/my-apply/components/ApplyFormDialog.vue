@@ -13,7 +13,10 @@
       label-width="100px"
       :disabled="submitting"
     >
-      <el-form-item :label="t('workflow.myApply.form.definition')" prop="definitionId">
+      <el-form-item
+        :label="t('workflow.myApply.form.definition')"
+        prop="definitionId"
+      >
         <el-select
           v-model="form.definitionId"
           :placeholder="t('workflow.myApply.form.definitionPlaceholder')"
@@ -28,21 +31,30 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item :label="t('workflow.myApply.form.title')" prop="title">
+      <el-form-item
+        :label="t('workflow.myApply.form.title')"
+        prop="title"
+      >
         <el-input
           v-model="form.title"
           :placeholder="t('workflow.myApply.form.titlePlaceholder')"
         />
       </el-form-item>
 
-      <el-form-item :label="t('workflow.myApply.form.businessType')" prop="businessType">
+      <el-form-item
+        :label="t('workflow.myApply.form.businessType')"
+        prop="businessType"
+      >
         <el-input
           v-model="form.businessType"
           :placeholder="t('workflow.myApply.form.businessTypePlaceholder')"
         />
       </el-form-item>
 
-      <el-form-item :label="t('workflow.myApply.form.formData')" prop="formData">
+      <el-form-item
+        :label="t('workflow.myApply.form.formData')"
+        prop="formData"
+      >
         <el-input
           v-model="form.formData"
           type="textarea"

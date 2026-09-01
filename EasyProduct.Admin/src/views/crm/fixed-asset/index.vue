@@ -273,3 +273,4 @@ const handleDelete = async (row: FixedAsset) => {
 <style scoped lang="scss">
 .fixed-asset-page {
 }
+</style>

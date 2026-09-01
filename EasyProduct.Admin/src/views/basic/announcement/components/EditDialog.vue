@@ -100,7 +100,7 @@
             style="height: 400px; overflow-y: hidden"
             :default-config="editorConfig"
             mode="default"
-            @onCreated="handleEditorCreated"
+            @on-created="handleEditorCreated"
           />
         </div>
       </el-form-item>

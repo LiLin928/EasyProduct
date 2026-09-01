@@ -7,7 +7,10 @@
       @reset="handleReset"
     >
       <template #toolbar>
-        <el-button type="primary" @click="openApply">
+        <el-button
+          type="primary"
+          @click="openApply"
+        >
           {{ t('workflow.myApply.add') }}
         </el-button>
       </template>
@@ -159,3 +162,4 @@ const handleCancel = async (row: WorkflowInstance) => {
 <style scoped lang="scss">
 .my-apply-page {
 }
+</style>

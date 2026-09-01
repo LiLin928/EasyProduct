@@ -4,8 +4,65 @@ import { ok, fail, paginate } from '../../helpers/envelope.js'
 import { guid, isoTime } from '../../helpers/id.js'
 import { SUPPLIERS } from '../../data/crm.js'
 import { PURCHASE_ORDERS, type PurchaseOrder, type PurchaseOrderItem } from '../../data/crm-purchase.js'
+import { STOCKS, STOCK_RECORDS, type StockRecord, WAREHOUSES } from '../../data/crm-inventory.js'
 
 export const adminCrmPurchaseOrderRouter = Router()
+
+/**
+ * 处理采购入库
+ * 当采购订单状态变更为 received 时，自动创建入库记录并更新库存
+ */
+function processPurchaseInbound(order: PurchaseOrder): void {
+  const operator = 'System'
+  const remark = `采购入库 - 订单: ${order.orderNo}`
+
+  for (const item of order.items) {
+    // 1. 创建入库记录
+    const warehouse = WAREHOUSES.find(w => w.id === item.warehouseId) ?? WAREHOUSES[0]
+    const record: StockRecord = {
+      id: guid(),
+      warehouseId: item.warehouseId,
+      warehouseName: warehouse?.name ?? '深圳主仓',
+      skuCode: item.skuCode,
+      skuName: item.skuName,
+      spec: item.spec,
+      unit: '个',
+      type: 'in',
+      sourceType: 'purchase_in',
+      sourceOrderNo: order.orderNo,
+      quantity: item.quantity,
+      operator,
+      remark,
+      createdAt: isoTime(),
+    }
+    STOCK_RECORDS.unshift(record)
+
+    // 2. 更新库存账面
+    const stock = STOCKS.find(s => s.warehouseId === item.warehouseId && s.skuCode === item.skuCode)
+    if (stock) {
+      stock.available += item.quantity
+      stock.total += item.quantity
+      stock.updatedAt = isoTime()
+    } else {
+      // 如果库存不存在，创建新库存记录
+      STOCKS.push({
+        id: guid(),
+        warehouseId: item.warehouseId,
+        warehouseName: warehouse?.name ?? '深圳主仓',
+        skuCode: item.skuCode,
+        skuName: item.skuName,
+        spec: item.spec,
+        unit: '个',
+        available: item.quantity,
+        locked: 0,
+        total: item.quantity,
+        minLimit: 100,
+        maxLimit: 1000,
+        updatedAt: isoTime(),
+      })
+    }
+  }
+}
 
 // ── 供应商下拉 ──
 adminCrmPurchaseOrderRouter.get('/crm/purchase-order/supplier/options', (_req, res) => {
@@ -45,6 +102,7 @@ adminCrmPurchaseOrderRouter.post('/crm/purchase-order', (req, res) => {
   const sup = SUPPLIERS.find(s => s.id === body.supplierId)
   if (!sup) { res.json(fail('supplier not found', 404)); return }
 
+  const defaultWarehouseId = WAREHOUSES[0]?.id ?? ''
   const id = guid()
   const items: PurchaseOrderItem[] = (body.items ?? []).map((it: PurchaseOrderItem) => {
     const amount = +(it.price * it.quantity).toFixed(2)
@@ -52,6 +110,8 @@ adminCrmPurchaseOrderRouter.post('/crm/purchase-order', (req, res) => {
     return {
       id: guid(),
       orderId: id,
+      skuCode: it.skuCode ?? '',
+      skuName: it.skuName ?? it.productName ?? '',
       productName: it.productName,
       spec: it.spec || '',
       price: it.price,
@@ -61,6 +121,7 @@ adminCrmPurchaseOrderRouter.post('/crm/purchase-order', (req, res) => {
       amount,
       taxAmount,
       totalAmount: +(amount + taxAmount).toFixed(2),
+      warehouseId: it.warehouseId ?? defaultWarehouseId,
     }
   })
   const subtotal = +items.reduce((s, i) => s + i.amount, 0).toFixed(2)
@@ -74,7 +135,7 @@ adminCrmPurchaseOrderRouter.post('/crm/purchase-order', (req, res) => {
     supplierName: sup.name,
     buyerName: body.buyerName || '',
     currencyCode: body.currencyCode || 'CNY',
-    currencySymbol: body.currencySymbol || 'Y',
+    currencySymbol: body.currencySymbol || '¥',
     paymentTerms: body.paymentTerms || 'Net 30',
     deliveryDate: body.deliveryDate || isoTime(10).slice(0, 10),
     status: 'draft',
@@ -97,6 +158,7 @@ adminCrmPurchaseOrderRouter.put('/crm/purchase-order/:id', (req, res) => {
   if (order.status !== 'draft') { res.json(fail('only draft orders can be edited')); return }
 
   const body = req.body
+  const defaultWarehouseId = WAREHOUSES[0]?.id ?? ''
   if (body.buyerName !== undefined) order.buyerName = body.buyerName
   if (body.paymentTerms !== undefined) order.paymentTerms = body.paymentTerms
   if (body.deliveryDate !== undefined) order.deliveryDate = body.deliveryDate
@@ -109,6 +171,9 @@ adminCrmPurchaseOrderRouter.put('/crm/purchase-order/:id', (req, res) => {
         ...it,
         id: it.id || guid(),
         orderId: order.id,
+        skuCode: it.skuCode ?? '',
+        skuName: it.skuName ?? it.productName ?? '',
+        warehouseId: it.warehouseId ?? defaultWarehouseId,
         amount,
         taxAmount,
         totalAmount: +(amount + taxAmount).toFixed(2),
@@ -128,7 +193,7 @@ adminCrmPurchaseOrderRouter.put('/crm/purchase-order/:id/status', (req, res) => 
   if (!order) { res.json(fail('purchase order not found', 404)); return }
 
   const newStatus = req.body.status as PurchaseOrder['status']
-  const valid: Record<PurchaseOrder['status'], PurchaseOrder['status'][]> = {
+  const valid: Record<PurchaseOrder['status'], PurchaseOrder['status'][]>= {
     draft: ['confirmed', 'cancelled'],
     confirmed: ['received', 'cancelled'],
     received: ['completed'],
@@ -139,6 +204,12 @@ adminCrmPurchaseOrderRouter.put('/crm/purchase-order/:id/status', (req, res) => 
     res.json(fail(`cannot transition from ${order.status} to ${newStatus}`))
     return
   }
+
+  // 当状态变为 received 时，自动处理入库
+  if (newStatus === 'received') {
+    processPurchaseInbound(order)
+  }
+
   order.status = newStatus
   order.updatedAt = isoTime()
   res.json(ok(null, 'status updated'))

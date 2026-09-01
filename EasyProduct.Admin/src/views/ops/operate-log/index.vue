@@ -276,3 +276,4 @@ const openDetail = (row: OperateLog) => {
 <style scoped lang="scss">
 .operate-log-page {
 }
+</style>

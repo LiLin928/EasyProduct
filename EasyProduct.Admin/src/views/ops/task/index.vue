@@ -227,3 +227,4 @@ const handleDelete = async (row: Task) => {
 <style scoped lang="scss">
 .task-page {
 }
+</style>
