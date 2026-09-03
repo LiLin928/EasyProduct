@@ -1,14 +1,38 @@
 {
-  "app": { "name": "EasyProduct" },
-  "nav": { "home": "首页" },
-  "footer": { "rights": "版权所有" },
-  "error": { "network": "网络错误" },
-  "locale": { "zhCN": "中文", "enUS": "EN" },
+  "app": {
+    "name": "EasyProduct"
+  },
+  "nav": {
+    "home": "首页",
+    "products": "产品中心",
+    "news": "新闻动态",
+    "announcement": "公告中心",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "inquiry": "询价篮",
+    "videos": "视频中心",
+    "downloads": "资料下载",
+    "closeMenu": "关闭菜单",
+    "openMenu": "打开菜单"
+  },
+  "footer": {
+    "rights": "版权所有"
+  },
+  "error": {
+    "network": "网络错误"
+  },
+  "locale": {
+    "zhCN": "中文",
+    "enUS": "EN"
+  },
   "pagination": {
     "prev": "上一页",
     "next": "下一页",
     "page": "第 {current} 页 / 共 {total} 页"
   },
   "empty": "暂无数据",
-  "loading": "加载中..."
+  "loading": "加载中...",
+  "viewAll": "查看全部",
+  "previous": "上一页",
+  "next": "下一页"
 }

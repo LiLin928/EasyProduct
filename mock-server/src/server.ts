@@ -13,7 +13,7 @@ app.use(express.json())
 // 模块 mock 状态表（与 README 一致；新增模块在此登记）
 const MOCK_STATUS = [
   { zone: 'admin', module: 'Basic（认证/菜单/字典骨架）', status: 'pending', backendPhase: 'P1' },
-  { zone: 'site', module: '官网内容（首页聚合骨架）', status: 'pending', backendPhase: 'P2' },
+  { zone: 'site', module: '官网内容（首页聚合骨架）', status: 'completed', backendPhase: 'P2' },
   { zone: 'app', module: '商城（会员登录骨架）', status: 'pending', backendPhase: 'P3' },
 ]
 

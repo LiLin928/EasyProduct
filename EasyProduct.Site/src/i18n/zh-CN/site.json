@@ -1,7 +1,23 @@
 {
   "home": {
     "newsTitle": "新闻动态",
-    "moreNews": "查看更多"
+    "moreNews": "查看更多",
+    "viewMore": "了解更多",
+    "feature1Title": "优质产品",
+    "feature1Desc": "精选高品质产品，满足您的各种需求",
+    "feature2Title": "全球服务",
+    "feature2Desc": "服务覆盖多个国家和地区，为您提供全球支持",
+    "feature3Title": "专业团队",
+    "feature3Desc": "多年行业经验，专业团队为您服务",
+    "categoriesTitle": "产品分类",
+    "categoriesSubtitle": "探索我们的产品系列，找到最适合您的解决方案"
+  },
+  "footer": {
+    "about": "关于我们",
+    "aboutDesc": "EasyProduct 致力于为全球市场提供高品质产品和专业服务。",
+    "links": "快速链接",
+    "contact": "联系我们",
+    "rights": "保留所有权利。"
   },
   "notFound": {
     "back": "返回首页"
@@ -11,7 +27,11 @@
     "detail": "产品详情",
     "allCategories": "全部分类",
     "quantity": "数量",
-    "addToInquiry": "加入询价篮"
+    "addToInquiry": "加入询价篮",
+    "subtitle": "精选优质产品，满足您的各种需求",
+    "filter": "筛选",
+    "allProduct": "全部产品",
+    "searchPlaceholder": "搜索产品名称..."
   },
   "news": {
     "title": "新闻动态",
@@ -34,12 +54,23 @@
   },
   "videos": {
     "title": "视频中心",
-    "views": "次播放"
+    "subtitle": "观看我们的产品演示和技术视频",
+    "allCategories": "全部分类",
+    "searchPlaceholder": "搜索视频...",
+    "views": "次播放",
+    "play": "播放视频",
+    "filter": "分类筛选",
+    "all": "全部视频"
   },
   "downloads": {
     "title": "资料下载",
+    "subtitle": "下载产品手册、技术文档和相关资料",
+    "allCategories": "全部分类",
+    "searchPlaceholder": "搜索资料...",
     "downloads": "次下载",
-    "download": "下载"
+    "download": "立即下载",
+    "filter": "分类筛选",
+    "all": "全部资料"
   },
   "announcement": {
     "title": "公告中心",

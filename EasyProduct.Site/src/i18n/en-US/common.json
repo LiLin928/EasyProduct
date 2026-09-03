@@ -1,14 +1,38 @@
 {
-  "app": { "name": "EasyProduct" },
-  "nav": { "home": "Home" },
-  "footer": { "rights": "All rights reserved" },
-  "error": { "network": "Network error" },
-  "locale": { "zhCN": "中文", "enUS": "EN" },
+  "app": {
+    "name": "EasyProduct"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "news": "News",
+    "announcement": "Announcements",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "inquiry": "Inquiry",
+    "videos": "Videos",
+    "downloads": "Downloads",
+    "closeMenu": "Close Menu",
+    "openMenu": "Open Menu"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  },
+  "error": {
+    "network": "Network error"
+  },
+  "locale": {
+    "zhCN": "中文",
+    "enUS": "EN"
+  },
   "pagination": {
     "prev": "Previous",
     "next": "Next",
     "page": "Page {current} of {total}"
   },
   "empty": "No data",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "viewAll": "View All",
+  "previous": "Previous",
+  "next": "Next"
 }

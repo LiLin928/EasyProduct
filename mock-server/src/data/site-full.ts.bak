@@ -47,23 +47,8 @@ export const NEWS_FULL: SiteNews[] = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
-export interface VideoCategory {
-  id: string;
-  name: string;
-  nameEn: string;
-  sort: number;
-}
-
-export const VIDEO_CATEGORIES: VideoCategory[] = [
-  { id: "cat-1", name: "产品教程", nameEn: "Product Tutorials", sort: 1 },
-  { id: "cat-2", name: "企业宣传", nameEn: "Corporate", sort: 2 },
-  { id: "cat-3", name: "客户案例", nameEn: "Case Studies", sort: 3 },
-  { id: "cat-4", name: "技术培训", nameEn: "Technical Training", sort: 4 },
-];
-
 export interface SiteVideo {
   id: string;
-  categoryId: string;
   title: string;
   titleEn: string;
   coverImage: string;
@@ -93,23 +78,8 @@ export const VIDEOS: SiteVideo[] = Array.from({ length: 10 }, (_, i) => ({
   updatedAt: isoTime(),
 }));
 
-export interface DownloadCategory {
-  id: string;
-  name: string;
-  nameEn: string;
-  sort: number;
-}
-
-export const DOWNLOAD_CATEGORIES: DownloadCategory[] = [
-  { id: "dcat-1", name: "产品手册", nameEn: "Product Manuals", sort: 1 },
-  { id: "dcat-2", name: "技术文档", nameEn: "Technical Documents", sort: 2 },
-  { id: "dcat-3", name: "软件下载", nameEn: "Software Downloads", sort: 3 },
-  { id: "dcat-4", name: "驱动程序", nameEn: "Drivers", sort: 4 },
-];
-
 export interface SiteDownload {
   id: string;
-  categoryId: string;
   title: string;
   titleEn: string;
   fileUrl: string;
@@ -123,23 +93,19 @@ export interface SiteDownload {
 }
 
 // 下载列表（15 条）
-export const DOWNLOADS: SiteDownload[] = Array.from({ length: 15 }, (_, i) => {
-  const categoryIndex = i % 4;
-  return {
-    id: guid(),
-    categoryId: DOWNLOAD_CATEGORIES[categoryIndex].id,
-    title: Mock.mock("@ctitle(8,15)"),
-    titleEn: Mock.mock("@title(4,8)"),
-    fileUrl: "https://example.com/file.pdf",
-    fileSize: Mock.mock("@integer(1024, 10485760)") as number,
-    downloadCount: Mock.mock("@integer(0, 500)") as number,
-    status: "published" as SiteDownloadStatus,
-    sort: i + 1,
-    publishTime: isoTime(),
-    createdAt: isoTime(),
-    updatedAt: isoTime(),
-  };
-});
+export const DOWNLOADS: SiteDownload[] = Array.from({ length: 15 }, (_, i) => ({
+  id: guid(),
+  title: Mock.mock("@ctitle(8,15)"),
+  titleEn: Mock.mock("@title(4,8)"),
+  fileUrl: "https://example.com/file.pdf",
+  fileSize: Mock.mock("@integer(1024, 10485760)") as number,
+  downloadCount: Mock.mock("@integer(0, 500)") as number,
+  status: "published" as SiteDownloadStatus,
+  sort: i + 1,
+  publishTime: isoTime(),
+  createdAt: isoTime(),
+  updatedAt: isoTime(),
+}));
 
 export interface SiteAbout {
   id: string;
@@ -180,4 +146,3 @@ export const CONTACT_INFO: ContactInfo = {
   workingHours: "周一至周五 9:00-18:00",
   workingHoursEn: "Mon-Fri 9:00-18:00",
 };
-

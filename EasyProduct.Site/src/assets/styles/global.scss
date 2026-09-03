@@ -1,11 +1,114 @@
-@use './variables' as *;
+@use "variables" as *;
+@use "mixins" as *;
 
+// ========================================
+// 基础安全：避免移动端横向溢出
+// ========================================
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+// ========================================
+// 通用工具类
+// ========================================
+.container {
+  max-width: $site-max-width;
+  margin: 0 auto;
+  padding: 0 $spacing-xl;
+
+  @include compact {
+    padding: 0 $spacing-md;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: $color-primary;
+}
+
+.text-accent {
+  color: $color-accent;
+}
+
+// ========================================
+// 响应式隐藏
+// ========================================
+.hidden-mobile {
+  @include mobile {
+    display: none !important;
+  }
+}
+
+.hidden-tablet {
+  @include tablet {
+    display: none !important;
+  }
+}
+
+.hidden-desktop {
+  @include desktop {
+    display: none !important;
+  }
+}
+
+.hidden-compact {
+  @include compact {
+    display: none !important;
+  }
+}
+
+// ========================================
+// 媒体元素默认不撑破容器
+// ========================================
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+// ========================================
+// 滚动条样式
+// ========================================
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-bg-tertiary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-border;
+  border-radius: 4px;
+
+  &:hover {
+    background: $color-text-tertiary;
+  }
+}
+
+@include compact {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+// ========================================
+// App Toast 样式
+// ========================================
 .app-toast {
   position: fixed;
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999;
+  z-index: $z-index-toast;
   padding: $spacing-sm $spacing-md;
   border-radius: $radius-sm;
   background: rgba(0, 0, 0, 0.75);

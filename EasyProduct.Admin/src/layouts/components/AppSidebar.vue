@@ -15,9 +15,10 @@
         circle
         @click="appStore.toggleSidebar()"
       >
-        <el-icon class="collapse-icon">
-          <component :is="appStore.sidebarCollapsed ? 'ArrowRight' : 'ArrowLeft'" />
+        <el-icon class="collapse-icon" v-if="!appStore.sidebarCollapsed">
+          <component is="ArrowRight" />
         </el-icon>
+        <span class="logo-text" v-else>EP</span>
       </el-button>
     </div>
     <el-menu
@@ -91,7 +92,7 @@ onMounted(async () => {
   width: 220px;
   height: 100vh;
   background: var(--ep-bg-card);
-  border-right: 1px solid var(--ep-border-light);
+  // border-right: 1px solid var(--ep-border-light);
   display: flex;
   flex-direction: column;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -199,9 +200,9 @@ onMounted(async () => {
       border-radius: 8px;
     }
 
-    :deep(.el-menu-item.is-active) {
-      border-right: 3px solid var(--ep-primary);
-    }
+    // :deep(.el-menu-item.is-active) {
+    //   border-right: 3px solid var(--ep-primary);
+    // }
 
     :deep(.menu-icon) {
       font-size: 18px;

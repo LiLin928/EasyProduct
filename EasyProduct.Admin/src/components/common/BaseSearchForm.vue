@@ -1,12 +1,12 @@
 <template>
   <el-card class="base-search-form">
     <!-- 工具栏插槽（右对齐） -->
-    <div
+    <!-- <div
       v-if="$slots.toolbar"
       class="base-search-form__toolbar"
     >
       <slot name="toolbar" />
-    </div>
+    </div> -->
 
     <el-form
       :model="localModel"
@@ -14,7 +14,7 @@
       :label-width="labelWidth"
     >
       <!-- 动态渲染字段 -->
-      <el-form-item
+      <el-form-item 
         v-for="field in fields"
         :key="field.prop"
         :label="t(field.label)"
@@ -56,10 +56,9 @@
           @change="handleSearch"
         />
       </el-form-item>
-
       <!-- 操作按钮（右对齐） -->
       <el-form-item
-        v-if="showButtons"
+        v-if="showButtons || $slots.toolbar|| $slots.extraActions"
         class="base-search-form__actions"
       >
         <el-button
@@ -72,13 +71,16 @@
         <el-button @click="handleReset">
           {{ t(resetButtonText) }}
         </el-button>
+        <!-- 额外操作按钮插槽（位于重置按钮之后） -->
+        <slot name="toolbar" />
+        <slot name="extra-actions" />
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SearchField } from '@/types/search'
 
@@ -107,6 +109,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const slots = useSlots()
 
 // 本地模型（用于双向绑定）
 const localModel = computed({
@@ -140,6 +143,12 @@ const handleReset = (): void => {
 
   &__actions {
     margin-left: auto; // 推到右侧
+    float: right;
+
+    // 按钮间距
+    :deep(.el-button + .el-button) {
+      margin-left: 12px;
+    }
   }
 
   // 下拉框最小宽度

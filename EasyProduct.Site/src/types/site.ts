@@ -78,9 +78,18 @@ export interface ProductQuery {
   keyword?: string
 }
 
+/** 视频分类 */
+export interface VideoCategory {
+  id: string
+  name: string
+  nameEn: string
+  sort: number
+}
+
 /** 视频 */
 export interface Video {
   id: string
+  categoryId: string
   title: string
   titleEn: string
   coverImage: string
@@ -90,9 +99,18 @@ export interface Video {
   publishTime: string
 }
 
+/** 下载分类 */
+export interface DownloadCategory {
+  id: string
+  name: string
+  nameEn: string
+  sort: number
+}
+
 /** 下载 */
 export interface Download {
   id: string
+  categoryId: string
   title: string
   titleEn: string
   fileUrl: string

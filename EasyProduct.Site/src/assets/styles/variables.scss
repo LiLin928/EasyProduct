@@ -1,14 +1,109 @@
-$spacing-xs: 4px;
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 48px;
-$radius-sm: 4px;
-$radius-md: 8px;
-$site-max-width: 1200px;
-$color-primary: #1e6fff;
-$color-text: #22272e;
-$color-text-secondary: #6b7280;
-$color-bg: #ffffff;
-$color-bg-soft: #f6f8fa;
-$color-border: #e5e7eb;
+// ========================================
+// 颜色系统 - 参考 WebSiteNew 的专业配色
+// ========================================
+$color-primary: #1a5ba7;
+$color-primary-light: #2563eb;
+$color-primary-dark: #0f3d7a;
+$color-primary-rgb: 26, 91, 167;
+$color-accent: #e4332d;
+$color-accent-light: #ff4f49;
+$color-accent-dark: #c22a25;
+$color-accent-rgb: 228, 51, 45;
+
+// 文本颜色
+$color-text-primary: #0f172a;
+$color-text-secondary: #475569;
+$color-text-tertiary: #94a3b8;
+
+// 背景色
+$color-bg-primary: #fff;
+$color-bg-secondary: #f8fafc;
+$color-bg-tertiary: #f1f5f9;
+
+// 边框颜色
+$color-border: #e2e8f0;
+$color-border-light: #f1f5f9;
+
+// 功能色
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-danger: #ef4444;
+$color-info: #909399;
+
+// ========================================
+// 字体系统
+// ========================================
+$font-display: 'Syne', sans-serif;
+$font-heading: 'Outfit', sans-serif;
+$font-body: 'Noto Sans SC', 'Outfit', sans-serif;
+
+// 字体大小
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+
+// ========================================
+// 间距系统 - 7级
+// ========================================
+$spacing-xs: 0.5rem;   // 8px
+$spacing-sm: 1rem;     // 16px
+$spacing-md: 1.5rem;   // 24px
+$spacing-lg: 2rem;     // 32px
+$spacing-xl: 3rem;     // 48px
+$spacing-2xl: 4rem;    // 64px
+$spacing-3xl: 6rem;    // 96px
+
+// ========================================
+// 圆角
+// ========================================
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+
+// ========================================
+// 阴影系统
+// ========================================
+$shadow-sm: 0 2px 4px rgb(0 0 0 / 5%);
+$shadow-md: 0 4px 12px rgb(0 0 0 / 8%);
+$shadow-lg: 0 8px 24px rgb(0 0 0 / 12%);
+$shadow-xl: 0 16px 48px rgb(0 0 0 / 16%);
+
+// ========================================
+// 响应式断点
+// ========================================
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1200px;
+
+// ========================================
+// 过渡动画
+// ========================================
+$transition-fast: 0.15s ease;
+$transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ========================================
+// Z-index 层级
+// ========================================
+$z-index-navbar: 1000;
+$z-index-sidebar: 1100;
+$z-index-modal: 1200;
+$z-index-toast: 1300;
+
+// ========================================
+// 布局
+// ========================================
+$site-max-width: 1400px;
+
+// ========================================
+// 向后兼容的旧变量名
+// ========================================
+$color-text: $color-text-primary;
+$color-bg: $color-bg-primary;
+$color-bg-soft: $color-bg-secondary;
+$color-bg-card: $color-bg-primary;
+$color-bg-light: $color-bg-secondary;
+$color-bg-hover: $color-bg-tertiary;

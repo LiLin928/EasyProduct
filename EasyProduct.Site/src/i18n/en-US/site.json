@@ -1,7 +1,23 @@
 {
   "home": {
     "newsTitle": "News",
-    "moreNews": "More"
+    "moreNews": "More",
+    "viewMore": "View More",
+    "feature1Title": "Quality Products",
+    "feature1Desc": "Carefully selected high-quality products to meet your various needs",
+    "feature2Title": "Global Service",
+    "feature2Desc": "Serving multiple countries and regions worldwide",
+    "feature3Title": "Professional Team",
+    "feature3Desc": "Years of industry experience with a professional team at your service",
+    "categoriesTitle": "Product Categories",
+    "categoriesSubtitle": "Explore our product series and find the best solution for you"
+  },
+  "footer": {
+    "about": "About Us",
+    "aboutDesc": "EasyProduct is committed to providing high-quality products and professional services to the global market.",
+    "links": "Quick Links",
+    "contact": "Contact Us",
+    "rights": "All rights reserved."
   },
   "notFound": {
     "back": "Back to Home"
@@ -11,7 +27,11 @@
     "detail": "Product Detail",
     "allCategories": "All Categories",
     "quantity": "Quantity",
-    "addToInquiry": "Add to Inquiry"
+    "addToInquiry": "Add to Inquiry",
+    "subtitle": "Carefully selected quality products to meet your various needs",
+    "filter": "Filter",
+    "allProduct": "All Products",
+    "searchPlaceholder": "Search product name..."
   },
   "news": {
     "title": "News",
@@ -34,12 +54,23 @@
   },
   "videos": {
     "title": "Video Center",
-    "views": "views"
+    "subtitle": "Watch our product demos and technical videos",
+    "allCategories": "All Categories",
+    "searchPlaceholder": "Search videos...",
+    "views": "views",
+    "play": "Play Video",
+    "filter": "Filter",
+    "all": "All Videos"
   },
   "downloads": {
     "title": "Downloads",
+    "subtitle": "Download product manuals, technical documents and related materials",
+    "allCategories": "All Categories",
+    "searchPlaceholder": "Search documents...",
     "downloads": "downloads",
-    "download": "Download"
+    "download": "Download Now",
+    "filter": "Filter",
+    "all": "All Documents"
   },
   "announcement": {
     "title": "Announcements",

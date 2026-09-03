@@ -1,4 +1,4 @@
-@use './variables' as *;
+@use "variables" as *;
 
 * {
   box-sizing: border-box;
@@ -8,9 +8,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  color: $color-text;
-  background: $color-bg;
-  font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: $color-text-primary;
+  background: $color-bg-primary;
+  font-family: $font-body;
 }
 
 a {
