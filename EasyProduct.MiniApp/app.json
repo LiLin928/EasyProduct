@@ -4,6 +4,14 @@
     "pages/category/category",
     "pages/cart/cart",
     "pages/profile/profile",
+    "pages/product/detail/detail",
+    "pages/order/list/list",
+    "pages/order/detail/detail",
+    "pages/address/list/list",
+    "pages/address/edit/edit",
+    "pages/pay/checkout/checkout",
+    "pages/pay/result/result",
+    "pages/search/search",
     "pages/announcement/index",
     "pages/announcement/detail"
   ],
@@ -16,6 +24,8 @@
   "tabBar": {
     "color": "#999999",
     "selectedColor": "#1e6fff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
     "list": [
       { "pagePath": "pages/index/index", "text": "首页" },
       { "pagePath": "pages/category/category", "text": "分类" },

@@ -1,9 +1,10 @@
 // stores/base.store.ts
+
 type Listener<T> = (state: T) => void
 
 /** 全局状态基类：getState/setState/subscribe（F3 cart/member store 继承它） */
 export class BaseStore<T> {
-  private state: T
+  protected state: T
   private listeners: Array<Listener<T>> = []
 
   constructor(initial: T) {

@@ -1,0 +1,53 @@
+<!-- 地址列表页 -->
+<view class="address-list-page">
+  <!-- 地址列表 -->
+  <scroll-view class="address-list" scroll-y wx:if="{{ addresses.length > 0 }}">
+    <view class="address-item" wx:for="{{ addresses }}" wx:key="id" data-item="{{ item }}" bindtap="onAddressTap">
+      <view class="address-content">
+        <view class="address-header">
+          <text class="address-name">{{ item.name }}</text>
+          <text class="address-phone">{{ item.phone }}</text>
+          <view class="default-tag" wx:if="{{ item.isDefault }}">默认</view>
+        </view>
+        <view class="address-detail">{{ item.province }}{{ item.city }}{{ item.district }}{{ item.detail }}</view>
+      </view>
+
+      <view class="address-actions">
+        <view class="action-btn" bindtap="onSetDefault" data-id="{{ item.id }}">
+          <view class="checkbox {{ item.isDefault ? "checked" : "" }}">
+            <text wx:if="{{ item.isDefault }}">✓</text>
+          </view>
+          <text>{{ t("common.address.default") }}</text>
+        </view>
+        <view class="action-btn" bindtap="onEdit" data-id="{{ item.id }}">
+          <image src="/static/icons/edit.png" class="action-icon" />
+          <text>{{ t("common.button.edit") }}</text>
+        </view>
+        <view class="action-btn" bindtap="onDelete" data-id="{{ item.id }}">
+          <image src="/static/icons/delete.png" class="action-icon" />
+          <text>{{ t("common.button.delete") }}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="list-footer"></view>
+  </scroll-view>
+
+  <!-- 空地址 -->
+  <view class="empty-address" wx:if="{{ addresses.length === 0 && !loading }}">
+    <image class="empty-icon" src="/static/icons/address-empty.png" mode="aspectFit" />
+    <text class="empty-text">暂无收货地址</text>
+    <view class="add-btn" bindtap="onAddAddress">{{ t("common.address.add") }}</view>
+  </view>
+
+  <!-- 底部添加按钮 -->
+  <view class="footer-btn" bindtap="onAddAddress" wx:if="{{ addresses.length > 0 }}">
+    <text>+ {{ t("common.address.add") }}</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{ loading }}">
+    <text>{{ t("common.loading") }}</text>
+  </view>
+</view>

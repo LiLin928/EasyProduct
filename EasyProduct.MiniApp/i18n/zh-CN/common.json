@@ -1,9 +1,91 @@
 {
   "app": { "name": "EasyProduct" },
-  "button": { "confirm": "确定", "cancel": "取消" },
+  "button": {
+    "confirm": "确定",
+    "cancel": "取消",
+    "submit": "提交",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "buy": "立即购买",
+    "addToCart": "加入购物车",
+    "settle": "结算",
+    "pay": "支付",
+    "receive": "确认收货",
+    "cancelOrder": "取消订单",
+    "more": "更多",
+    "viewMore": "查看更多"
+  },
   "loading": "加载中…",
   "loadFailed": "加载失败",
   "tab": { "home": "首页", "category": "分类", "cart": "购物车", "profile": "我的" },
+  "search": { "placeholder": "搜索商品" },
+  "product": {
+    "price": "价格",
+    "originalPrice": "原价",
+    "stock": "库存",
+    "sales": "销量",
+    "hot": "热销推荐",
+    "new": "新品上市",
+    "detail": "商品详情",
+    "spec": "选择规格",
+    "quantity": "数量",
+    "addToCartSuccess": "已加入购物车",
+    "noStock": "库存不足"
+  },
+  "cart": {
+    "title": "购物车",
+    "empty": "购物车是空的",
+    "selectAll": "全选",
+    "total": "合计",
+    "settle": "结算",
+    "deleteConfirm": "确定删除该商品吗？"
+  },
+  "order": {
+    "title": "我的订单",
+    "orderNo": "订单号",
+    "createTime": "下单时间",
+    "totalAmount": "订单金额",
+    "status": {
+      "pending": "待付款",
+      "paid": "待发货",
+      "shipped": "待收货",
+      "completed": "已完成",
+      "cancelled": "已取消",
+      "refunded": "已退款"
+    },
+    "payNow": "立即支付",
+    "cancel": "取消订单",
+    "confirmReceive": "确认收货"
+  },
+  "address": {
+    "title": "收货地址",
+    "name": "收货人",
+    "phone": "联系电话",
+    "region": "所在地区",
+    "detail": "详细地址",
+    "default": "设为默认",
+    "add": "新增地址",
+    "edit": "编辑地址",
+    "deleteConfirm": "确定删除该地址吗？"
+  },
+  "pay": {
+    "title": "确认支付",
+    "orderInfo": "订单信息",
+    "payAmount": "支付金额",
+    "payMethod": "支付方式",
+    "wxPay": "微信支付",
+    "paySuccess": "支付成功",
+    "payFailed": "支付失败"
+  },
+  "profile": {
+    "myOrders": "我的订单",
+    "myAddress": "收货地址",
+    "contactService": "联系客服",
+    "settings": "设置",
+    "logout": "退出登录"
+  },
   "announcement": {
     "title": "公告中心",
     "detail": "公告详情",

@@ -1,0 +1,111 @@
+<!-- 商品详情页 -->
+<view class="product-detail-page" wx:if="{{ product }}">
+  <!-- 商品轮播图 -->
+  <swiper class="product-swiper" indicator-dots circular>
+    <swiper-item wx:for="{{ product.images || [product.image] }}" wx:key="index">
+      <image class="product-image" src="{{ item }}" mode="aspectFill" data-urls="{{ product.images || [product.image] }}" data-current="{{ item }}" bindtap="previewImage" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 商品信息 -->
+  <view class="product-info">
+    <view class="price-row">
+      <text class="current-price">¥{{ currentPrice }}</text>
+      <text class="original-price" wx:if="{{ product.originalPrice }}">¥{{ product.originalPrice }}</text>
+    </view>
+    <view class="product-name">{{ product.name }}</view>
+    <view class="product-desc" wx:if="{{ product.description }}">{{ product.description }}</view>
+    <view class="product-stats">
+      <text>销量 {{ product.sales || 0 }}</text>
+      <text>库存 {{ currentStock }}</text>
+    </view>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="spec-section" wx:if="{{ product.specs && product.specs.length > 0 }}" bindtap="showSpecPopup" data-type="select">
+    <text class="spec-label">{{ t("common.product.spec") }}</text>
+    <text class="spec-value">{{ selectedSpecText || "请选择规格" }}</text>
+    <text class="spec-arrow">></text>
+  </view>
+
+  <!-- 商品详情 -->
+  <view class="detail-section">
+    <view class="section-title">{{ t("common.product.detail") }}</view>
+    <rich-text class="detail-content" nodes="{{ product.detail }}" wx:if="{{ product.detail }}"></rich-text>
+    <view class="detail-images" wx:if="{{ product.images && product.images.length > 1 }}">
+      <image wx:for="{{ product.images }}" wx:key="index" src="{{ item }}" mode="widthFix" />
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <view class="action-left">
+      <view class="action-item" bindtap="onCartTap">
+        <image src="/static/icons/cart.png" class="action-icon" />
+        <text>购物车</text>
+      </view>
+      <view class="action-item" bindtap="onServiceTap">
+        <image src="/static/icons/service.png" class="action-icon" />
+        <text>客服</text>
+      </view>
+    </view>
+    <view class="action-right">
+      <view class="btn-cart" bindtap="showSpecPopup" data-type="cart">{{ t("common.button.addToCart") }}</view>
+      <view class="btn-buy" bindtap="showSpecPopup" data-type="buy">{{ t("common.button.buy") }}</view>
+    </view>
+  </view>
+
+  <!-- 规格选择弹窗 -->
+  <view class="spec-popup" wx:if="{{ showSpecPopup }}" bindtap="closeSpecPopup">
+    <view class="spec-popup-content" catchtap="preventClose">
+      <!-- 商品信息 -->
+      <view class="popup-header">
+        <image class="popup-image" src="{{ product.image }}" />
+        <view class="popup-info">
+          <text class="popup-price">¥{{ currentPrice }}</text>
+          <text class="popup-stock">库存 {{ currentStock }}</text>
+        </view>
+        <view class="popup-close" bindtap="closeSpecPopup">×</view>
+      </view>
+
+      <!-- 规格列表 -->
+      <view class="popup-specs" wx:if="{{ product.specs }}">
+        <view class="spec-group" wx:for="{{ product.specs }}" wx:key="id">
+          <text class="spec-group-name">{{ item.name }}</text>
+          <view class="spec-options">
+            <view
+              class="spec-option {{ selectedSpecs[item.id] === option.id ? "selected" : "" }} {{ option.stock === 0 ? "disabled" : "" }}"
+              wx:for="{{ item.options }}"
+              wx:key="id"
+              data-group-id="{{ item.id }}"
+              data-option-id="{{ option.id }}"
+              bindtap="onSpecSelect"
+            >
+              {{ option.name }}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 数量选择 -->
+      <view class="quantity-row">
+        <text>数量</text>
+        <view class="quantity-selector">
+          <view class="btn-minus" bindtap="onQuantityMinus">-</view>
+          <text class="quantity-value">{{ quantity }}</text>
+          <view class="btn-plus" bindtap="onQuantityPlus">+</view>
+        </view>
+      </view>
+
+      <!-- 确认按钮 -->
+      <view class="confirm-btn" bindtap="onSpecConfirm">
+        {{ isAddingToCart ? t("common.button.addToCart") : t("common.button.buy") }}
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{ !product }}">
+  <text>{{ t("common.loading") }}</text>
+</view>

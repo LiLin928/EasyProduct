@@ -1,0 +1,46 @@
+<!-- 支付结果页 -->
+<view class="pay-result-page">
+  <!-- 成功状态 -->
+  <view class="result-content" wx:if="{{ success }}">
+    <view class="result-icon success">
+      <image src="/static/icons/pay-success.png" mode="aspectFit" />
+    </view>
+    <text class="result-title">支付成功</text>
+    <text class="result-desc">感谢您的购买，订单已生成</text>
+    <view class="order-info" wx:if="{{ order }}">
+      <view class="info-row">
+        <text class="info-label">订单编号</text>
+        <text class="info-value">{{ order.orderNo }}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">订单金额</text>
+        <text class="info-value price">¥{{ order.totalAmount }}</text>
+      </view>
+    </view>
+    <view class="action-buttons">
+      <view class="btn-primary" bindtap="onViewOrder">
+        <text>查看订单</text>
+      </view>
+      <view class="btn-secondary" bindtap="onContinueShopping">
+        <text>继续购物</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 失败状态 -->
+  <view class="result-content" wx:if="{{ !success }}">
+    <view class="result-icon fail">
+      <image src="/static/icons/pay-fail.png" mode="aspectFit" />
+    </view>
+    <text class="result-title">支付失败</text>
+    <text class="result-desc">支付遇到问题，请重新尝试</text>
+    <view class="action-buttons">
+      <view class="btn-primary" bindtap="onViewOrder">
+        <text>查看订单</text>
+      </view>
+      <view class="btn-secondary" bindtap="onGoHome">
+        <text>返回首页</text>
+      </view>
+    </view>
+  </view>
+</view>

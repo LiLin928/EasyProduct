@@ -1,0 +1,119 @@
+<!-- 订单列表页 -->
+<view class="order-list-page">
+  <!-- 状态标签 -->
+  <view class="status-tabs">
+    <view 
+      class="tab-item {{ currentStatus === item.status ? 'active' : '' }}"
+      wx:for="{{ tabs }}"
+      wx:key="status"
+      data-status="{{ item.status }}"
+      bindtap="onTabChange"
+    >
+      <text>{{ item.label }}</text>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view 
+    class="order-list" 
+    scroll-y
+    wx:if="{{ orders.length > 0 }}"
+    bindscrolltolower="onLoadMore"
+  >
+    <view 
+      class="order-item" 
+      wx:for="{{ orders }}" 
+      wx:key="id"
+      data-id="{{ item.id }}"
+      bindtap="onOrderTap"
+    >
+      <!-- 订单头部 -->
+      <view class="order-header">
+        <text class="order-no">订单号：{{ item.orderNo }}</text>
+        <text 
+          class="order-status"
+          style="color: {{ getStatusColor(item.status) }}"
+        >
+          {{ getStatusText(item.status) }}
+        </text>
+      </view>
+
+      <!-- 订单商品 -->
+      <view class="order-goods">
+        <view class="goods-item" wx:for="{{ item.items }}" wx:key="id">
+          <image class="goods-image" src="{{ item.productImage }}" mode="aspectFill" />
+          <view class="goods-info">
+            <text class="goods-name">{{ item.productName }}</text>
+            <view class="goods-price-row">
+              <text class="goods-price">¥{{ item.price }}</text>
+              <text class="goods-count">x{{ item.count }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 订单金额 -->
+      <view class="order-amount">
+        <text class="amount-label">共{{ item.items.length }}件商品 合计：</text>
+        <text class="amount-value">¥{{ item.totalAmount }}</text>
+      </view>
+
+      <!-- 订单操作 -->
+      <view class="order-actions">
+        <!-- 待付款 -->
+        <view wx:if="{{ item.status === 'pending' }}">
+          <view class="action-btn secondary" bindtap="onCancelOrder" data-id="{{ item.id }}">
+            <text>{{ t("common.order.cancel") }}</text>
+          </view>
+          <view class="action-btn primary" bindtap="onPayNow" data-id="{{ item.id }}">
+            <text>{{ t("common.order.payNow") }}</text>
+          </view>
+        </view>
+
+        <!-- 待发货 -->
+        <view wx:if="{{ item.status === 'paid' }}">
+          <view class="action-btn secondary" bindtap="onCancelOrder" data-id="{{ item.id }}">
+            <text>{{ t("common.order.cancel") }}</text>
+          </view>
+        </view>
+
+        <!-- 待收货 -->
+        <view wx:if="{{ item.status === 'shipped' }}">
+          <view class="action-btn primary" bindtap="onConfirmReceive" data-id="{{ item.id }}">
+            <text>{{ t("common.order.confirmReceive") }}</text>
+          </view>
+        </view>
+
+        <!-- 已完成 -->
+        <view wx:if="{{ item.status === 'completed' }}">
+          <view class="action-btn secondary" bindtap="onBuyAgain" data-items="{{ item.items }}">
+            <text>再次购买</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{ loading }}">
+      <text>{{ t("common.loading") }}</text>
+    </view>
+    <view class="no-more" wx:if="{{ !hasMore && orders.length > 0 }}">
+      <text>没有更多订单了</text>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="list-footer"></view>
+  </scroll-view>
+
+  <!-- 空订单 -->
+  <view class="empty-order" wx:if="{{ orders.length === 0 && !loading }}">
+    <image class="empty-icon" src="/static/icons/order-empty.png" mode="aspectFit" />
+    <text class="empty-text">暂无订单</text>
+    <view class="go-shopping-btn" bindtap="onGoShopping">去逛逛</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{ loading && orders.length === 0 }}">
+    <text>{{ t("common.loading") }}</text>
+  </view>
+</view>

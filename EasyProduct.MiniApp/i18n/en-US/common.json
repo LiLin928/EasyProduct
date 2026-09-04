@@ -1,21 +1,103 @@
 {
   "app": { "name": "EasyProduct" },
-  "button": { "confirm": "OK", "cancel": "Cancel" },
-  "loading": "Loading…",
-  "loadFailed": "Load failed",
+  "button": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "buy": "Buy Now",
+    "addToCart": "Add to Cart",
+    "settle": "Checkout",
+    "pay": "Pay",
+    "receive": "Confirm Receipt",
+    "cancelOrder": "Cancel Order",
+    "more": "More",
+    "viewMore": "View More"
+  },
+  "loading": "Loading...",
+  "loadFailed": "Failed to load",
   "tab": { "home": "Home", "category": "Category", "cart": "Cart", "profile": "Profile" },
+  "search": { "placeholder": "Search products" },
+  "product": {
+    "price": "Price",
+    "originalPrice": "Original Price",
+    "stock": "Stock",
+    "sales": "Sales",
+    "hot": "Hot Products",
+    "new": "New Arrivals",
+    "detail": "Product Details",
+    "spec": "Select Specification",
+    "quantity": "Quantity",
+    "addToCartSuccess": "Added to cart",
+    "noStock": "Out of stock"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "selectAll": "Select All",
+    "total": "Total",
+    "settle": "Checkout",
+    "deleteConfirm": "Are you sure to delete this item?"
+  },
+  "order": {
+    "title": "My Orders",
+    "orderNo": "Order No",
+    "createTime": "Order Time",
+    "totalAmount": "Total Amount",
+    "status": {
+      "pending": "Pending Payment",
+      "paid": "Pending Shipment",
+      "shipped": "Pending Receipt",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "payNow": "Pay Now",
+    "cancel": "Cancel Order",
+    "confirmReceive": "Confirm Receipt"
+  },
+  "address": {
+    "title": "Shipping Address",
+    "name": "Recipient",
+    "phone": "Phone",
+    "region": "Region",
+    "detail": "Detailed Address",
+    "default": "Set as Default",
+    "add": "Add Address",
+    "edit": "Edit Address",
+    "deleteConfirm": "Are you sure to delete this address?"
+  },
+  "pay": {
+    "title": "Confirm Payment",
+    "orderInfo": "Order Info",
+    "payAmount": "Payment Amount",
+    "payMethod": "Payment Method",
+    "wxPay": "WeChat Pay",
+    "paySuccess": "Payment Successful",
+    "payFailed": "Payment Failed"
+  },
+  "profile": {
+    "myOrders": "My Orders",
+    "myAddress": "My Address",
+    "contactService": "Contact Service",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
   "announcement": {
-    "title": "Announcement Center",
-    "detail": "Announcement Detail",
+    "title": "Announcements",
+    "detail": "Announcement Details",
     "type": { "system": "System", "activity": "Activity", "update": "Update" },
     "unread": "Unread",
     "noData": "No announcements",
-    "publishedAt": "Published at",
+    "publishedAt": "Published At",
     "attachment": "Attachment",
     "download": "Download",
-    "markRead": "Mark as read",
+    "markRead": "Mark as Read",
     "pullRefresh": "Pull to refresh",
-    "loadMore": "Pull up to load more",
+    "loadMore": "Load more",
     "noMore": "No more data"
   }
 }

@@ -1,0 +1,84 @@
+<!-- 地址编辑页 -->
+<view class="address-edit-page">
+  <!-- 表单 -->
+  <view class="form-container">
+    <view class="form-item">
+      <text class="form-label">{{ t("common.address.name") }}</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入收货人姓名"
+        value="{{ name }}"
+        data-field="name"
+        bindinput="onInputChange"
+      />
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">{{ t("common.address.phone") }}</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入联系电话"
+        type="number"
+        maxlength="11"
+        value="{{ phone }}"
+        data-field="phone"
+        bindinput="onInputChange"
+      />
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">{{ t("common.address.region") }}</text>
+      <picker 
+        class="form-picker"
+        mode="multiSelector"
+        range="{{ regionArray }}"
+        value="{{ regionIndex }}"
+        bindchange="onRegionChange"
+        bindcolumnchange="onRegionColumnChange"
+      >
+        <view class="picker-value {{ province ? 'has-value' : '' }}">
+          {{ province ? province + ' ' + city + ' ' + district : '请选择所在地区' }}
+        </view>
+      </picker>
+      <image class="arrow-icon" src="/static/icons/arrow-right.png" />
+    </view>
+    
+    <view class="form-item">
+      <text class="form-label">{{ t("common.address.detail") }}</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请输入详细地址，如街道、门牌号等"
+        value="{{ detail }}"
+        data-field="detail"
+        bindinput="onInputChange"
+      />
+    </view>
+    
+    <view class="form-item switch-item">
+      <text class="form-label">{{ t("common.address.default") }}</text>
+      <switch 
+        class="form-switch"
+        checked="{{ isDefault }}"
+        bindchange="onDefaultChange"
+        color="#1989fa"
+      />
+    </view>
+  </view>
+
+  <!-- 按钮区域 -->
+  <view class="button-container">
+    <view class="btn-save" bindtap="onSave">
+      <text>{{ t("common.button.save") }}</text>
+    </view>
+    <view class="btn-cancel" bindtap="onCancel">
+      <text>{{ t("common.button.cancel") }}</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-mask" wx:if="{{ loading }}">
+    <view class="loading-content">
+      <text>{{ t("common.loading") }}</text>
+    </view>
+  </view>
+</view>

@@ -1,3 +1,84 @@
-<view class="page">
-  <view class="page__title">{{ title }}</view>
+<!-- 购物车页 -->
+<view class="cart-page">
+  <!-- 购物车头部 -->
+  <view class="cart-header" wx:if="{{ items.length > 0 }}">
+    <text class="cart-title">{{ t("common.cart.title") }} ({{ totalCount }}件)</text>
+    <text class="cart-edit" bindtap="toggleEdit">{{ isEditing ? "完成" : "编辑" }}</text>
+  </view>
+
+  <!-- 购物车列表 -->
+  <scroll-view class="cart-list" scroll-y wx:if="{{ items.length > 0 }}">
+    <view class="cart-item" wx:for="{{ items }}" wx:key="id">
+      <!-- 选择框 -->
+      <view class="item-select" bindtap="onToggleSelect" data-id="{{ item.id }}">
+        <view class="checkbox {{ item.selected ? "checked" : "" }}">
+          <text wx:if="{{ item.selected }}">✓</text>
+        </view>
+      </view>
+
+      <!-- 商品图片 -->
+      <image class="item-image" src="{{ item.product.image }}" mode="aspectFill" bindtap="onProductTap" data-id="{{ item.product.id }}" />
+
+      <!-- 商品信息 -->
+      <view class="item-info" bindtap="onProductTap" data-id="{{ item.product.id }}">
+        <text class="item-name">{{ item.product.name }}</text>
+        <text class="item-price">¥{{ item.product.price }}</text>
+      </view>
+
+      <!-- 数量操作 -->
+      <view class="item-action">
+        <view class="quantity-selector" wx:if="{{ !isEditing }}">
+          <view class="btn-minus" bindtap="onQuantityMinus" data-id="{{ item.id }}" data-count="{{ item.count }}">-</view>
+          <text class="quantity-value">{{ item.count }}</text>
+          <view class="btn-plus" bindtap="onQuantityPlus" data-id="{{ item.id }}" data-count="{{ item.count }}">+</view>
+        </view>
+        <view class="delete-btn" wx:if="{{ isEditing }}" bindtap="onDeleteItem" data-id="{{ item.id }}">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="list-footer"></view>
+  </scroll-view>
+
+  <!-- 空购物车 -->
+  <view class="empty-cart" wx:if="{{ items.length === 0 }}">
+    <image class="empty-icon" src="/static/icons/cart-empty.png" mode="aspectFit" />
+    <text class="empty-text">{{ t("common.cart.empty") }}</text>
+    <view class="go-shopping-btn" bindtap="onGoShopping">去逛逛</view>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="cart-footer" wx:if="{{ items.length > 0 }}">
+    <view class="footer-left">
+      <view class="select-all" bindtap="onToggleSelectAll">
+        <view class="checkbox {{ isSelectAll ? "checked" : "" }}">
+          <text wx:if="{{ isSelectAll }}">✓</text>
+        </view>
+        <text>{{ t("common.cart.selectAll") }}</text>
+      </view>
+    </view>
+
+    <view class="footer-right" wx:if="{{ !isEditing }}">
+      <view class="total-info">
+        <text class="total-label">{{ t("common.cart.total") }}:</text>
+        <text class="total-price">¥{{ selectedPrice }}</text>
+      </view>
+      <view class="checkout-btn {{ selectedCount === 0 ? "disabled" : "" }}" bindtap="onCheckout">
+        {{ t("common.button.settle") }}{{ selectedCount > 0 ? "(" + selectedCount + ")" : "" }}
+      </view>
+    </view>
+
+    <view class="footer-right" wx:if="{{ isEditing }}">
+      <view class="delete-btn {{ selectedCount === 0 ? "disabled" : "" }}" bindtap="onBatchDelete">
+        删除({{ selectedCount }})
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{ loading }}">
+    <text>{{ t("common.loading") }}</text>
+  </view>
 </view>

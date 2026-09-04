@@ -1,0 +1,166 @@
+<!-- 订单详情页 -->
+<view class="order-detail-page" wx:if="{{ order }}">
+  <!-- 订单状态 -->
+  <view class="status-section" style="background-color: {{ getStatusColor(order.status) }}">
+    <view class="status-icon">
+      <image src="/static/icons/order-{{ order.status }}.png" mode="aspectFit" />
+    </view>
+    <view class="status-info">
+      <text class="status-text">{{ getStatusText(order.status) }}</text>
+      <text class="status-desc" wx:if="{{ order.status === 'pending' }}">请在30分钟内完成支付</text>
+      <text class="status-desc" wx:if="{{ order.status === 'paid' }}">商家正在备货中</text>
+      <text class="status-desc" wx:if="{{ order.status === 'shipped' }}">商品运输中，请注意查收</text>
+      <text class="status-desc" wx:if="{{ order.status === 'completed' }}">交易已完成，欢迎再次购买</text>
+      <text class="status-desc" wx:if="{{ order.status === 'cancelled' }}">订单已取消</text>
+    </view>
+  </view>
+
+  <!-- 收货地址 -->
+  <view class="address-section">
+    <view class="section-title">
+      <image src="/static/icons/location.png" class="section-icon" />
+      <text>收货地址</text>
+    </view>
+    <view class="address-content" wx:if="{{ order.address }}">
+      <view class="address-header">
+        <text class="address-name">{{ order.address.name }}</text>
+        <text class="address-phone">{{ order.address.phone }}</text>
+      </view>
+      <text class="address-detail">
+        {{ order.address.province }}{{ order.address.city }}{{ order.address.district }}{{ order.address.detail }}
+      </text>
+    </view>
+    <view class="address-empty" wx:if="{{ !order.address }}">
+      <text>暂无收货地址</text>
+    </view>
+  </view>
+
+  <!-- 商品信息 -->
+  <view class="goods-section">
+    <view class="section-title">
+      <text>商品信息</text>
+    </view>
+    <view class="goods-list">
+      <view class="goods-item" wx:for="{{ order.items }}" wx:key="id">
+        <image class="goods-image" src="{{ item.productImage }}" mode="aspectFill" />
+        <view class="goods-info">
+          <text class="goods-name">{{ item.productName }}</text>
+          <view class="goods-price-row">
+            <text class="goods-price">¥{{ item.price }}</text>
+            <text class="goods-count">x{{ item.count }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="order-remark" wx:if="{{ order.remark }}">
+      <text class="remark-label">订单备注：</text>
+      <text class="remark-content">{{ order.remark }}</text>
+    </view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="info-section">
+    <view class="section-title">
+      <text>订单信息</text>
+    </view>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-label">订单编号</text>
+        <view class="info-value copy-row">
+          <text>{{ order.orderNo }}</text>
+          <text class="copy-btn" bindtap="onCopyOrderNo">复制</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-label">创建时间</text>
+        <text class="info-value">{{ order.createdAt }}</text>
+      </view>
+      <view class="info-item" wx:if="{{ order.paymentTime }}">
+        <text class="info-label">付款时间</text>
+        <text class="info-value">{{ order.paymentTime }}</text>
+      </view>
+      <view class="info-item" wx:if="{{ order.deliveryTime }}">
+        <text class="info-label">发货时间</text>
+        <text class="info-value">{{ order.deliveryTime }}</text>
+      </view>
+      <view class="info-item" wx:if="{{ order.completeTime }}">
+        <text class="info-label">完成时间</text>
+        <text class="info-value">{{ order.completeTime }}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 价格明细 -->
+  <view class="price-section">
+    <view class="price-row">
+      <text class="price-label">商品总额</text>
+      <text class="price-value">¥{{ order.totalAmount }}</text>
+    </view>
+    <view class="price-row">
+      <text class="price-label">运费</text>
+      <text class="price-value">¥0.00</text>
+    </view>
+    <view class="price-row total">
+      <text class="price-label">实付款</text>
+      <text class="price-value">¥{{ order.totalAmount }}</text>
+    </view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="footer-placeholder"></view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <!-- 待付款 -->
+    <view wx:if="{{ order.status === 'pending' }}">
+      <view class="action-btn secondary" bindtap="onCancelOrder">
+        <text>{{ t("common.order.cancel") }}</text>
+      </view>
+      <view class="action-btn primary" bindtap="onPayNow">
+        <text>{{ t("common.order.payNow") }}</text>
+      </view>
+    </view>
+
+    <!-- 待发货 -->
+    <view wx:if="{{ order.status === 'paid' }}">
+      <view class="action-btn secondary" bindtap="onContactService">
+        <text>联系客服</text>
+      </view>
+      <view class="action-btn secondary" bindtap="onCancelOrder">
+        <text>{{ t("common.order.cancel") }}</text>
+      </view>
+    </view>
+
+    <!-- 待收货 -->
+    <view wx:if="{{ order.status === 'shipped' }}">
+      <view class="action-btn secondary" bindtap="onViewLogistics">
+        <text>查看物流</text>
+      </view>
+      <view class="action-btn primary" bindtap="onConfirmReceive">
+        <text>{{ t("common.order.confirmReceive") }}</text>
+      </view>
+    </view>
+
+    <!-- 已完成 -->
+    <view wx:if="{{ order.status === 'completed' }}">
+      <view class="action-btn secondary" bindtap="onContactService">
+        <text>联系客服</text>
+      </view>
+      <view class="action-btn secondary" bindtap="onBuyAgain">
+        <text>再次购买</text>
+      </view>
+    </view>
+
+    <!-- 已取消 -->
+    <view wx:if="{{ order.status === 'cancelled' }}">
+      <view class="action-btn secondary" bindtap="onBuyAgain">
+        <text>再次购买</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{ loading }}">
+  <text>{{ t("common.loading") }}</text>
+</view>

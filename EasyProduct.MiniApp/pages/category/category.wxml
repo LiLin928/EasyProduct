@@ -1,3 +1,61 @@
-<view class="page">
-  <view class="page__title">{{ title }}</view>
+<!-- 分类页 -->
+<view class="category-page">
+  <!-- 左侧分类列表 -->
+  <scroll-view class="category-sidebar" scroll-y>
+    <view
+      class="category-item {{ currentCategoryId === item.id ? "active" : "" }}"
+      wx:for="{{ categories }}"
+      wx:key="id"
+      data-id="{{ item.id }}"
+      bindtap="onCategoryChange"
+    >
+      <text>{{ item.name }}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 右侧商品列表 -->
+  <view class="product-content">
+    <!-- 排序栏 -->
+    <view class="sort-bar">
+      <view class="sort-item {{ sortField === "createdAt" ? "active" : "" }}" data-field="createdAt" bindtap="onSortChange">
+        <text>综合</text>
+        <text class="sort-arrow" wx:if="{{ sortField === "createdAt" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+      </view>
+      <view class="sort-item {{ sortField === "sales" ? "active" : "" }}" data-field="sales" bindtap="onSortChange">
+        <text>销量</text>
+        <text class="sort-arrow" wx:if="{{ sortField === "sales" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+      </view>
+      <view class="sort-item {{ sortField === "price" ? "active" : "" }}" data-field="price" bindtap="onSortChange">
+        <text>价格</text>
+        <text class="sort-arrow" wx:if="{{ sortField === "price" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <scroll-view class="product-list" scroll-y>
+      <view class="product-grid">
+        <view class="product-item" wx:for="{{ products }}" wx:key="id" data-id="{{ item.id }}" bindtap="onProductTap">
+          <image class="product-image" src="{{ item.image }}" mode="aspectFill" />
+          <view class="product-info">
+            <text class="product-name">{{ item.name }}</text>
+            <view class="product-meta">
+              <text class="product-price">¥{{ item.price }}</text>
+              <text class="product-sales">已售{{ item.sales || 0 }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载状态 -->
+      <view class="load-more" wx:if="{{ loading }}">
+        <text>{{ t("common.loading") }}</text>
+      </view>
+      <view class="no-more" wx:if="{{ !hasMore && products.length > 0 }}">
+        <text>{{ t("common.announcement.noMore") }}</text>
+      </view>
+      <view class="empty" wx:if="{{ !loading && products.length === 0 }}">
+        <text>暂无商品</text>
+      </view>
+    </scroll-view>
+  </view>
 </view>
