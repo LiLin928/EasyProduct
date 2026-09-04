@@ -15,6 +15,7 @@ const MOCK_STATUS = [
   { zone: 'admin', module: 'Basic（认证/菜单/字典骨架）', status: 'pending', backendPhase: 'P1' },
   { zone: 'site', module: '官网内容（首页聚合骨架）', status: 'completed', backendPhase: 'P2' },
   { zone: 'app', module: '商城（会员登录骨架）', status: 'pending', backendPhase: 'P3' },
+  { zone: 'app', module: '会员收货地址（小程序端）', status: 'completed', backendPhase: 'P3-ext' },
 ]
 
 app.get('/__mock/status', (_req, res) => res.json(ok(MOCK_STATUS)))
@@ -99,6 +100,7 @@ import { appCartRouter } from './routes/app/cart.js'
 import { appOrderRouter } from './routes/app/order.js'
 import { appPaymentRouter } from './routes/app/payment.js'
 import { appMemberRouter } from './routes/app/member.js'
+import { appAddressRouter } from './routes/app/address.js'
 import { i18nRouter } from './routes/i18n.js'
 
 app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter, adminCrmReversalRouter, adminOpsOperateLogRouter, adminOpsLoginLogRouter, adminOpsTaskRouter, adminOpsTaskLogRouter, adminOpsLogQueryRouter, adminRptDatasourceRouter, adminRptDefinitionRouter, adminRptColumnTemplateRouter, adminWfMyApplyRouter, adminWfTodoRouter, adminWfDoneRouter, adminWfInstanceRouter, adminWfDefinitionRouter, adminWfDesignerRouter, adminWorkflowVueflowRouter)
@@ -111,6 +113,7 @@ app.use('/api/app/cart', appCartRouter)
 app.use('/api/app/orders', appOrderRouter)
 app.use('/api/app/payment', appPaymentRouter)
 app.use('/api/app/member', appMemberRouter)
+app.use('/api/app/addresses', appAddressRouter)
 app.use('/api/i18n', i18nRouter)
 
 app.listen(PORT, () => {
