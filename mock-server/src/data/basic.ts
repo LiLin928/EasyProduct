@@ -11,7 +11,7 @@ export const ADMIN_USERS = [
 /** 权限标识：super 用通配 '*'；其余账号 F2 Basic 模块时细化 */
 export const USER_PERMISSIONS: Record<string, string[]> = {
   admin: ['*'],
-  sales: ['crm:customer:list', 'crm:customer:add', 'mall:order:list'],
+  sales: ['crm:customer:list', 'crm:customer:add', 'mall:order:list', 'mall:address:list', 'mall:address:edit'],
   ops: ['ops:log:list'],
 }
 
@@ -84,6 +84,7 @@ export const MENU_TREE = [
       { id: guid(), parentId: '0', name: 'mall-coupon', path: '/mall/coupon', titleKey: 'menu.mallCoupon', icon: 'Ticket', sort: 4, status: 'enabled', visible: true, children: [] },
       { id: guid(), parentId: '0', name: 'mall-order', path: '/mall/order', titleKey: 'menu.mallOrder', icon: 'List', sort: 5, status: 'enabled', visible: true, children: [] },
       { id: guid(), parentId: '0', name: 'mall-payment', path: '/mall/payment', titleKey: 'menu.mallPayment', icon: 'Wallet', sort: 6, status: 'enabled', visible: true, children: [] },
+      { id: guid(), parentId: '0', name: 'mall-address', path: '/mall/address', titleKey: 'menu.mallAddress', icon: 'Location', sort: 7, status: 'enabled', visible: true, children: [] },
     ]
   },
   {

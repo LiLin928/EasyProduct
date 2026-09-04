@@ -240,3 +240,6 @@ export const PAYMENT_STATUS_OPTIONS = [
   { label: 'mall.payment.statusFailed', value: 'failed' as const },
   { label: 'mall.payment.statusRefunded', value: 'refunded' as const },
 ]
+
+// ---- Address ----
+export * from './mall/address.types'

@@ -43,6 +43,16 @@ export const mallRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/mall/payment/index.vue'),
         meta: { title: 'menu.mallPayment', icon: 'Wallet' },
       },
+      {
+        path: 'address',
+        name: 'mall-address',
+        component: () => import('@/views/mall/address/index.vue'),
+        meta: { title: 'menu.mallAddress', icon: 'Location' },
+      },
     ],
   },
 ]
+
+
+
+

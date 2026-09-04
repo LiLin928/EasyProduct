@@ -6,7 +6,10 @@
     <div class="app-sidebar__header">
       <div class="app-sidebar__logo">
         <div class="logo-icon">
-          <span v-if="!appStore.sidebarCollapsed" class="logo-text">Easy Product</span>
+          <span
+            v-if="!appStore.sidebarCollapsed"
+            class="logo-text"
+          >Easy Product</span>
         </div>
       </div>
       <el-button
@@ -15,10 +18,16 @@
         circle
         @click="appStore.toggleSidebar()"
       >
-        <el-icon class="collapse-icon" v-if="!appStore.sidebarCollapsed">
+        <el-icon
+          v-if="!appStore.sidebarCollapsed"
+          class="collapse-icon"
+        >
           <component is="ArrowRight" />
         </el-icon>
-        <span class="logo-text" v-else>EP</span>
+        <span
+          v-else
+          class="logo-text"
+        >EP</span>
       </el-button>
     </div>
     <el-menu

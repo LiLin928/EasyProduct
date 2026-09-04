@@ -209,6 +209,60 @@
       "deleteSuccess": "Deleted successfully"
     }
   },
+  "address": {
+    "title": "Address Management",
+    "list": "Address List",
+    "add": "Add Address",
+    "edit": "Edit Address",
+    "delete": "Delete Address",
+    "deleteConfirm": "Are you sure to delete this address?",
+    "memberId": "Member",
+    "memberIdRequired": "Please select a member",
+    "memberName": "Member Name",
+    "memberPhone": "Member Phone",
+    "name": "Recipient",
+    "nameRequired": "Please enter recipient name",
+    "phone": "Phone",
+    "phoneRequired": "Please enter phone number",
+    "phoneInvalid": "Invalid phone number format",
+    "province": "Province",
+    "provinceRequired": "Please enter province",
+    "city": "City",
+    "cityRequired": "Please enter city",
+    "district": "District",
+    "districtRequired": "Please enter district",
+    "detail": "Address Detail",
+    "detailRequired": "Please enter address detail",
+    "fullAddress": "Full Address",
+    "isDefault": "Default Address",
+    "default": "Default",
+    "setDefault": "Set as Default",
+    "setDefaultConfirm": "Are you sure to set {name}''s address as default?",
+    "createdAt": "Created At",
+    "searchMemberName": "Member Name",
+    "searchPhone": "Phone",
+    "searchProvince": "Province",
+    "searchCity": "City",
+    "searchKeyword": "Keyword",
+    "form": {
+      "addTitle": "Add New Address",
+      "editTitle": "Edit Address",
+      "memberPlaceholder": "Please select a member",
+      "namePlaceholder": "Please enter recipient name",
+      "phonePlaceholder": "Please enter phone number",
+      "provincePlaceholder": "Please enter province",
+      "cityPlaceholder": "Please enter city",
+      "districtPlaceholder": "Please enter district",
+      "detailPlaceholder": "Please enter address detail"
+    },
+    "message": {
+      "createSuccess": "Created successfully",
+      "updateSuccess": "Updated successfully",
+      "deleteSuccess": "Deleted successfully",
+      "setDefaultSuccess": "Set as default successfully",
+      "setDefaultFailed": "Failed to set as default"
+    }
+  },
   "payment": {
     "title": "Payment Records",
     "list": "Payment Log",
@@ -232,3 +286,4 @@
     }
   }
 }
+

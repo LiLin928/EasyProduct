@@ -209,6 +209,60 @@
       "deleteSuccess": "删除成功"
     }
   },
+  "address": {
+    "title": "收货地址管理",
+    "list": "地址列表",
+    "add": "新增地址",
+    "edit": "编辑地址",
+    "delete": "删除地址",
+    "deleteConfirm": "确认删除该地址吗？",
+    "memberId": "会员",
+    "memberIdRequired": "请选择会员",
+    "memberName": "会员昵称",
+    "memberPhone": "会员手机号",
+    "name": "收货人",
+    "nameRequired": "请输入收货人姓名",
+    "phone": "联系电话",
+    "phoneRequired": "请输入联系电话",
+    "phoneInvalid": "手机号格式不正确",
+    "province": "省",
+    "provinceRequired": "请输入省份",
+    "city": "市",
+    "cityRequired": "请输入城市",
+    "district": "区",
+    "districtRequired": "请输入区县",
+    "detail": "详细地址",
+    "detailRequired": "请输入详细地址",
+    "fullAddress": "完整地址",
+    "isDefault": "默认地址",
+    "default": "默认",
+    "setDefault": "设为默认",
+    "setDefaultConfirm": "确认将 {name} 的地址设为默认吗？",
+    "createdAt": "创建时间",
+    "searchMemberName": "会员昵称",
+    "searchPhone": "联系电话",
+    "searchProvince": "省份",
+    "searchCity": "城市",
+    "searchKeyword": "关键词",
+    "form": {
+      "addTitle": "新增收货地址",
+      "editTitle": "编辑收货地址",
+      "memberPlaceholder": "请选择会员",
+      "namePlaceholder": "请输入收货人姓名",
+      "phonePlaceholder": "请输入联系电话",
+      "provincePlaceholder": "请输入省份",
+      "cityPlaceholder": "请输入城市",
+      "districtPlaceholder": "请输入区县",
+      "detailPlaceholder": "请输入详细地址"
+    },
+    "message": {
+      "createSuccess": "创建成功",
+      "updateSuccess": "更新成功",
+      "deleteSuccess": "删除成功",
+      "setDefaultSuccess": "已设为默认地址",
+      "setDefaultFailed": "设置默认地址失败"
+    }
+  },
   "payment": {
     "title": "支付记录",
     "list": "支付流水",
@@ -232,3 +286,5 @@
     }
   }
 }
+
+

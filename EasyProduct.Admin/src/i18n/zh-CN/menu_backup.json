@@ -30,8 +30,7 @@
   "mallPoints": "积分记录",
   "mallCoupon": "优惠券管理",
   "mallOrder": "商城订单",
-  "mallPayment": "支付记录",
-  "mallAddress": "收货地址管理",
+  "mallPayment": "支付记录",`n  "mallAddress": "收货地址管理",
   "crm": "CRM",
   "crmRoot": "CRM",
   "crmCustomer": "客户管理",
@@ -46,12 +45,12 @@
   "crmStockCheck": "盘点管理",
   "crmStockAlert": "库存预警",
   "workflow": "工作流",
-  "report": "报表管理",
+ "report": "报表管理",
   "reportRoot": "报表管理",
   "reportDatasource": "数据源管理",
   "reportDefinition": "报表定义",
   "reportColumnTemplate": "列模板",
-  "ops": "运维日志",
+ "ops": "运维日志",
   "profile": "个人中心",
   "notFound": "页面不存在",
   "crmInvoice": "发票管理",
@@ -73,3 +72,4 @@
   "workflowPublish": "流程发布",
   "workflowDesigner": "流程设计器"
 }
+
