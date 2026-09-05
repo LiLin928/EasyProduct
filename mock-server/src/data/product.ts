@@ -168,7 +168,7 @@ export const CHANNELS: ProductChannel[] = SPUS.flatMap((spu) => {
     id: guid(),
     spuId: spu.id,
     channel: ch,
-    published: Mock.mock('@boolean(7, 3)') as boolean,
+    published: ch === 'miniapp' ? true : (Mock.mock('@boolean(7, 3)') as boolean),
     sort: idx + 1,
     createdAt: isoTime(),
     updatedAt: isoTime(),

@@ -4,12 +4,21 @@ import type { CartItem } from '../types/cart.types'
 
 const BASE_URL = '/cart'
 
+/** 购物车响应结构 */
+interface CartResponse {
+  list: CartItem[]
+  totalQuantity: number
+  totalAmount: number
+}
+
 /** 获取购物车列表 */
-export function getCartList(): Promise<CartItem[]> {
-  return request<CartItem[]>({
+export async function getCartList(): Promise<CartItem[]> {
+  const res = await request<CartResponse>({
     url: BASE_URL,
     method: 'GET',
   })
+  // 后端返回 { list, totalQuantity, totalAmount }，提取 list
+  return res.list || []
 }
 
 /** 添加商品到购物车

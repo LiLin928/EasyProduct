@@ -29,7 +29,7 @@
       <view class="attachment-item" wx:for="{{ announcement.attachments }}" wx:key="id">
         <view class="attachment-info">
           <text class="attachment-name">{{ item.name }}</text>
-          <text class="attachment-size">{{ item.size > 1024 * 1024 ? (item.size / 1024 / 1024).toFixed(2) + 'MB' : (item.size / 1024).toFixed(2) + 'KB' }}</text>
+          <text class="attachment-size">{{ item.sizeFormatted }}</text>
         </view>
         <button class="download-btn" bindtap="downloadAttachment" data-url="{{ item.url }}" data-name="{{ item.name }}">
           {{ downloadText }}

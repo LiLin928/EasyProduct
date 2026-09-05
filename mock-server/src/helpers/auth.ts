@@ -4,7 +4,7 @@ import { fail } from './envelope.js'
 import { MEMBERS } from '../data/mall.js'
 
 const ADMIN_PUBLIC = ['/api/admin/auth/login']
-const APP_PUBLIC = ['/api/app/auth/wx-login']
+const APP_PUBLIC = ['/api/app/auth/login', '/api/app/auth/wx-login', '/api/app/categories', '/api/app/products', '/api/app/products/categories', '/api/app/products/products', '/api/app/products/new', '/api/app/products/hot']
 
 /** /api/admin/** 必须带 Bearer Token（登录接口除外） */
 export function adminGuard(req: Request, res: Response, next: NextFunction): void {
@@ -34,3 +34,7 @@ export function appGuard(req: Request, res: Response, next: NextFunction): void 
   }
   next()
 }
+
+
+
+

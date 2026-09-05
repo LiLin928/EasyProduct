@@ -3,7 +3,7 @@
   <!-- 左侧分类列表 -->
   <scroll-view class="category-sidebar" scroll-y>
     <view
-      class="category-item {{ currentCategoryId === item.id ? "active" : "" }}"
+      class="category-item {{ currentCategoryId === item.id ? 'active' : '' }}"
       wx:for="{{ categories }}"
       wx:key="id"
       data-id="{{ item.id }}"
@@ -17,17 +17,17 @@
   <view class="product-content">
     <!-- 排序栏 -->
     <view class="sort-bar">
-      <view class="sort-item {{ sortField === "createdAt" ? "active" : "" }}" data-field="createdAt" bindtap="onSortChange">
+      <view class="sort-item {{ sortField === 'createdAt' ? 'active' : '' }}" data-field="createdAt" bindtap="onSortChange">
         <text>综合</text>
-        <text class="sort-arrow" wx:if="{{ sortField === "createdAt" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+        <text class="sort-arrow" wx:if="{{ sortField === 'createdAt' }}">{{ sortOrder === 'asc' ? '↑' : '↓' }}</text>
       </view>
-      <view class="sort-item {{ sortField === "sales" ? "active" : "" }}" data-field="sales" bindtap="onSortChange">
+      <view class="sort-item {{ sortField === 'sales' ? 'active' : '' }}" data-field="sales" bindtap="onSortChange">
         <text>销量</text>
-        <text class="sort-arrow" wx:if="{{ sortField === "sales" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+        <text class="sort-arrow" wx:if="{{ sortField === 'sales' }}">{{ sortOrder === 'asc' ? '↑' : '↓' }}</text>
       </view>
-      <view class="sort-item {{ sortField === "price" ? "active" : "" }}" data-field="price" bindtap="onSortChange">
+      <view class="sort-item {{ sortField === 'price' ? 'active' : '' }}" data-field="price" bindtap="onSortChange">
         <text>价格</text>
-        <text class="sort-arrow" wx:if="{{ sortField === "price" }}">{{ sortOrder === "asc" ? "↑" : "↓" }}</text>
+        <text class="sort-arrow" wx:if="{{ sortField === 'price' }}">{{ sortOrder === 'asc' ? '↑' : '↓' }}</text>
       </view>
     </view>
 

@@ -2,6 +2,7 @@
 import { t } from '../../utils/i18n'
 import { memberStore } from '../../stores/member.store'
 import { getMemberInfo } from '../../api/member'
+import { checkLogin } from '../../utils/request'
 import type { Member } from '../../types/member.types'
 
 interface ProfilePageData {
@@ -92,9 +93,11 @@ Page<ProfilePageData, WechatMiniprogram.Page.CustomOption>({
     })
   },
 
-  /** 登录 */
+  /** 跳转到登录页 */
   onLogin() {
-    wx.showToast({ title: '功能开发中', icon: 'none' })
+    wx.navigateTo({
+      url: '/pages/login/login?from=profile',
+    })
   },
 
   /** 查看订单列表 */

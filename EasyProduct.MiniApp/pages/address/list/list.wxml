@@ -1,53 +1,46 @@
-<!-- 地址列表页 -->
 <view class="address-list-page">
   <!-- 地址列表 -->
-  <scroll-view class="address-list" scroll-y wx:if="{{ addresses.length > 0 }}">
-    <view class="address-item" wx:for="{{ addresses }}" wx:key="id" data-item="{{ item }}" bindtap="onAddressTap">
-      <view class="address-content">
+  <view class="address-list" wx:if="{{ addresses.length > 0 }}">
+    <view class="address-item" wx:for="{{ addresses }}" wx:key="id">
+      <view class="address-content" bindtap="onSelect" data-id="{{ item.id }}">
         <view class="address-header">
-          <text class="address-name">{{ item.name }}</text>
-          <text class="address-phone">{{ item.phone }}</text>
+          <text class="name">{{ item.name }}</text>
+          <text class="phone">{{ item.phone }}</text>
           <view class="default-tag" wx:if="{{ item.isDefault }}">默认</view>
         </view>
-        <view class="address-detail">{{ item.province }}{{ item.city }}{{ item.district }}{{ item.detail }}</view>
+        <view class="address-detail">{{ item.fullAddress }}</view>
       </view>
-
       <view class="address-actions">
         <view class="action-btn" bindtap="onSetDefault" data-id="{{ item.id }}">
-          <view class="checkbox {{ item.isDefault ? "checked" : "" }}">
+          <view class="checkbox {{ item.isDefault ? 'checked' : '' }}">
             <text wx:if="{{ item.isDefault }}">✓</text>
           </view>
           <text>{{ t("common.address.default") }}</text>
         </view>
         <view class="action-btn" bindtap="onEdit" data-id="{{ item.id }}">
-          <image src="/static/icons/edit.png" class="action-icon" />
-          <text>{{ t("common.button.edit") }}</text>
+          <text class="icon-text">✏️</text>
+          <text>编辑</text>
         </view>
-        <view class="action-btn" bindtap="onDelete" data-id="{{ item.id }}">
-          <image src="/static/icons/delete.png" class="action-icon" />
-          <text>{{ t("common.button.delete") }}</text>
+        <view class="action-btn delete" bindtap="onDelete" data-id="{{ item.id }}">
+          <text class="icon-text">🗑️</text>
+          <text>删除</text>
         </view>
       </view>
     </view>
+  </view>
 
-    <!-- 底部占位 -->
-    <view class="list-footer"></view>
-  </scroll-view>
-
-  <!-- 空地址 -->
-  <view class="empty-address" wx:if="{{ addresses.length === 0 && !loading }}">
-    <image class="empty-icon" src="/static/icons/address-empty.png" mode="aspectFit" />
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{ addresses.length === 0 }}">
+    <text class="empty-icon">📍</text>
     <text class="empty-text">暂无收货地址</text>
-    <view class="add-btn" bindtap="onAddAddress">{{ t("common.address.add") }}</view>
+    <text class="empty-tip">添加地址后，购物更方便</text>
   </view>
 
-  <!-- 底部添加按钮 -->
-  <view class="footer-btn" bindtap="onAddAddress" wx:if="{{ addresses.length > 0 }}">
-    <text>+ {{ t("common.address.add") }}</text>
-  </view>
-
-  <!-- 加载状态 -->
-  <view class="loading-container" wx:if="{{ loading }}">
-    <text>{{ t("common.loading") }}</text>
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button class="add-btn" bindtap="onAdd">
+      <text class="btn-icon">+</text>
+      <text>新建地址</text>
+    </button>
   </view>
 </view>

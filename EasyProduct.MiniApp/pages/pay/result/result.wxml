@@ -3,7 +3,7 @@
   <!-- 成功状态 -->
   <view class="result-content" wx:if="{{ success }}">
     <view class="result-icon success">
-      <image src="/static/icons/pay-success.png" mode="aspectFit" />
+      <image src="" mode="aspectFit" />
     </view>
     <text class="result-title">支付成功</text>
     <text class="result-desc">感谢您的购买，订单已生成</text>
@@ -30,7 +30,7 @@
   <!-- 失败状态 -->
   <view class="result-content" wx:if="{{ !success }}">
     <view class="result-icon fail">
-      <image src="/static/icons/pay-fail.png" mode="aspectFit" />
+      <image src="" mode="aspectFit" />
     </view>
     <text class="result-title">支付失败</text>
     <text class="result-desc">支付遇到问题，请重新尝试</text>
@@ -44,3 +44,4 @@
     </view>
   </view>
 </view>
+

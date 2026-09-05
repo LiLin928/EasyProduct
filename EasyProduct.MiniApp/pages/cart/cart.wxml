@@ -3,7 +3,7 @@
   <!-- 购物车头部 -->
   <view class="cart-header" wx:if="{{ items.length > 0 }}">
     <text class="cart-title">{{ t("common.cart.title") }} ({{ totalCount }}件)</text>
-    <text class="cart-edit" bindtap="toggleEdit">{{ isEditing ? "完成" : "编辑" }}</text>
+    <text class="cart-edit" bindtap="toggleEdit">{{ isEditing ? '完成' : '编辑' }}</text>
   </view>
 
   <!-- 购物车列表 -->
@@ -11,7 +11,7 @@
     <view class="cart-item" wx:for="{{ items }}" wx:key="id">
       <!-- 选择框 -->
       <view class="item-select" bindtap="onToggleSelect" data-id="{{ item.id }}">
-        <view class="checkbox {{ item.selected ? "checked" : "" }}">
+        <view class="checkbox {{ item.selected ? 'checked' : '' }}">
           <text wx:if="{{ item.selected }}">✓</text>
         </view>
       </view>
@@ -44,7 +44,7 @@
 
   <!-- 空购物车 -->
   <view class="empty-cart" wx:if="{{ items.length === 0 }}">
-    <image class="empty-icon" src="/static/icons/cart-empty.png" mode="aspectFit" />
+    <text class="empty-icon-text">🛒</text>
     <text class="empty-text">{{ t("common.cart.empty") }}</text>
     <view class="go-shopping-btn" bindtap="onGoShopping">去逛逛</view>
   </view>
@@ -53,7 +53,7 @@
   <view class="cart-footer" wx:if="{{ items.length > 0 }}">
     <view class="footer-left">
       <view class="select-all" bindtap="onToggleSelectAll">
-        <view class="checkbox {{ isSelectAll ? "checked" : "" }}">
+        <view class="checkbox {{ isSelectAll ? 'checked' : '' }}">
           <text wx:if="{{ isSelectAll }}">✓</text>
         </view>
         <text>{{ t("common.cart.selectAll") }}</text>
@@ -65,13 +65,13 @@
         <text class="total-label">{{ t("common.cart.total") }}:</text>
         <text class="total-price">¥{{ selectedPrice }}</text>
       </view>
-      <view class="checkout-btn {{ selectedCount === 0 ? "disabled" : "" }}" bindtap="onCheckout">
-        {{ t("common.button.settle") }}{{ selectedCount > 0 ? "(" + selectedCount + ")" : "" }}
+      <view class="checkout-btn {{ selectedCount === 0 ? 'disabled' : '' }}" bindtap="onCheckout">
+        {{ t("common.button.settle") }}{{ selectedCount > 0 ? "(" + selectedCount + ")" : '' }}
       </view>
     </view>
 
     <view class="footer-right" wx:if="{{ isEditing }}">
-      <view class="delete-btn {{ selectedCount === 0 ? "disabled" : "" }}" bindtap="onBatchDelete">
+      <view class="delete-btn {{ selectedCount === 0 ? 'disabled' : '' }}" bindtap="onBatchDelete">
         删除({{ selectedCount }})
       </view>
     </view>
@@ -82,3 +82,4 @@
     <text>{{ t("common.loading") }}</text>
   </view>
 </view>
+

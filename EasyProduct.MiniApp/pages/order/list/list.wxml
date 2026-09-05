@@ -107,7 +107,7 @@
 
   <!-- 空订单 -->
   <view class="empty-order" wx:if="{{ orders.length === 0 && !loading }}">
-    <image class="empty-icon" src="/static/icons/order-empty.png" mode="aspectFit" />
+    <image class="empty-icon" src="" mode="aspectFit" />
     <text class="empty-text">暂无订单</text>
     <view class="go-shopping-btn" bindtap="onGoShopping">去逛逛</view>
   </view>
@@ -117,3 +117,4 @@
     <text>{{ t("common.loading") }}</text>
   </view>
 </view>
+

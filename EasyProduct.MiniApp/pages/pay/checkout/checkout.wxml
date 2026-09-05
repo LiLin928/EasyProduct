@@ -4,7 +4,7 @@
   <view class="address-card" bindtap="onSelectAddress">
     <view class="address-content" wx:if="{{ selectedAddress }}">
       <view class="address-left">
-        <image class="location-icon" src="/static/icons/location.png" />
+        <image class="location-icon" src="" />
       </view>
       <view class="address-right">
         <view class="address-header">
@@ -15,12 +15,12 @@
           {{ selectedAddress.province }}{{ selectedAddress.city }}{{ selectedAddress.district }}{{ selectedAddress.detail }}
         </view>
       </view>
-      <image class="arrow-icon" src="/static/icons/arrow-right.png" />
+      <image class="arrow-icon" src="" />
     </view>
     <view class="address-empty" wx:if="{{ !selectedAddress }}">
-      <image class="location-icon" src="/static/icons/location.png" />
+      <image class="location-icon" src="" />
       <text>请选择收货地址</text>
-      <image class="arrow-icon" src="/static/icons/arrow-right.png" />
+      <image class="arrow-icon" src="" />
     </view>
   </view>
 
@@ -94,7 +94,8 @@
 
 <!-- 空商品 -->
 <view class="empty-goods" wx:if="{{ selectedItems.length === 0 && !loading }}">
-  <image class="empty-icon" src="/static/icons/cart-empty.png" mode="aspectFit" />
+  <image class="empty-icon" src="" mode="aspectFit" />
   <text class="empty-text">暂无待结算商品</text>
   <view class="go-shopping-btn" bindtap="onGoShopping">去逛逛</view>
 </view>
+

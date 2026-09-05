@@ -1,6 +1,7 @@
 // utils/storage.ts
 
 const MEMBER_TOKEN = 'member_token'
+const MEMBER_INFO = 'member_info'
 const LOCALE_CACHE = 'i18n_cache'
 
 /** 获取会员 Token */
@@ -14,6 +15,21 @@ export const clearMemberToken = (): void => wx.removeStorageSync(MEMBER_TOKEN)
 
 /** 移除会员 Token（alias） */
 export const removeMemberToken = (): void => wx.removeStorageSync(MEMBER_TOKEN)
+
+/** 获取会员信息 */
+export const getMemberInfo = (): { id: string; nickName: string; avatar: string; level: string; points: number } | null => {
+  return wx.getStorageSync(MEMBER_INFO) || null
+}
+
+/** 设置会员信息 */
+export const setMemberInfo = (info: { id: string; nickName: string; avatar: string; level: string; points: number }): void => {
+  wx.setStorageSync(MEMBER_INFO, info)
+}
+
+/** 清除会员信息 */
+export const clearMemberInfo = (): void => {
+  wx.removeStorageSync(MEMBER_INFO)
+}
 
 /** 获取本地化缓存 */
 export const getLocaleCache = <T>(key: string): T | null => {

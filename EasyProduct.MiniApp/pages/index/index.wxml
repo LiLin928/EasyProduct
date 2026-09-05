@@ -19,7 +19,7 @@
   <view class="category-section">
     <view class="category-list">
       <view class="category-item" wx:for="{{ categories }}" wx:key="id" data-id="{{ item.id }}" bindtap="onCategoryTap">
-        <image class="category-icon" src="{{ item.icon || "/static/icons/category-default.png" }}" mode="aspectFit" />
+        <view class="category-icon-placeholder">{{ item.icon ? "" : "🏷️" }}</view><image wx:if="{{ item.icon }}" class="category-icon" src="{{ item.icon }}" mode="aspectFit" />
         <text class="category-name">{{ item.name }}</text>
       </view>
     </view>
@@ -66,3 +66,4 @@
     <text>{{ t("common.loading") }}</text>
   </view>
 </view>
+

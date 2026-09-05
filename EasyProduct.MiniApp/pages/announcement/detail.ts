@@ -38,9 +38,25 @@ Page<PageData, WechatMiniprogram.Page.CustomOption>({
     }
   },
 
+  formatFileSize(size: number): string {
+    if (size > 1024 * 1024) {
+      return (size / 1024 / 1024).toFixed(2) + 'MB'
+    }
+    return (size / 1024).toFixed(2) + 'KB'
+  },
+
   async loadAnnouncement(id: string) {
     try {
       const announcement = await getUserAnnouncementById(id)
+      
+      // 格式化附件大小
+      if (announcement.attachments && announcement.attachments.length > 0) {
+        announcement.attachments = announcement.attachments.map(item => ({
+          ...item,
+          sizeFormatted: this.formatFileSize(item.size)
+        }))
+      }
+      
       this.setData({ announcement, loading: false })
 
       // 自动标记已读

@@ -3,7 +3,7 @@
   <!-- 订单状态 -->
   <view class="status-section" style="background-color: {{ getStatusColor(order.status) }}">
     <view class="status-icon">
-      <image src="/static/icons/order-{{ order.status }}.png" mode="aspectFit" />
+      <image src=" order.status }}.png" mode="aspectFit" />
     </view>
     <view class="status-info">
       <text class="status-text">{{ getStatusText(order.status) }}</text>
@@ -18,7 +18,7 @@
   <!-- 收货地址 -->
   <view class="address-section">
     <view class="section-title">
-      <image src="/static/icons/location.png" class="section-icon" />
+      <image src="" class="section-icon" />
       <text>收货地址</text>
     </view>
     <view class="address-content" wx:if="{{ order.address }}">
@@ -164,3 +164,4 @@
 <view class="loading-container" wx:if="{{ loading }}">
   <text>{{ t("common.loading") }}</text>
 </view>
+

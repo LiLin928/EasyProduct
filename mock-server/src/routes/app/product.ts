@@ -29,6 +29,42 @@ appProductRouter.get('/categories', (_req, res) => {
 })
 
 /**
+ * 获取分类列表（兼容 /api/app/products/categories）
+ * GET /api/app/products/categories
+ */
+appProductRouter.get('/products/categories', (_req, res) => {
+  const list = CATEGORIES.filter((c) => c.status === 'enabled').map((c) => {
+    const productCount = miniappSpus.filter((p) => p.categoryId === c.id).length
+    return { id: c.id, name: c.name, nameEn: c.nameEn, sort: c.sort, productCount }
+  })
+  res.json(ok(list))
+})
+
+/**
+ * 获取新品列表
+ * GET /api/app/products/new
+ */
+appProductRouter.get('/products/new', (req, res) => {
+  const limit = Math.min(20, Math.max(1, parseInt(req.query.limit as string || '6', 10)))
+  // 按创建时间倒序取最新商品
+  const sorted = [...miniappSpus].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  const list = sorted.slice(0, limit)
+  res.json(ok(list))
+})
+
+/**
+ * 获取热销列表
+ * GET /api/app/products/hot
+ */
+appProductRouter.get('/products/hot', (req, res) => {
+  const limit = Math.min(20, Math.max(1, parseInt(req.query.limit as string || '6', 10)))
+  // 按销量倒序取热销商品（mock 阶段用随机排序）
+  const sorted = [...miniappSpus].sort((a, b) => (b.sales || 0) - (a.sales || 0))
+  const list = sorted.slice(0, limit)
+  res.json(ok(list))
+})
+
+/**
  * 获取商品列表（分页 + 分类/关键词筛选，仅小程序渠道上架商品）
  * GET /api/app/products
  */

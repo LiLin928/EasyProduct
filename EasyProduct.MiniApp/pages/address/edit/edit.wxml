@@ -40,7 +40,7 @@
           {{ province ? province + ' ' + city + ' ' + district : '请选择所在地区' }}
         </view>
       </picker>
-      <image class="arrow-icon" src="/static/icons/arrow-right.png" />
+      <image class="arrow-icon" src="" />
     </view>
     
     <view class="form-item">
@@ -82,3 +82,4 @@
     </view>
   </view>
 </view>
+
