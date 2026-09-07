@@ -134,7 +134,7 @@ watch(() => props.visible, (val) => {
     model.code = ''
     model.name = ''
     model.rate = 0
-    model.status = 'active'
+    model.status = 1
     model.remark = ''
   }
   formRef.value?.clearValidate()

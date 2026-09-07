@@ -140,8 +140,8 @@ watch(() => props.visible, (val) => {
     model.name = ''
     model.symbol = ''
     model.exchangeRate = 1
-    model.isDefault = false
-    model.status = 'active'
+    model.isDefault = 0
+    model.status = 1
   }
   formRef.value?.clearValidate()
 })

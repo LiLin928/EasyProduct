@@ -26,9 +26,9 @@ export const updateMenuSort = (dragId: string, dropId: string, type: 'prev' | 'n
   post<null>('/api/admin/basic/menu/sort', { dragId, dropId, type })
 
 /** 更新菜单状态 */
-export const updateMenuStatus = (id: string, status: 'enabled' | 'disabled') =>
+export const updateMenuStatus = (id: string, status: 0 | 1) =>
   put<null>(`/api/admin/basic/menu/${id}/status`, { status })
 
 /** 更新菜单可见性 */
-export const updateMenuVisible = (id: string, visible: boolean) =>
+export const updateMenuVisible = (id: string, visible: 0 | 1) =>
   put<null>(`/api/admin/basic/menu/${id}/visible`, { visible })

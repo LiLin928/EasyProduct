@@ -1,0 +1,2501 @@
+# Product 模块后端开发说明文档
+
+> **模块名称**：Product 模块 - 商品管理
+> **适用项目**：EasyProduct.WebApi（.NET 8）
+> **文档版本**：1.0
+> **创建日期**：2026-09-07
+> **上游规范**：`docs/backend-guidelines.md`、`docs/api/other-modules.md`
+
+---
+
+## 1. 模块概述
+
+### 1.1 业务范围
+
+Product 模块负责商品核心数据管理，包含以下业务对象：
+
+| 对象 | 说明 | 核心功能 |
+|------|------|---------|
+| **ProductCategory** | 商品分类 | 树形分类管理、启用/禁用状态 |
+| **ProductSpu** | 商品SPU | 标准产品单元管理、规格定义、SKU关联 |
+| **ProductSku** | 商品SKU | 库存单元管理、多价格体系、库存管理 |
+| **ProductChannel** | 商品渠道 | 销售渠道管理（线上/线下/第三方） |
+
+### 1.2 核心业务规则
+
+1. **分类树形结构**：支持多级分类，每个分类有唯一编码
+2. **SPU/SKU关系**：一个 SPU 可关联多个 SKU，根据规格组合自动生成 SKU
+3. **多价格体系**：零售价、会员价、B2B 价、成本价四档价格
+4. **库存管理**：SKU 维度库存，支持库存预警和库存流水
+5. **规格管理**：通过规格组（SpecGroup）定义商品规格维度
+
+### 1.3 路由分区
+
+| 分区 | 路由前缀 | 认证 | 消费者 |
+|------|---------|------|--------|
+| 管理端 | `/api/admin/product/*` | AdminJwt + 权限标识 | EasyProduct.Admin |
+| 小程序 | `/api/app/product/*` | MemberJwt | EasyProduct.MiniApp |
+| 官网 | `/api/site/product/*` | 匿名 | EasyProduct.Site |
+
+---
+
+## 2. 技术栈和依赖
+
+### 2.1 核心技术栈
+
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| .NET | 8.0 (LTS) | 运行时 |
+| SqlSugarCore | 5.1.4.x | ORM 框架 |
+| Mapster | 10.x | 对象映射 |
+| BCrypt.Net-Next | 4.x | 密码加密（仅用于渠道密钥） |
+| xUnit | 2.x | 单元测试 |
+
+### 2.2 项目依赖
+
+```
+EasyProduct.Web/
+  └─ Controllers/Admin/Product/     # 管理端 Controller
+  └─ Controllers/App/Product/       # 小程序 Controller
+  └─ Controllers/Site/Product/      # 官网 Controller
+
+EasyProduct.Business/Product/
+  └─ IProductCategoryService.cs     # 分类服务接口
+  └─ ProductCategoryService.cs      # 分类服务实现
+  └─ IProductSpuService.cs          # SPU 服务接口
+  └─ ProductSpuService.cs           # SPU 服务实现
+  └─ IProductSkuService.cs          # SKU 服务接口
+  └─ ProductSkuService.cs           # SKU 服务实现
+  └─ IProductChannelService.cs      # 渠道服务接口
+  └─ ProductChannelService.cs       # 渠道服务实现
+
+EasyProduct.Models/Entitys/Product/
+  └─ product_category.cs            # 分类实体
+  └─ product_spu.cs                 # SPU 实体
+  └─ product_sku.cs                 # SKU 实体
+  └─ product_channel.cs             # 渠道实体
+
+EasyProduct.Models/Dto/Product/
+  └─ CategoryDto.cs                 # 分类 DTO
+  └─ SpuDto.cs                      # SPU DTO
+  └─ SkuDto.cs                      # SKU DTO
+  └─ ChannelDto.cs                  # 渠道 DTO
+```
+
+---
+
+## 3. 实体类设计
+
+### 3.1 ProductCategory - 商品分类
+
+```csharp
+using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
+using EasyProduct.Models.Constants;
+
+namespace EasyProduct.Models.Entitys.Product;
+
+/// <summary>
+/// 商品分类实体
+/// </summary>
+/// <remarks>
+/// 树形结构，支持多级分类。表名：product_category
+/// </remarks>
+[SugarTable("product_category", "商品分类表")]
+public class product_category : BaseEntity
+{
+    /// <summary>
+    /// 分类名称
+    /// </summary>
+    [SugarColumn(Length = 100, ColumnDescription = "分类名称")]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "英文名称")]
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 父分类ID（根分类为 null）
+    /// </summary>
+    [SugarColumn(IsNullable = true, ColumnDescription = "父分类ID")]
+    public Guid? ParentId { get; set; }
+
+    /// <summary>
+    /// 分类编码（唯一）
+    /// </summary>
+    [SugarColumn(Length = 50, ColumnDescription = "分类编码")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 排序序号
+    /// </summary>
+    [SugarColumn(ColumnDescription = "排序序号")]
+    public int Sort { get; set; } = 0;
+}
+```
+
+**说明：**
+- 继承 `BaseEntity`，自动包含 `Id`、`IsDeleted`、`Status`、`CreatedAt`、`UpdatedAt`、`CreatedBy`、`UpdatedBy` 字段
+- `IsDeleted` 使用 `DeleteStatus` 常量：`DeleteStatus.NotDeleted`（0）、`DeleteStatus.Deleted`（1）
+- `Status` 使用 `CommonStatus` 常量：`CommonStatus.Enabled`（1）、`CommonStatus.Disabled`（0）
+```
+
+### 3.2 ProductSpu - 商品SPU
+
+```csharp
+using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
+using EasyProduct.Models.Constants;
+
+namespace EasyProduct.Models.Entitys.Product;
+
+/// <summary>
+/// 商品SPU实体
+/// </summary>
+/// <remarks>
+/// 标准产品单元，关联多个SKU。表名：product_spu
+/// </remarks>
+[SugarTable("product_spu", "商品SPU表")]
+public class product_spu : BaseEntity
+{
+    /// <summary>
+    /// 商品编码（唯一）
+    /// </summary>
+    [SugarColumn(Length = 50, ColumnDescription = "商品编码")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品名称
+    /// </summary>
+    [SugarColumn(Length = 200, ColumnDescription = "商品名称")]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    [SugarColumn(Length = 200, IsNullable = true, ColumnDescription = "英文名称")]
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    [SugarColumn(ColumnDescription = "分类ID")]
+    public Guid CategoryId { get; set; }
+
+    /// <summary>
+    /// 商品类型：1-票务，2-普通商品，3-服务
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductType 常量：ProductType.Ticket、ProductType.Normal、ProductType.Service
+    /// </remarks>
+    [SugarColumn(ColumnDescription = "商品类型")]
+    public int Type { get; set; } = ProductType.Normal;
+
+    /// <summary>
+    /// 主图URL
+    /// </summary>
+    [SugarColumn(Length = 500, ColumnDescription = "主图URL")]
+    public string MainImage { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品图片（JSON数组）
+    /// </summary>
+    /// <example>
+    /// ["http://example.com/1.jpg", "http://example.com/2.jpg"]
+    /// </example>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true, ColumnDescription = "商品图片JSON数组")]
+    public string? Images { get; set; }
+
+    /// <summary>
+    /// 商品描述
+    /// </summary>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true, ColumnDescription = "商品描述")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 单位
+    /// </summary>
+    [SugarColumn(Length = 20, ColumnDescription = "单位")]
+    public string Unit { get; set; } = "件";
+
+    /// <summary>
+    /// 品牌
+    /// </summary>
+    [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "品牌")]
+    public string? Brand { get; set; }
+
+    /// <summary>
+    /// 规格组（JSON数组）
+    /// </summary>
+    /// <example>
+    /// [{"name":"颜色","values":["红色","蓝色"]},{"name":"尺寸","values":["S","M","L"]}]
+    /// </example>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true, ColumnDescription = "规格组JSON数组")]
+    public string? Specs { get; set; }
+}
+```
+
+**说明：**
+- 继承 `BaseEntity`，自动包含 `Id`、`IsDeleted`、`Status`、`CreatedAt`、`UpdatedAt`、`CreatedBy`、`UpdatedBy` 字段
+- `Type` 使用 `ProductType` 常量：`ProductType.Ticket`（1）、`ProductType.Normal`（2）、`ProductType.Service`（3）
+- `Status` 使用 `ProductSpuStatus` 常量：`ProductSpuStatus.Active`（1）、`ProductSpuStatus.Inactive`（0）
+```
+
+### 3.3 ProductSku - 商品SKU
+
+```csharp
+using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
+using EasyProduct.Models.Constants;
+
+namespace EasyProduct.Models.Entitys.Product;
+
+/// <summary>
+/// 商品SKU实体
+/// </summary>
+/// <remarks>
+/// 库存单元，关联SPU。表名：product_sku
+/// </remarks>
+[SugarTable("product_sku", "商品SKU表")]
+public class product_sku : BaseEntity
+{
+    /// <summary>
+    /// SPU ID
+    /// </summary>
+    [SugarColumn(ColumnDescription = "SPU ID")]
+    public Guid SpuId { get; set; }
+
+    /// <summary>
+    /// 规格值JSON对象
+    /// </summary>
+    /// <example>
+    /// {"颜色":"红色","尺寸":"M"}
+    /// </example>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true, ColumnDescription = "规格值JSON对象")]
+    public string? SpecValues { get; set; }
+
+    /// <summary>
+    /// 条形码
+    /// </summary>
+    [SugarColumn(Length = 50, IsNullable = true, ColumnDescription = "条形码")]
+    public string? Barcode { get; set; }
+
+    /// <summary>
+    /// 零售价
+    /// </summary>
+    [SugarColumn(Length = 18, DecimalDigits = 2, ColumnDescription = "零售价")]
+    public decimal RetailPrice { get; set; }
+
+    /// <summary>
+    /// 会员价
+    /// </summary>
+    [SugarColumn(Length = 18, DecimalDigits = 2, ColumnDescription = "会员价")]
+    public decimal MemberPrice { get; set; }
+
+    /// <summary>
+    /// B2B价
+    /// </summary>
+    [SugarColumn(Length = 18, DecimalDigits = 2, IsNullable = true, ColumnDescription = "B2B价")]
+    public decimal? B2bPrice { get; set; }
+
+    /// <summary>
+    /// 成本价
+    /// </summary>
+    [SugarColumn(Length = 18, DecimalDigits = 2, ColumnDescription = "成本价")]
+    public decimal CostPrice { get; set; }
+
+    /// <summary>
+    /// 库存数量
+    /// </summary>
+    [SugarColumn(ColumnDescription = "库存数量")]
+    public int Stock { get; set; } = 0;
+}
+```
+
+**说明：**
+- 继承 `BaseEntity`，自动包含 `Id`、`IsDeleted`、`Status`、`CreatedAt`、`UpdatedAt`、`CreatedBy`、`UpdatedBy` 字段
+- `Status` 使用 `ProductSkuStatus` 常量：`ProductSkuStatus.Active`（1）、`ProductSkuStatus.Inactive`（0）
+```
+
+### 3.4 ProductChannel - 商品渠道
+
+```csharp
+using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
+using EasyProduct.Models.Constants;
+
+namespace EasyProduct.Models.Entitys.Product;
+
+/// <summary>
+/// 商品渠道实体
+/// </summary>
+/// <remarks>
+/// 销售渠道管理。表名：product_channel
+/// </remarks>
+[SugarTable("product_channel", "商品渠道表")]
+public class product_channel : BaseEntity
+{
+    /// <summary>
+    /// 渠道名称
+    /// </summary>
+    [SugarColumn(Length = 100, ColumnDescription = "渠道名称")]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道编码（唯一）
+    /// </summary>
+    [SugarColumn(Length = 50, ColumnDescription = "渠道编码")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道类型：1-线上，2-线下，3-第三方
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductChannelType 常量：
+    /// - ProductChannelType.Online（1）- 线上
+    /// - ProductChannelType.Offline（2）- 线下
+    /// - ProductChannelType.ThirdParty（3）- 第三方
+    /// </remarks>
+    [SugarColumn(ColumnDescription = "渠道类型")]
+    public int Type { get; set; } = ProductChannelType.Online;
+
+    /// <summary>
+    /// 渠道描述
+    /// </summary>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true, ColumnDescription = "渠道描述")]
+    public string? Description { get; set; }
+}
+```
+
+**说明：**
+- 继承 `BaseEntity`，自动包含 `Id`、`IsDeleted`、`Status`、`CreatedAt`、`UpdatedAt`、`CreatedBy`、`UpdatedBy` 字段
+- `Status` 使用 `CommonStatus` 常量：`CommonStatus.Enabled`（1）、`CommonStatus.Disabled`（0）
+- `Type` 使用 `ProductChannelType` 常量：`ProductChannelType.Online`（1）、`ProductChannelType.Offline`（2）、`ProductChannelType.ThirdParty`（3）
+```
+
+---
+
+## 4. DTO 设计
+
+### 4.1 分类相关 DTO
+
+```csharp
+namespace EasyProduct.Models.Dto.Product;
+
+/// <summary>
+/// 商品分类 DTO
+/// </summary>
+public class CategoryDto
+{
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 分类名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 父分类ID
+    /// </summary>
+    public Guid? ParentId { get; set; }
+
+    /// <summary>
+    /// 分类编码
+    /// </summary>
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 排序序号
+    /// </summary>
+    public int Sort { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 CommonStatus 常量：CommonStatus.Enabled（1）、CommonStatus.Disabled（0）
+    /// </remarks>
+    public int Status { get; set; } = CommonStatus.Enabled;
+
+    /// <summary>
+    /// 子分类列表
+    /// </summary>
+    public List<CategoryDto>? Children { get; set; }
+}
+
+/// <summary>
+/// 创建商品分类 DTO
+/// </summary>
+public class CreateCategoryDto
+{
+    /// <summary>
+    /// 分类名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 父分类ID
+    /// </summary>
+    public Guid? ParentId { get; set; }
+
+    /// <summary>
+    /// 分类编码
+    /// </summary>
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 排序序号
+    /// </summary>
+    public int Sort { get; set; } = 0;
+}
+
+/// <summary>
+/// 更新商品分类 DTO
+/// </summary>
+public class UpdateCategoryDto
+{
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 分类名称
+    /// </summary>
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 父分类ID
+    /// </summary>
+    public Guid? ParentId { get; set; }
+
+    /// <summary>
+    /// 分类编码
+    /// </summary>
+    public string? Code { get; set; }
+
+    /// <summary>
+    /// 排序序号
+    /// </summary>
+    public int? Sort { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    public int? Status { get; set; }
+}
+```
+
+### 4.2 SPU 相关 DTO
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace EasyProduct.Models.Dto.Product;
+
+/// <summary>
+/// 商品SPU DTO
+/// </summary>
+public class SpuDto
+{
+    /// <summary>
+    /// SPU ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 商品编码
+    /// </summary>
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    public Guid CategoryId { get; set; }
+
+    /// <summary>
+    /// 商品类型
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductType 常量：ProductType.Ticket（1）、ProductType.Normal（2）、ProductType.Service（3）
+    /// </remarks>
+    public int Type { get; set; } = ProductType.Normal;
+
+    /// <summary>
+    /// 主图URL
+    /// </summary>
+    public string MainImage { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品图片列表
+    /// </summary>
+    public List<string>? Images { get; set; }
+
+    /// <summary>
+    /// 商品描述
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 单位
+    /// </summary>
+    public string Unit { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 品牌
+    /// </summary>
+    public string? Brand { get; set; }
+
+    /// <summary>
+    /// 规格组
+    /// </summary>
+    public List<SpecGroupDto>? Specs { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductSpuStatus 常量：ProductSpuStatus.Active（1）、ProductSpuStatus.Inactive（0）
+    /// </remarks>
+    public int Status { get; set; } = ProductSpuStatus.Inactive;
+
+    /// <summary>
+    /// SKU列表
+    /// </summary>
+    public List<SkuDto>? Skus { get; set; }
+
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+}
+
+/// <summary>
+/// 规格组 DTO
+/// </summary>
+public class SpecGroupDto
+{
+    /// <summary>
+    /// 规格名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 规格值列表
+    /// </summary>
+    public List<string> Values { get; set; } = new();
+}
+
+/// <summary>
+/// 创建商品SPU DTO
+/// </summary>
+public class CreateSpuDto
+{
+    /// <summary>
+    /// 商品编码
+    /// </summary>
+    [Required(ErrorMessage = "商品编码不能为空")]
+    [MaxLength(50, ErrorMessage = "商品编码长度不能超过50")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品名称
+    /// </summary>
+    [Required(ErrorMessage = "商品名称不能为空")]
+    [MaxLength(200, ErrorMessage = "商品名称长度不能超过200")]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    [MaxLength(200)]
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    [Required(ErrorMessage = "分类ID不能为空")]
+    public Guid CategoryId { get; set; }
+
+    /// <summary>
+    /// 商品类型
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductType 常量：ProductType.Ticket（1）、ProductType.Normal（2）、ProductType.Service（3）
+    /// </remarks>
+    public int Type { get; set; } = ProductType.Normal;
+
+    /// <summary>
+    /// 主图URL
+    /// </summary>
+    [Required(ErrorMessage = "主图URL不能为空")]
+    [MaxLength(500)]
+    public string MainImage { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 商品图片列表
+    /// </summary>
+    public List<string>? Images { get; set; }
+
+    /// <summary>
+    /// 商品描述
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 单位
+    /// </summary>
+    [MaxLength(20)]
+    public string Unit { get; set; } = "件";
+
+    /// <summary>
+    /// 品牌
+    /// </summary>
+    [MaxLength(100)]
+    public string? Brand { get; set; }
+
+    /// <summary>
+    /// 规格组（用于自动生成SKU）
+    /// </summary>
+    public List<SpecGroupDto>? Specs { get; set; }
+
+    /// <summary>
+    /// 初始SKU列表（如果Specs为空，则使用此列表）
+    /// </summary>
+    public List<CreateSkuDto>? Skus { get; set; }
+}
+
+/// <summary>
+/// 更新商品SPU DTO
+/// </summary>
+public class UpdateSpuDto
+{
+    /// <summary>
+    /// SPU ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 商品名称
+    /// </summary>
+    [MaxLength(200)]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// 英文名称
+    /// </summary>
+    [MaxLength(200)]
+    public string? NameEn { get; set; }
+
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    public Guid? CategoryId { get; set; }
+
+    /// <summary>
+    /// 主图URL
+    /// </summary>
+    [MaxLength(500)]
+    public string? MainImage { get; set; }
+
+    /// <summary>
+    /// 商品图片列表
+    /// </summary>
+    public List<string>? Images { get; set; }
+
+    /// <summary>
+    /// 商品描述
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 单位
+    /// </summary>
+    [MaxLength(20)]
+    public string? Unit { get; set; }
+
+    /// <summary>
+    /// 品牌
+    /// </summary>
+    [MaxLength(100)]
+    public string? Brand { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductSpuStatus 常量：ProductSpuStatus.Active（1）、ProductSpuStatus.Inactive（0）
+    /// </remarks>
+    public int? Status { get; set; }
+}
+
+/// <summary>
+/// 商品SPU查询 DTO
+/// </summary>
+public class SpuQueryDto
+{
+    /// <summary>
+    /// 页码，从 1 开始
+    /// </summary>
+    [Range(1, int.MaxValue, ErrorMessage = "页码必须大于0")]
+    public int PageIndex { get; set; } = 1;
+
+    /// <summary>
+    /// 每页数量
+    /// </summary>
+    [Range(1, 200, ErrorMessage = "每页数量必须在1-200之间")]
+    public int PageSize { get; set; } = 10;
+
+    /// <summary>
+    /// 关键词（商品名称、编码）
+    /// </summary>
+    public string? Keyword { get; set; }
+
+    /// <summary>
+    /// 分类ID
+    /// </summary>
+    public Guid? CategoryId { get; set; }
+
+    /// <summary>
+    /// 商品类型
+    /// </summary>
+    public int? Type { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    public int? Status { get; set; }
+}
+```
+
+### 4.3 SKU 相关 DTO
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace EasyProduct.Models.Dto.Product;
+
+/// <summary>
+/// 商品SKU DTO
+/// </summary>
+public class SkuDto
+{
+    /// <summary>
+    /// SKU ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// SPU ID
+    /// </summary>
+    public Guid SpuId { get; set; }
+
+    /// <summary>
+    /// 规格值对象
+    /// </summary>
+    public Dictionary<string, string>? SpecValues { get; set; }
+
+    /// <summary>
+    /// 条形码
+    /// </summary>
+    public string? Barcode { get; set; }
+
+    /// <summary>
+    /// 零售价
+    /// </summary>
+    public decimal RetailPrice { get; set; }
+
+    /// <summary>
+    /// 会员价
+    /// </summary>
+    public decimal MemberPrice { get; set; }
+
+    /// <summary>
+    /// B2B价
+    /// </summary>
+    public decimal? B2bPrice { get; set; }
+
+    /// <summary>
+    /// 成本价
+    /// </summary>
+    public decimal CostPrice { get; set; }
+
+    /// <summary>
+    /// 库存数量
+    /// </summary>
+    public int Stock { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductSkuStatus 常量：ProductSkuStatus.Active（1）、ProductSkuStatus.Inactive（0）
+    /// </remarks>
+    public int Status { get; set; } = ProductSkuStatus.Active;
+}
+
+/// <summary>
+/// 创建商品SKU DTO
+/// </summary>
+public class CreateSkuDto
+{
+    /// <summary>
+    /// 规格值对象
+    /// </summary>
+    public Dictionary<string, string>? SpecValues { get; set; }
+
+    /// <summary>
+    /// 条形码
+    /// </summary>
+    [MaxLength(50)]
+    public string? Barcode { get; set; }
+
+    /// <summary>
+    /// 零售价
+    /// </summary>
+    [Required(ErrorMessage = "零售价不能为空")]
+    [Range(0, double.MaxValue, ErrorMessage = "零售价必须大于等于0")]
+    public decimal RetailPrice { get; set; }
+
+    /// <summary>
+    /// 会员价
+    /// </summary>
+    [Required(ErrorMessage = "会员价不能为空")]
+    [Range(0, double.MaxValue, ErrorMessage = "会员价必须大于等于0")]
+    public decimal MemberPrice { get; set; }
+
+    /// <summary>
+    /// B2B价
+    /// </summary>
+    [Range(0, double.MaxValue, ErrorMessage = "B2B价必须大于等于0")]
+    public decimal? B2bPrice { get; set; }
+
+    /// <summary>
+    /// 成本价
+    /// </summary>
+    [Required(ErrorMessage = "成本价不能为空")]
+    [Range(0, double.MaxValue, ErrorMessage = "成本价必须大于等于0")]
+    public decimal CostPrice { get; set; }
+
+    /// <summary>
+    /// 库存数量
+    /// </summary>
+    [Range(0, int.MaxValue, ErrorMessage = "库存数量必须大于等于0")]
+    public int Stock { get; set; } = 0;
+}
+
+/// <summary>
+/// 更新商品SKU DTO
+/// </summary>
+public class UpdateSkuDto
+{
+    /// <summary>
+    /// SKU ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 条形码
+    /// </summary>
+    [MaxLength(50)]
+    public string? Barcode { get; set; }
+
+    /// <summary>
+    /// 零售价
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? RetailPrice { get; set; }
+
+    /// <summary>
+    /// 会员价
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? MemberPrice { get; set; }
+
+    /// <summary>
+    /// B2B价
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? B2bPrice { get; set; }
+
+    /// <summary>
+    /// 成本价
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? CostPrice { get; set; }
+
+    /// <summary>
+    /// 库存数量
+    /// </summary>
+    [Range(0, int.MaxValue)]
+    public int? Stock { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductSkuStatus 常量：ProductSkuStatus.Active（1）、ProductSkuStatus.Inactive（0）
+    /// </remarks>
+    public int? Status { get; set; }
+}
+
+/// <summary>
+/// 批量更新SKU DTO
+/// </summary>
+public class BatchUpdateSkuDto
+{
+    /// <summary>
+    /// SKU ID列表
+    /// </summary>
+    [Required(ErrorMessage = "SKU ID列表不能为空")]
+    public List<Guid> Ids { get; set; } = new();
+
+    /// <summary>
+    /// 零售价（统一更新）
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? RetailPrice { get; set; }
+
+    /// <summary>
+    /// 会员价（统一更新）
+    /// </summary>
+    [Range(0, double.MaxValue)]
+    public decimal? MemberPrice { get; set; }
+
+    /// <summary>
+    /// 状态（统一更新）
+    /// </summary>
+    public int? Status { get; set; }
+}
+```
+
+### 4.4 渠道相关 DTO
+
+```csharp
+namespace EasyProduct.Models.Dto.Product;
+
+/// <summary>
+/// 商品渠道 DTO
+/// </summary>
+public class ChannelDto
+{
+    /// <summary>
+    /// 渠道ID
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// 渠道名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道编码
+    /// </summary>
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道类型
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductChannelType 常量：
+    /// - ProductChannelType.Online（1）- 线上
+    /// - ProductChannelType.Offline（2）- 线下
+    /// - ProductChannelType.ThirdParty（3）- 第三方
+    /// </remarks>
+    public int Type { get; set; } = ProductChannelType.Online;
+
+    /// <summary>
+    /// 渠道描述
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    /// <remarks>
+    /// 使用 CommonStatus 常量：CommonStatus.Enabled（1）、CommonStatus.Disabled（0）
+    /// </remarks>
+    public int Status { get; set; } = CommonStatus.Enabled;
+
+    /// <summary>
+    /// 创建时间
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+}
+
+/// <summary>
+/// 创建商品渠道 DTO
+/// </summary>
+public class CreateChannelDto
+{
+    /// <summary>
+    /// 渠道名称
+    /// </summary>
+    [Required(ErrorMessage = "渠道名称不能为空")]
+    [MaxLength(100, ErrorMessage = "渠道名称长度不能超过100")]
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道编码
+    /// </summary>
+    [Required(ErrorMessage = "渠道编码不能为空")]
+    [MaxLength(50, ErrorMessage = "渠道编码长度不能超过50")]
+    public string Code { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 渠道类型
+    /// </summary>
+    /// <remarks>
+    /// 使用 ProductChannelType 常量：
+    /// - ProductChannelType.Online（1）- 线上
+    /// - ProductChannelType.Offline（2）- 线下
+    /// - ProductChannelType.ThirdParty（3）- 第三方
+    /// </remarks>
+    public int Type { get; set; } = ProductChannelType.Online;
+
+    /// <summary>
+    /// 渠道描述
+    /// </summary>
+    public string? Description { get; set; }
+}
+```
+
+---
+
+## 5. Service 层实现指南
+
+### 5.1 商品分类服务
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Common.Error;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Models.Entitys.Product;
+using Mapster;
+using SqlSugar;
+
+namespace EasyProduct.Business.Product;
+
+/// <summary>
+/// 商品分类服务接口
+/// </summary>
+public interface IProductCategoryService
+{
+    /// <summary>
+    /// 获取分类树
+    /// </summary>
+    Task<List<CategoryDto>> GetTreeAsync();
+
+    /// <summary>
+    /// 创建分类
+    /// </summary>
+    Task<bool> CreateAsync(CreateCategoryDto dto);
+
+    /// <summary>
+    /// 更新分类
+    /// </summary>
+    Task<bool> UpdateAsync(UpdateCategoryDto dto);
+
+    /// <summary>
+    /// 删除分类
+    /// </summary>
+    Task<bool> DeleteAsync(Guid id);
+}
+
+/// <summary>
+/// 商品分类服务实现
+/// </summary>
+public class ProductCategoryService : BaseService<product_category>, IProductCategoryService
+{
+    /// <summary>
+    /// 获取分类树
+    /// </summary>
+    /// <returns>分类树列表</returns>
+    /// <remarks>
+    /// 1. 查询所有未删除的分类
+    /// 2. 构建树形结构
+    /// 3. 按排序号排序
+    /// </remarks>
+    public async Task<List<CategoryDto>> GetTreeAsync()
+    {
+        // 查询所有分类
+        var categories = await GetListAsync(c => !c.IsDeleted);
+
+        // 映射为 DTO
+        var dtoList = categories.Adapt<List<CategoryDto>>();
+
+        // 构建树形结构
+        return BuildTree(dtoList, null);
+    }
+
+    /// <summary>
+    /// 创建分类
+    /// </summary>
+    /// <param name="dto">创建参数</param>
+    /// <returns>创建成功返回 true</returns>
+    /// <exception cref="BusinessException">编码已存在时抛出</exception>
+    public async Task<bool> CreateAsync(CreateCategoryDto dto)
+    {
+        // 检查编码是否已存在
+        if (await ExistsAsync(c => c.Code == dto.Code && c.IsDeleted == DeleteStatus.NotDeleted))
+        {
+            throw new BusinessException("分类编码已存在", 400);
+        }
+
+        // 检查父分类是否存在
+        if (dto.ParentId.HasValue)
+        {
+            var parent = await GetByIdAsync(dto.ParentId.Value);
+            if (parent == null || parent.IsDeleted == DeleteStatus.Deleted)
+            {
+                throw new BusinessException("父分类不存在", 404);
+            }
+        }
+
+        var entity = dto.Adapt<product_category>();
+        entity.Id = Guid.NewGuid();
+        entity.Status = CommonStatus.Enabled;
+        entity.IsDeleted = DeleteStatus.NotDeleted;
+        entity.CreatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = null;
+
+        return await InsertAsync(entity);
+    }
+
+    /// <summary>
+    /// 更新分类
+    /// </summary>
+    /// <param name="dto">更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    /// <exception cref="BusinessException">分类不存在或编码重复时抛出</exception>
+    public async Task<bool> UpdateAsync(UpdateCategoryDto dto)
+    {
+        var entity = await GetByIdAsync(dto.Id);
+        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+        {
+            throw new BusinessException("分类不存在", 404);
+        }
+
+        // 检查编码唯一性
+        if (!string.IsNullOrEmpty(dto.Code) && dto.Code != entity.Code)
+        {
+            if (await ExistsAsync(c => c.Code == dto.Code && c.Id != dto.Id && c.IsDeleted == DeleteStatus.NotDeleted))
+            {
+                throw new BusinessException("分类编码已存在", 400);
+            }
+        }
+
+        // 更新字段
+        if (!string.IsNullOrEmpty(dto.Name))
+            entity.Name = dto.Name;
+        if (!string.IsNullOrEmpty(dto.NameEn))
+            entity.NameEn = dto.NameEn;
+        if (dto.ParentId.HasValue)
+            entity.ParentId = dto.ParentId;
+        if (!string.IsNullOrEmpty(dto.Code))
+            entity.Code = dto.Code;
+        if (dto.Sort.HasValue)
+            entity.Sort = dto.Sort.Value;
+        if (dto.Status.HasValue)
+            entity.Status = dto.Status.Value;
+
+        entity.UpdatedAt = DateTime.UtcNow;
+
+        return await UpdateAsync(entity) > 0;
+    }
+
+    /// <summary>
+    /// 删除分类（软删除）
+    /// </summary>
+    /// <param name="id">分类ID</param>
+    /// <returns>删除成功返回 true</returns>
+    /// <exception cref="BusinessException">分类不存在或存在子分类时抛出</exception>
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var entity = await GetByIdAsync(id);
+        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+        {
+            throw new BusinessException("分类不存在", 404);
+        }
+
+        // 检查是否存在子分类
+        if (await ExistsAsync(c => c.ParentId == id && c.IsDeleted == DeleteStatus.NotDeleted))
+        {
+            throw new BusinessException("存在子分类，无法删除", 400);
+        }
+
+        // 检查是否存在商品
+        if (await _db.Queryable<product_spu>().AnyAsync(s => s.CategoryId == id && s.IsDeleted == DeleteStatus.NotDeleted))
+        {
+            throw new BusinessException("分类下存在商品，无法删除", 400);
+        }
+
+        entity.IsDeleted = DeleteStatus.Deleted;
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.Status = CommonStatus.Disabled;
+
+        return await UpdateAsync(entity) > 0;
+    }
+
+    /// <summary>
+    /// 构建树形结构
+    /// </summary>
+    private List<CategoryDto> BuildTree(List<CategoryDto> all, Guid? parentId)
+    {
+        return all
+            .Where(c => c.ParentId == parentId)
+            .OrderBy(c => c.Sort)
+            .Select(c =>
+            {
+                c.Children = BuildTree(all, c.Id);
+                return c;
+            })
+            .ToList();
+    }
+}
+```
+
+### 5.2 商品SPU服务
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Common.Error;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Models.Entitys.Product;
+using Mapster;
+using SqlSugar;
+using System.Text.Json;
+
+namespace EasyProduct.Business.Product;
+
+/// <summary>
+/// 商品SPU服务接口
+/// </summary>
+public interface IProductSpuService
+{
+    /// <summary>
+    /// 分页查询SPU列表
+    /// </summary>
+    Task<PageResponse<SpuDto>> GetPageListAsync(SpuQueryDto query);
+
+    /// <summary>
+    /// 获取SPU详情（含SKU）
+    /// </summary>
+    Task<SpuDto?> GetByIdAsync(Guid id);
+
+    /// <summary>
+    /// 创建SPU（自动生成SKU）
+    /// </summary>
+    Task<bool> CreateAsync(CreateSpuDto dto);
+
+    /// <summary>
+    /// 更新SPU
+    /// </summary>
+    Task<bool> UpdateAsync(UpdateSpuDto dto);
+
+    /// <summary>
+    /// 删除SPU
+    /// </summary>
+    Task<bool> DeleteAsync(Guid id);
+}
+
+/// <summary>
+/// 商品SPU服务实现
+/// </summary>
+public class ProductSpuService : BaseService<product_spu>, IProductSpuService
+{
+    /// <summary>
+    /// 分页查询SPU列表
+    /// </summary>
+    /// <param name="query">查询参数</param>
+    /// <returns>SPU分页列表</returns>
+    /// <remarks>
+    /// 支持按分类、类型、状态、关键词筛选
+    /// </remarks>
+    public async Task<PageResponse<SpuDto>> GetPageListAsync(SpuQueryDto query)
+    {
+        var whereExpr = Expressionable.Create<product_spu>()
+            .AndIF(!string.IsNullOrEmpty(query.Keyword),
+                s => s.Name.Contains(query.Keyword!) || s.Code.Contains(query.Keyword!))
+            .AndIF(query.CategoryId.HasValue, s => s.CategoryId == query.CategoryId!.Value)
+            .AndIF(query.Type.HasValue, s => s.Type == query.Type.Value)
+            .AndIF(query.Status.HasValue, s => s.Status == query.Status.Value)
+            .And(s => s.IsDeleted == DeleteStatus.NotDeleted)
+            .ToExpression();
+
+        var result = await GetPageListAsync(
+            query.PageIndex,
+            query.PageSize,
+            whereExpr,
+            s => s.CreatedAt,
+            isAsc: false);
+
+        // 映射为 DTO
+        var dtoList = result.List.Select(s =>
+        {
+            var dto = s.Adapt<SpuDto>();
+            // 解析图片和规格
+            if (!string.IsNullOrEmpty(s.Images))
+                dto.Images = JsonSerializer.Deserialize<List<string>>(s.Images);
+            if (!string.IsNullOrEmpty(s.Specs))
+                dto.Specs = JsonSerializer.Deserialize<List<SpecGroupDto>>(s.Specs);
+            return dto;
+        }).ToList();
+
+        return PageResponse<SpuDto>.Create(dtoList, result.Total, result.PageIndex, result.PageSize);
+    }
+
+    /// <summary>
+    /// 获取SPU详情（含SKU）
+    /// </summary>
+    /// <param name="id">SPU ID</param>
+    /// <returns>SPU详情</returns>
+    public async Task<SpuDto?> GetByIdAsync(Guid id)
+    {
+        var entity = await GetByIdAsync(id);
+        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+            return null;
+
+        var dto = entity.Adapt<SpuDto>();
+
+        // 解析图片和规格
+        if (!string.IsNullOrEmpty(entity.Images))
+            dto.Images = JsonSerializer.Deserialize<List<string>>(entity.Images);
+        if (!string.IsNullOrEmpty(entity.Specs))
+            dto.Specs = JsonSerializer.Deserialize<List<SpecGroupDto>>(entity.Specs);
+
+        // 查询关联的 SKU
+        var skus = await _db.Queryable<product_sku>()
+            .Where(s => s.SpuId == id && s.IsDeleted == DeleteStatus.NotDeleted)
+            .ToListAsync();
+
+        dto.Skus = skus.Select(s =>
+        {
+            var skuDto = s.Adapt<SkuDto>();
+            if (!string.IsNullOrEmpty(s.SpecValues))
+                skuDto.SpecValues = JsonSerializer.Deserialize<Dictionary<string, string>>(s.SpecValues);
+            return skuDto;
+        }).ToList();
+
+        return dto;
+    }
+
+    /// <summary>
+    /// 创建SPU（自动生成SKU）
+    /// </summary>
+    /// <param name="dto">创建参数</param>
+    /// <returns>创建成功返回 true</returns>
+    /// <exception cref="BusinessException">编码重复或分类不存在时抛出</exception>
+    public async Task<bool> CreateAsync(CreateSpuDto dto)
+    {
+        // 检查编码唯一性
+        if (await ExistsAsync(s => s.Code == dto.Code && !s.IsDeleted))
+        {
+            throw new BusinessException("商品编码已存在", 400);
+        }
+
+        // 检查分类是否存在
+        var category = await _db.Queryable<product_category>()
+            .FirstAsync(c => c.Id == dto.CategoryId && !c.IsDeleted);
+        if (category == null)
+        {
+            throw new BusinessException("商品分类不存在", 404);
+        }
+
+        var entity = dto.Adapt<product_spu>();
+        entity.Id = Guid.NewGuid();
+        entity.Images = dto.Images != null ? JsonSerializer.Serialize(dto.Images) : null;
+        entity.Specs = dto.Specs != null ? JsonSerializer.Serialize(dto.Specs) : null;
+        entity.Status = "inactive";
+        entity.CreateTime = DateTime.Now;
+        entity.UpdateTime = DateTime.Now;
+
+        // 使用事务保存 SPU 和 SKU
+        return await ExecuteTransactionAsync(async () =>
+        {
+            // 保存 SPU
+            await InsertAsync(entity);
+
+            // 自动生成 SKU
+            if (dto.Specs != null && dto.Specs.Count > 0)
+            {
+                var skus = GenerateSkus(entity.Id, dto.Specs);
+                foreach (var sku in skus)
+                {
+                    await _db.Insertable(sku).ExecuteCommandAsync();
+                }
+            }
+            else if (dto.Skus != null && dto.Skus.Count > 0)
+            {
+                // 使用提供的 SKU 列表
+                foreach (var skuDto in dto.Skus)
+                {
+                    var sku = skuDto.Adapt<product_sku>();
+                    sku.Id = Guid.NewGuid();
+                    sku.SpuId = entity.Id;
+                    sku.Status = "active";
+                    sku.CreateTime = DateTime.Now;
+                    sku.UpdateTime = DateTime.Now;
+                    sku.SpecValues = skuDto.SpecValues != null
+                        ? JsonSerializer.Serialize(skuDto.SpecValues)
+                        : null;
+                    await _db.Insertable(sku).ExecuteCommandAsync();
+                }
+            }
+        });
+    }
+
+    /// <summary>
+    /// 更新SPU
+    /// </summary>
+    /// <param name="dto">更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    public async Task<bool> UpdateAsync(UpdateSpuDto dto)
+    {
+        var entity = await GetByIdAsync(dto.Id);
+        if (entity == null || entity.IsDeleted)
+        {
+            throw new BusinessException("商品不存在", 404);
+        }
+
+        // 更新字段
+        if (!string.IsNullOrEmpty(dto.Name))
+            entity.Name = dto.Name;
+        if (!string.IsNullOrEmpty(dto.NameEn))
+            entity.NameEn = dto.NameEn;
+        if (dto.CategoryId.HasValue)
+            entity.CategoryId = dto.CategoryId.Value;
+        if (!string.IsNullOrEmpty(dto.MainImage))
+            entity.MainImage = dto.MainImage;
+        if (dto.Images != null)
+            entity.Images = JsonSerializer.Serialize(dto.Images);
+        if (dto.Description != null)
+            entity.Description = dto.Description;
+        if (!string.IsNullOrEmpty(dto.Unit))
+            entity.Unit = dto.Unit;
+        if (dto.Brand != null)
+            entity.Brand = dto.Brand;
+        if (!string.IsNullOrEmpty(dto.Status))
+            entity.Status = dto.Status;
+
+        entity.UpdateTime = DateTime.Now;
+
+        return await UpdateAsync(entity) > 0;
+    }
+
+    /// <summary>
+    /// 删除SPU（软删除）
+    /// </summary>
+    /// <param name="id">SPU ID</param>
+    /// <returns>删除成功返回 true</returns>
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var entity = await GetByIdAsync(id);
+        if (entity == null || entity.IsDeleted)
+            return false;
+
+        // 检查是否存在订单关联（待实现订单模块后添加）
+
+        entity.IsDeleted = true;
+        entity.UpdateTime = DateTime.Now;
+        entity.Status = "inactive";
+
+        // 同时软删除关联的 SKU
+        await _db.Updateable<product_sku>()
+            .SetColumns(s => new product_sku { IsDeleted = true, UpdateTime = DateTime.Now, Status = "inactive" })
+            .Where(s => s.SpuId == id)
+            .ExecuteCommandAsync();
+
+        return await UpdateAsync(entity) > 0;
+    }
+
+    /// <summary>
+    /// 生成SKU列表（根据规格组合）
+    /// </summary>
+    private List<product_sku> GenerateSkus(Guid spuId, List<SpecGroupDto> specs)
+    {
+        var skus = new List<product_sku>();
+
+        // 生成规格组合
+        var combinations = GenerateCombinations(specs);
+
+        foreach (var combo in combinations)
+        {
+            var sku = new product_sku
+            {
+                Id = Guid.NewGuid(),
+                SpuId = spuId,
+                SpecValues = JsonSerializer.Serialize(combo),
+                Status = "active",
+                CreateTime = DateTime.Now,
+                UpdateTime = DateTime.Now
+            };
+            skus.Add(sku);
+        }
+
+        return skus;
+    }
+
+    /// <summary>
+    /// 生成规格组合
+    /// </summary>
+    private List<Dictionary<string, string>> GenerateCombinations(List<SpecGroupDto> specs)
+    {
+        var result = new List<Dictionary<string, string>>();
+
+        if (specs.Count == 0)
+            return result;
+
+        // 递归生成所有组合
+        GenerateCombinationsRecursive(specs, 0, new Dictionary<string, string>(), result);
+
+        return result;
+    }
+
+    /// <summary>
+    /// 递归生成规格组合
+    /// </summary>
+    private void GenerateCombinationsRecursive(
+        List<SpecGroupDto> specs,
+        int index,
+        Dictionary<string, string> current,
+        List<Dictionary<string, string>> result)
+    {
+        if (index >= specs.Count)
+        {
+            result.Add(new Dictionary<string, string>(current));
+            return;
+        }
+
+        var spec = specs[index];
+        foreach (var value in spec.Values)
+        {
+            current[spec.Name] = value;
+            GenerateCombinationsRecursive(specs, index + 1, current, result);
+            current.Remove(spec.Name);
+        }
+    }
+}
+```
+
+### 5.3 商品SKU服务
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Common.Error;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Models.Entitys.Product;
+using Mapster;
+using SqlSugar;
+using System.Text.Json;
+
+namespace EasyProduct.Business.Product;
+
+/// <summary>
+/// 商品SKU服务接口
+/// </summary>
+public interface IProductSkuService
+{
+    /// <summary>
+    /// 更新单个SKU
+    /// </summary>
+    Task<bool> UpdateAsync(UpdateSkuDto dto);
+
+    /// <summary>
+    /// 批量更新SKU
+    /// </summary>
+    Task<bool> BatchUpdateAsync(BatchUpdateSkuDto dto);
+
+    /// <summary>
+    /// 扣减库存
+    /// </summary>
+    Task<bool> DeductStockAsync(Guid skuId, int quantity);
+
+    /// <summary>
+    /// 增加库存
+    /// </summary>
+    Task<bool> AddStockAsync(Guid skuId, int quantity);
+}
+
+/// <summary>
+/// 商品SKU服务实现
+/// </summary>
+public class ProductSkuService : BaseService<product_sku>, IProductSkuService
+{
+    /// <summary>
+    /// 更新单个SKU
+    /// </summary>
+    /// <param name="dto">更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    public async Task<bool> UpdateAsync(UpdateSkuDto dto)
+    {
+        var entity = await GetByIdAsync(dto.Id);
+        if (entity == null || entity.IsDeleted)
+        {
+            throw new BusinessException("SKU不存在", 404);
+        }
+
+        // 更新字段
+        if (!string.IsNullOrEmpty(dto.Barcode))
+            entity.Barcode = dto.Barcode;
+        if (dto.RetailPrice.HasValue)
+            entity.RetailPrice = dto.RetailPrice.Value;
+        if (dto.MemberPrice.HasValue)
+            entity.MemberPrice = dto.MemberPrice.Value;
+        if (dto.B2bPrice.HasValue)
+            entity.B2bPrice = dto.B2bPrice;
+        if (dto.CostPrice.HasValue)
+            entity.CostPrice = dto.CostPrice.Value;
+        if (dto.Stock.HasValue)
+            entity.Stock = dto.Stock.Value;
+        if (!string.IsNullOrEmpty(dto.Status))
+            entity.Status = dto.Status;
+
+        entity.UpdateTime = DateTime.Now;
+
+        return await UpdateAsync(entity) > 0;
+    }
+
+    /// <summary>
+    /// 批量更新SKU
+    /// </summary>
+    /// <param name="dto">批量更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    public async Task<bool> BatchUpdateAsync(BatchUpdateSkuDto dto)
+    {
+        var entities = await GetListAsync(s => dto.Ids.Contains(s.Id) && !s.IsDeleted);
+        if (entities.Count == 0)
+            return false;
+
+        // 批量更新
+        foreach (var entity in entities)
+        {
+            if (dto.RetailPrice.HasValue)
+                entity.RetailPrice = dto.RetailPrice.Value;
+            if (dto.MemberPrice.HasValue)
+                entity.MemberPrice = dto.MemberPrice.Value;
+            if (!string.IsNullOrEmpty(dto.Status))
+                entity.Status = dto.Status;
+            entity.UpdateTime = DateTime.Now;
+        }
+
+        return await _db.Updateable(entities).ExecuteCommandAsync() > 0;
+    }
+
+    /// <summary>
+    /// 扣减库存
+    /// </summary>
+    /// <param name="skuId">SKU ID</param>
+    /// <param name="quantity">扣减数量</param>
+    /// <returns>扣减成功返回 true</returns>
+    /// <exception cref="BusinessException">库存不足时抛出</exception>
+    /// <remarks>
+    /// 使用事务确保库存扣减的原子性
+    /// </remarks>
+    public async Task<bool> DeductStockAsync(Guid skuId, int quantity)
+    {
+        if (quantity <= 0)
+            throw new BusinessException("扣减数量必须大于0", 400);
+
+        return await ExecuteTransactionAsync(async () =>
+        {
+            // 锁定行进行查询
+            var entity = await _db.Queryable<product_sku>()
+                .With(SqlWith.RowLock)
+                .FirstAsync(s => s.Id == skuId && !s.IsDeleted);
+
+            if (entity == null)
+                throw new BusinessException("SKU不存在", 404);
+
+            if (entity.Stock < quantity)
+                throw new BusinessException($"库存不足，当前库存：{entity.Stock}", 400);
+
+            entity.Stock -= quantity;
+            entity.UpdateTime = DateTime.Now;
+
+            await _db.Updateable(entity).ExecuteCommandAsync();
+
+            // TODO: 记录库存流水（待实现）
+        });
+    }
+
+    /// <summary>
+    /// 增加库存
+    /// </summary>
+    /// <param name="skuId">SKU ID</param>
+    /// <param name="quantity">增加数量</param>
+    /// <returns>增加成功返回 true</returns>
+    public async Task<bool> AddStockAsync(Guid skuId, int quantity)
+    {
+        if (quantity <= 0)
+            throw new BusinessException("增加数量必须大于0", 400);
+
+        return await ExecuteTransactionAsync(async () =>
+        {
+            var entity = await GetByIdAsync(skuId);
+            if (entity == null || entity.IsDeleted)
+                throw new BusinessException("SKU不存在", 404);
+
+            entity.Stock += quantity;
+            entity.UpdateTime = DateTime.Now;
+
+            await UpdateAsync(entity);
+
+            // TODO: 记录库存流水（待实现）
+        });
+    }
+}
+```
+
+---
+
+## 6. Controller 层实现指南
+
+### 6.1 商品分类 Controller
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Business.Product;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EasyProduct.Web.Controllers.Admin.Product;
+
+/// <summary>
+/// 商品分类管理 Controller
+/// </summary>
+[ApiController]
+[Route("api/admin/product/category")]
+[Authorize(AuthenticationSchemes = "AdminJwt")]
+public class CategoryController : BaseController
+{
+    private readonly IProductCategoryService _categoryService;
+
+    public CategoryController(IProductCategoryService categoryService)
+    {
+        _categoryService = categoryService;
+    }
+
+    /// <summary>
+    /// 获取分类树
+    /// </summary>
+    [HttpGet("tree")]
+    [ProducesResponseType(typeof(ApiResponse<List<CategoryDto>>), 200)]
+    public async Task<ApiResponse<List<CategoryDto>>> GetTree()
+    {
+        var tree = await _categoryService.GetTreeAsync();
+        return Success(tree);
+    }
+
+    /// <summary>
+    /// 创建分类
+    /// </summary>
+    [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Create([FromBody] CreateCategoryDto dto)
+    {
+        await _categoryService.CreateAsync(dto);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 更新分类
+    /// </summary>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Update(Guid id, [FromBody] UpdateCategoryDto dto)
+    {
+        dto.Id = id;
+        await _categoryService.UpdateAsync(dto);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 删除分类
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Delete(Guid id)
+    {
+        await _categoryService.DeleteAsync(id);
+        return Success(true);
+    }
+}
+```
+
+### 6.2 商品SPU Controller
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Business.Product;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EasyProduct.Web.Controllers.Admin.Product;
+
+/// <summary>
+/// 商品SPU管理 Controller
+/// </summary>
+[ApiController]
+[Route("api/admin/product/spu")]
+[Authorize(AuthenticationSchemes = "AdminJwt")]
+public class SpuController : BaseController
+{
+    private readonly IProductSpuService _spuService;
+    private readonly IProductSkuService _skuService;
+
+    public SpuController(IProductSpuService spuService, IProductSkuService skuService)
+    {
+        _spuService = spuService;
+        _skuService = skuService;
+    }
+
+    /// <summary>
+    /// 获取SPU列表（分页）
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(ApiResponse<PageResponse<SpuDto>>), 200)]
+    public async Task<ApiResponse<PageResponse<SpuDto>>> GetList([FromQuery] SpuQueryDto query)
+    {
+        var result = await _spuService.GetPageListAsync(query);
+        return Success(result);
+    }
+
+    /// <summary>
+    /// 获取SPU详情（含SKU）
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<SpuDto>), 200)]
+    public async Task<ApiResponse<SpuDto>> GetById(Guid id)
+    {
+        var result = await _spuService.GetByIdAsync(id);
+        return Success(result);
+    }
+
+    /// <summary>
+    /// 创建SPU
+    /// </summary>
+    [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Create([FromBody] CreateSpuDto dto)
+    {
+        await _spuService.CreateAsync(dto);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 更新SPU
+    /// </summary>
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Update(Guid id, [FromBody] UpdateSpuDto dto)
+    {
+        dto.Id = id;
+        await _spuService.UpdateAsync(dto);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 删除SPU
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Delete(Guid id)
+    {
+        await _spuService.DeleteAsync(id);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 更新单个SKU
+    /// </summary>
+    [HttpPut("sku/{id}")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> UpdateSku(Guid id, [FromBody] UpdateSkuDto dto)
+    {
+        dto.Id = id;
+        await _skuService.UpdateAsync(dto);
+        return Success(true);
+    }
+
+    /// <summary>
+    /// 批量更新SKU
+    /// </summary>
+    [HttpPut("sku/batch")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> BatchUpdateSku([FromBody] BatchUpdateSkuDto dto)
+    {
+        await _skuService.BatchUpdateAsync(dto);
+        return Success(true);
+    }
+}
+```
+
+### 6.3 商品渠道 Controller
+
+```csharp
+using EasyProduct.Common.Base;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Business.Product;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EasyProduct.Web.Controllers.Admin.Product;
+
+/// <summary>
+/// 商品渠道管理 Controller
+/// </summary>
+[ApiController]
+[Route("api/admin/product/channel")]
+[Authorize(AuthenticationSchemes = "AdminJwt")]
+public class ChannelController : BaseController
+{
+    private readonly IProductChannelService _channelService;
+
+    public ChannelController(IProductChannelService channelService)
+    {
+        _channelService = channelService;
+    }
+
+    /// <summary>
+    /// 获取渠道列表
+    /// </summary>
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(ApiResponse<List<ChannelDto>>), 200)]
+    public async Task<ApiResponse<List<ChannelDto>>> GetList()
+    {
+        var result = await _channelService.GetListAsync();
+        return Success(result);
+    }
+
+    /// <summary>
+    /// 创建渠道
+    /// </summary>
+    [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<ApiResponse<bool>> Create([FromBody] CreateChannelDto dto)
+    {
+        await _channelService.CreateAsync(dto);
+        return Success(true);
+    }
+}
+```
+
+---
+
+## 7. 数据库表设计（SQL）
+
+### 7.1 商品分类表
+
+```sql
+-- 商品分类表
+CREATE TABLE `product_category` (
+  `id` char(36) NOT NULL COMMENT '分类ID',
+  `name` varchar(100) NOT NULL COMMENT '分类名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `parent_id` char(36) DEFAULT NULL COMMENT '父分类ID',
+  `code` varchar(50) NOT NULL COMMENT '分类编码',
+  `sort` int NOT NULL DEFAULT '0' COMMENT '排序序号',
+  `status` varchar(20) NOT NULL DEFAULT 'enabled' COMMENT '状态：enabled-启用，disabled-禁用',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`),
+  KEY `idx_parent_id` (`parent_id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类表';
+
+-- 初始化分类数据
+INSERT INTO `product_category` (`id`, `name`, `name_en`, `parent_id`, `code`, `sort`, `status`, `create_by`)
+VALUES
+('分类ID', '票务', 'Ticket', NULL, 'ticket', 1, 'enabled', 'system'),
+('分类ID', '特产', 'Specialty', NULL, 'specialty', 2, 'enabled', 'system'),
+('分类ID', '服务', 'Service', NULL, 'service', 3, 'enabled', 'system');
+```
+
+### 7.2 商品SPU表
+
+```sql
+-- 商品SPU表
+CREATE TABLE `product_spu` (
+  `id` char(36) NOT NULL COMMENT 'SPU ID',
+  `code` varchar(50) NOT NULL COMMENT '商品编码',
+  `name` varchar(200) NOT NULL COMMENT '商品名称',
+  `name_en` varchar(200) DEFAULT NULL COMMENT '英文名称',
+  `category_id` char(36) NOT NULL COMMENT '分类ID',
+  `type` varchar(20) NOT NULL DEFAULT 'normal' COMMENT '商品类型：ticket-票务，normal-普通商品，service-服务',
+  `main_image` varchar(500) NOT NULL COMMENT '主图URL',
+  `images` text COMMENT '商品图片JSON数组',
+  `description` text COMMENT '商品描述',
+  `unit` varchar(20) NOT NULL DEFAULT '件' COMMENT '单位',
+  `brand` varchar(100) DEFAULT NULL COMMENT '品牌',
+  `specs` text COMMENT '规格组JSON数组',
+  `status` varchar(20) NOT NULL DEFAULT 'inactive' COMMENT '状态：active-上架，inactive-下架',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_type` (`type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品SPU表';
+```
+
+### 7.3 商品SKU表
+
+```sql
+-- 商品SKU表
+CREATE TABLE `product_sku` (
+  `id` char(36) NOT NULL COMMENT 'SKU ID',
+  `spu_id` char(36) NOT NULL COMMENT 'SPU ID',
+  `spec_values` text COMMENT '规格值JSON对象',
+  `barcode` varchar(50) DEFAULT NULL COMMENT '条形码',
+  `retail_price` decimal(18,2) NOT NULL COMMENT '零售价',
+  `member_price` decimal(18,2) NOT NULL COMMENT '会员价',
+  `b2b_price` decimal(18,2) DEFAULT NULL COMMENT 'B2B价',
+  `cost_price` decimal(18,2) NOT NULL COMMENT '成本价',
+  `stock` int NOT NULL DEFAULT '0' COMMENT '库存数量',
+  `status` varchar(20) NOT NULL DEFAULT 'active' COMMENT '状态：active-上架，inactive-下架',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`),
+  KEY `idx_spu_id` (`spu_id`),
+  KEY `idx_barcode` (`barcode`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品SKU表';
+```
+
+### 7.4 商品渠道表
+
+```sql
+-- 商品渠道表
+CREATE TABLE `product_channel` (
+  `id` char(36) NOT NULL COMMENT '渠道ID',
+  `name` varchar(100) NOT NULL COMMENT '渠道名称',
+  `code` varchar(50) NOT NULL COMMENT '渠道编码',
+  `type` varchar(20) NOT NULL DEFAULT 'online' COMMENT '渠道类型：online-线上，offline-线下，third-party-第三方',
+  `description` text COMMENT '渠道描述',
+  `status` varchar(20) NOT NULL DEFAULT 'enabled' COMMENT '状态：enabled-启用，disabled-禁用',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`),
+  KEY `idx_type` (`type`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品渠道表';
+
+-- 初始化渠道数据
+INSERT INTO `product_channel` (`id`, `name`, `code`, `type`, `description`, `status`, `create_by`)
+VALUES
+('渠道ID', '官网', 'website', 'online', '官方网站销售', 'enabled', 'system'),
+('渠道ID', '小程序', 'miniprogram', 'online', '微信小程序销售', 'enabled', 'system'),
+('渠道ID', '门店', 'store', 'offline', '线下门店销售', 'enabled', 'system'),
+('渠道ID', '第三方', 'thirdparty', 'third-party', '第三方平台销售', 'enabled', 'system');
+```
+
+---
+
+## 8. 业务逻辑要点
+
+### 8.1 SKU 自动生成规则
+
+当创建 SPU 时，如果提供了规格组（Specs），系统会自动生成所有规格组合的 SKU：
+
+**示例：**
+
+```json
+// 输入规格组
+{
+  "specs": [
+    { "name": "颜色", "values": ["红色", "蓝色"] },
+    { "name": "尺寸", "values": ["S", "M", "L"] }
+  ]
+}
+
+// 自动生成 6 个 SKU（2 x 3 = 6 种组合）
+[
+  { "颜色": "红色", "尺寸": "S" },
+  { "颜色": "红色", "尺寸": "M" },
+  { "颜色": "红色", "尺寸": "L" },
+  { "颜色": "蓝色", "尺寸": "S" },
+  { "颜色": "蓝色", "尺寸": "M" },
+  { "颜色": "蓝色", "尺寸": "L" }
+]
+```
+
+**注意事项：**
+
+1. 生成的 SKU 初始状态为 `active`，但价格为 0，需要后续补充价格和库存信息
+2. 条形码（Barcode）可以为空，后续可手动填写或系统生成
+3. 如果不提供规格组，可以手动创建 SKU
+
+### 8.2 多价格体系
+
+Product 模块支持四档价格体系：
+
+| 价格类型 | 字段 | 说明 | 必填 |
+|---------|------|------|------|
+| **零售价** | `RetailPrice` | 面向普通用户的价格 | 是 |
+| **会员价** | `MemberPrice` | 面向会员的价格 | 是 |
+| **B2B价** | `B2bPrice` | 面向企业客户的价格 | 否 |
+| **成本价** | `CostPrice` | 商品的成本价格 | 是 |
+
+**价格规则：**
+
+1. 零售价 >= 会员价 >= 成本价（建议，非强制）
+2. B2B价通常低于会员价，但系统不强制要求
+3. 价格变更时，需要记录价格历史（待实现）
+
+### 8.3 库存管理
+
+**库存操作：**
+
+1. **扣减库存**（`DeductStockAsync`）：
+   - 用于下单、出库等场景
+   - 使用行锁（`WITH ROWLOCK`）防止并发超卖
+   - 库存不足时抛出异常
+   - 记录库存流水
+
+2. **增加库存**（`AddStockAsync`）：
+   - 用于入库、退货等场景
+   - 使用事务确保数据一致性
+   - 记录库存流水
+
+**库存流水（待实现）：**
+
+```csharp
+// 库存流水实体
+public class product_stock_record
+{
+    public Guid Id { get; set; }
+    public Guid SkuId { get; set; }
+    public string Type { get; set; } // in-入库，out-出库，return-退货
+    public int Quantity { get; set; }
+    public int BeforeStock { get; set; }
+    public int AfterStock { get; set; }
+    public string RefType { get; set; } // 关联单据类型（order/purchase/return）
+    public string RefId { get; set; } // 关联单据ID
+    public DateTime CreateTime { get; set; }
+    public string CreateBy { get; set; }
+}
+```
+
+### 8.4 商品状态流转
+
+**SPU 状态：**
+
+```
+inactive（下架） → active（上架） → inactive（下架）
+```
+
+**SKU 状态：**
+
+```
+inactive（下架） → active（上架） → inactive（下架）
+```
+
+**状态规则：**
+
+1. SPU 上架时，不会自动上架所有 SKU
+2. SKU 可以独立上架/下架，不受 SPU 状态限制
+3. 删除操作为软删除，状态自动变为 `inactive`
+
+### 8.5 分类管理
+
+**树形结构：**
+
+1. 支持无限层级分类（建议不超过 3 层）
+2. 每个分类有唯一编码（`Code`）
+3. 父分类删除时，需要检查是否存在子分类
+4. 分类删除时，需要检查是否存在关联商品
+
+**排序规则：**
+
+1. 同级分类按 `Sort` 字段升序排列
+2. `Sort` 相同时，按创建时间排序
+
+---
+
+## 9. 单元测试要求
+
+### 9.1 测试范围
+
+**必须编写单元测试的场景：**
+
+1. **库存扣减**（`DeductStockAsync`）：
+   - 正常扣减
+   - 库存不足
+   - 并发扣减（线程安全）
+   - SKU 不存在
+
+2. **库存增加**（`AddStockAsync`）：
+   - 正常增加
+   - SKU 不存在
+   - 数量为 0 或负数
+
+3. **SKU 自动生成**：
+   - 多规格组合生成
+   - 单规格生成
+   - 无规格时不生成
+
+**建议编写单元测试的场景：**
+
+1. SPU 创建（编码唯一性、分类验证）
+2. SPU 更新（字段更新、状态变更）
+3. 分类树构建
+4. 分类删除（存在子分类、存在商品）
+
+### 9.2 测试示例
+
+```csharp
+using Xunit;
+using EasyProduct.Business.Product;
+using EasyProduct.Models.Dto.Product;
+using EasyProduct.Common.Error;
+
+namespace EasyProduct.Tests.Product;
+
+/// <summary>
+/// 商品SKU服务测试
+/// </summary>
+public class ProductSkuServiceTests
+{
+    private readonly IProductSkuService _skuService;
+    private readonly ISqlSugarClient _db;
+
+    public ProductSkuServiceTests()
+    {
+        // 初始化测试数据库和服务
+    }
+
+    /// <summary>
+    /// 测试：正常扣减库存
+    /// </summary>
+    [Fact]
+    public async Task DeductStock_Normal_ShouldSuccess()
+    {
+        // Given: 准备测试数据
+        var skuId = Guid.NewGuid();
+        var initialStock = 100;
+        var deductQuantity = 10;
+
+        // When: 执行扣减
+        await _skuService.DeductStockAsync(skuId, deductQuantity);
+
+        // Then: 验证结果
+        var sku = await _db.Queryable<product_sku>().InSingleAsync(skuId);
+        Assert.Equal(initialStock - deductQuantity, sku.Stock);
+    }
+
+    /// <summary>
+    /// 测试：库存不足时应抛出异常
+    /// </summary>
+    [Fact]
+    public async Task DeductStock_InsufficientStock_ShouldThrowException()
+    {
+        // Given: 准备测试数据（库存为 5）
+        var skuId = Guid.NewGuid();
+        var deductQuantity = 10;
+
+        // When & Then: 应抛出业务异常
+        await Assert.ThrowsAsync<BusinessException>(
+            () => _skuService.DeductStockAsync(skuId, deductQuantity));
+    }
+
+    /// <summary>
+    /// 测试：并发扣减库存（线程安全）
+    /// </summary>
+    [Fact]
+    public async Task DeductStock_Concurrent_ShouldBeThreadSafe()
+    {
+        // Given: 准备测试数据（库存为 100）
+        var skuId = Guid.NewGuid();
+        var tasks = new List<Task>();
+
+        // When: 并发执行 10 次扣减，每次扣 10
+        for (int i = 0; i < 10; i++)
+        {
+            tasks.Add(_skuService.DeductStockAsync(skuId, 10));
+        }
+        await Task.WhenAll(tasks);
+
+        // Then: 最终库存应为 0
+        var sku = await _db.Queryable<product_sku>().InSingleAsync(skuId);
+        Assert.Equal(0, sku.Stock);
+    }
+}
+```
+
+---
+
+## 10. 开发检查清单
+
+### 10.1 代码规范检查
+
+- [ ] 所有方法添加 XML 注释（summary + remarks + example）
+- [ ] 实体类使用 PascalCase，数据库列名 snake_case
+- [ ] DTO 类添加 DataAnnotations 校验特性
+- [ ] 使用 Mapster 进行对象映射
+- [ ] 禁止在 Controller 中编写业务逻辑
+- [ ] 禁止在 Controller 中手写 try/catch
+- [ ] 使用构造器注入，禁止属性注入
+
+### 10.2 数据库检查
+
+- [ ] 所有表使用 GUID 主键
+- [ ] 所有表包含 `is_deleted`、`create_time`、`update_time` 字段
+- [ ] 唯一索引字段（Code、Barcode）添加唯一约束
+- [ ] 外键字段添加索引
+- [ ] 状态字段使用小写字符串常量
+
+### 10.3 API 规范检查
+
+- [ ] 路由遵循 RESTful 风格（`/api/admin/product/*`）
+- [ ] 统一响应格式（`ApiResponse<T>`）
+- [ ] HTTP 状态码一律返回 200
+- [ ] 分页参数使用 `pageIndex`/`pageSize`
+- [ ] Swagger 注释完整（summary + remarks + ProducesResponseType）
+
+### 10.4 业务逻辑检查
+
+- [ ] 库存扣减使用事务 + 行锁
+- [ ] 编码唯一性校验
+- [ ] 分类删除前检查子分类和商品
+- [ ] SKU 自动生成规格组合正确
+- [ ] 价格字段使用 `decimal(18,2)`
+
+### 10.5 测试检查
+
+- [ ] 库存扣减/增加单元测试覆盖
+- [ ] 边界条件测试（库存不足、并发扣减）
+- [ ] 异常场景测试（SKU 不存在、数量非法）
+- [ ] 测试使用独立数据库
+
+### 10.6 提交前检查
+
+- [ ] `dotnet build` 零错误
+- [ ] `dotnet test` 全部通过
+- [ ] 无新增警告
+- [ ] Commit 消息符合规范（`feat(api): Product 模块 SPU CRUD`）
+- [ ] Swagger 文档导出归档
+
+---
+
+## 附录
+
+### A. 常量定义
+
+```csharp
+// EasyProduct.Models/Constants/ProductConstants.cs
+
+namespace EasyProduct.Models.Constants;
+
+/// <summary>
+/// 商品模块常量
+/// </summary>
+public static class ProductConstants
+{
+    /// <summary>
+    /// 状态常量
+    /// </summary>
+    public static class Status
+    {
+        public const string Enabled = "enabled";
+        public const string Disabled = "disabled";
+        public const string Active = "active";
+        public const string Inactive = "inactive";
+    }
+
+    /// <summary>
+    /// 商品类型常量
+    /// </summary>
+    public static class Type
+    {
+        public const string Ticket = "ticket";
+        public const string Normal = "normal";
+        public const string Service = "service";
+    }
+
+    /// <summary>
+    /// 渠道类型常量
+    /// </summary>
+    public static class ChannelType
+    {
+        public const string Online = "online";
+        public const string Offline = "offline";
+        public const string ThirdParty = "third-party";
+    }
+}
+```
+
+### B. 错误码定义
+
+| 错误码 | 错误消息 | 场景 |
+|--------|---------|------|
+| 400 | 分类编码已存在 | 创建/更新分类时编码重复 |
+| 400 | 父分类不存在 | 创建分类时父分类不存在 |
+| 400 | 存在子分类，无法删除 | 删除分类时存在子分类 |
+| 400 | 分类下存在商品，无法删除 | 删除分类时存在商品 |
+| 400 | 商品编码已存在 | 创建 SPU 时编码重复 |
+| 400 | 商品分类不存在 | 创建 SPU 时分类不存在 |
+| 400 | 库存不足，当前库存：{stock} | 扣减库存时库存不足 |
+| 400 | 扣减/增加数量必须大于0 | 库存操作时数量非法 |
+| 404 | 分类不存在 | 分类查询/更新/删除时不存在 |
+| 404 | 商品不存在 | SPU 查询/更新/删除时不存在 |
+| 404 | SKU不存在 | SKU 操作时不存在 |
+
+---
+
+**文档维护：**
+
+- 本文档随 Product 模块开发进度持续更新
+- 重大变更需更新文档版本号
+- 实现细节调整需同步更新代码示例
+
+**参考文档：**
+
+- 后端开发规范：`docs/backend-guidelines.md`
+- 接口定义：`docs/api/other-modules.md`
+- 前端规范：`docs/frontend-guidelines.md`

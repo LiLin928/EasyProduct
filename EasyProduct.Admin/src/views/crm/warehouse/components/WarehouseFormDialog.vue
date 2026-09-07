@@ -170,7 +170,7 @@
      model.address = ''
      model.manager = ''
      model.phone = ''
-     model.status = 'active'
+     model.status = 1
      model.remark = ''
    }
    formRef.value?.clearValidate()

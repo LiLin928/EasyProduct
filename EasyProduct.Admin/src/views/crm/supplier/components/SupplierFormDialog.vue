@@ -213,7 +213,7 @@ watch(() => props.visible, (val) => {
     model.address = ''
     model.bankName = ''
     model.bankAccount = ''
-    model.status = 'active'
+    model.status = 1
     model.remark = ''
   }
   formRef.value?.clearValidate()

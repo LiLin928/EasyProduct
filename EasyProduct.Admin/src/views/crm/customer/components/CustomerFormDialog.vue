@@ -265,7 +265,7 @@ watch(() => props.visible, (val) => {
     model.address = ''
     model.salesPersonName = ''
     model.creditLimit = 0
-    model.status = 'active'
+    model.status = 1
     model.remark = ''
   }
   formRef.value?.clearValidate()
