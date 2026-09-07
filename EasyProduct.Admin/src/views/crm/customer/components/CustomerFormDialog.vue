@@ -144,10 +144,10 @@
             prop="status"
           >
             <el-radio-group v-model="model.status">
-              <el-radio value="active">
+              <el-radio :value="1">
                 {{ t('crm.customer.statusActive') }}
               </el-radio>
-              <el-radio value="inactive">
+              <el-radio :value="0">
                 {{ t('crm.customer.statusInactive') }}
               </el-radio>
             </el-radio-group>
@@ -230,7 +230,7 @@ const model = reactive({
   address: '',
   salesPersonName: '',
   creditLimit: 0,
-  status: 'active' as 'active' | 'inactive',
+  status: 1,
   remark: '',
 })
 

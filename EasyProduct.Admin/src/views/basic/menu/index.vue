@@ -212,7 +212,7 @@ const searchFields: SearchField[] = [
 const { searchModel, handleSearch, handleReset } = useSearch({
   defaultModel: {
     name: '',
-    status: ''
+    status: undefined
   }
 })
 

@@ -56,17 +56,17 @@
         :label="t('crm.currency.isDefault')"
         prop="isDefault"
       >
-        <el-switch v-model="model.isDefault" />
+        <el-switch v-model="model.isDefault" :active-value="1" :inactive-value="0" />
       </el-form-item>
       <el-form-item
         :label="t('crm.currency.status')"
         prop="status"
       >
         <el-radio-group v-model="model.status">
-          <el-radio value="active">
+          <el-radio :value="1">
             {{ t('crm.currency.statusActive') }}
           </el-radio>
-          <el-radio value="inactive">
+          <el-radio :value="0">
             {{ t('crm.currency.statusInactive') }}
           </el-radio>
         </el-radio-group>
@@ -117,8 +117,8 @@ const model = reactive({
   name: '',
   symbol: '',
   exchangeRate: 1,
-  isDefault: false,
-  status: 'active' as 'active' | 'inactive',
+  isDefault: 0,
+  status: 1,
 })
 
 const rules: FormRules = {

@@ -413,7 +413,7 @@ const handleRecall = async (row: Announcement): Promise<void> => {
 // 置顶/取消置顶
 const handleSetTop = async (row: Announcement): Promise<void> => {
   try {
-    const isTop = !row.isTop
+    const isTop = row.isTop === 1 ? 0 : 1
     await setTopAnnouncement(row.id, { isTop })
     ElMessage.success(
       isTop

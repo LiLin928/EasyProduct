@@ -269,7 +269,7 @@ const resetForm = () => {
   formData.name = ''
   formData.code = ''
   formData.sort = 0
-  formData.status = 'enabled'
+  formData.status = 1
   formData.leaderName = ''
   formData.phone = ''
   formData.email = ''

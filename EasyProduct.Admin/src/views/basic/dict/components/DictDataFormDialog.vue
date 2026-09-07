@@ -156,7 +156,7 @@ const resetForm = () => {
   formData.value = ''
   formData.labelKey = ''
   formData.sort = 0
-  formData.status = 'enabled'
+  formData.status = 1
 }
 
 // 关闭弹窗

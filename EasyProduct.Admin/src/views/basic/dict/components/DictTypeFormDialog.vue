@@ -153,7 +153,7 @@ const loadDetail = async (id: string) => {
 const resetForm = () => {
   formData.name = ''
   formData.code = ''
-  formData.status = 'enabled'
+  formData.status = 1
   formData.remark = ''
 }
 
