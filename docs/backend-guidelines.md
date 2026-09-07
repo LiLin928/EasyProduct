@@ -248,7 +248,76 @@ public abstract class BaseEntity
 ### 7.5 时间与枚举值
 
 1. 时间字段数据库 `datetime`，JSON 序列化输出 **ISO 8601**（`2026-08-08T10:00:00`）；全局 `JsonSerializerOptions` 不特殊处理 DateTime（默认即 ISO）。
-2. 业务状态/类型字段**存小写字符串**（`pending`/`paid`/`b2b`），与前端 `as const` 常量、`basic_dict` 字典值逐字一致；禁止存数字枚举码。常量定义在 `EasyProduct.Models/Constants/<模块>Constants.cs`，值与前端 types 对照维护。
+2. **业务状态/类型字段统一使用 `int` 类型**，与前端常量、`basic_dict` 字典值映射一致。枚举定义在 `EasyProduct.Models/Enums/`，值与前端 `as const` 常量逐字一致。
+3. **布尔字段统一使用 `int` 类型**（0=false，1=true），不使用数据库 `BOOLEAN` 类型。
+
+**详细规范见：** `docs/superpowers/specs/2026-09-07-status-enum-standardization-design.md`
+
+#### 7.5.1 状态枚举定义
+
+```csharp
+/// <summary>
+/// 通用状态枚举
+/// </summary>
+public enum Status
+{
+    /// <summary>禁用</summary>
+    Disabled = 0,
+    /// <summary>启用</summary>
+    Enabled = 1
+}
+
+/// <summary>
+/// 订单状态枚举
+/// </summary>
+public enum OrderStatus
+{
+    /// <summary>已取消</summary>
+    Cancelled = 0,
+    /// <summary>待支付</summary>
+    Pending = 1,
+    /// <summary>已支付</summary>
+    Paid = 2,
+    /// <summary>已发货</summary>
+    Shipped = 3,
+    /// <summary>已完成</summary>
+    Completed = 4,
+    /// <summary>已退款</summary>
+    Refunded = 5
+}
+```
+
+#### 7.5.2 实体字段定义
+
+```csharp
+/// <summary>
+/// 状态：0=禁用，1=启用
+/// </summary>
+public Status Status { get; set; }
+
+/// <summary>
+/// 是否可见：0=否，1=是
+/// </summary>
+public int Visible { get; set; }
+
+/// <summary>
+/// 订单状态：0=已取消，1=待支付，2=已支付，3=已发货，4=已完成，5=已退款
+/// </summary>
+public OrderStatus OrderStatus { get; set; }
+```
+
+#### 7.5.3 数据库字段类型
+
+```sql
+-- 状态字段
+status INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用'
+
+-- 布尔字段
+is_default INT DEFAULT 0 COMMENT '是否默认：0=否，1=是'
+
+-- 订单状态
+order_status INT DEFAULT 1 COMMENT '订单状态：0=已取消，1=待支付，2=已支付，3=已发货，4=已完成，5=已退款'
+```
 
 ---
 
@@ -376,7 +445,7 @@ throw new BusinessException("库存不足，无法出库", 400);
 | 7 | 日志 ES Sink | Serilog→ES | — | — | **裁掉**，Console + 滚动文件 |
 | 8 | MySQL 驱动 | MySql.Data + MySqlConnector 并存 | MySql.Data | — | **仅 MySqlConnector** |
 | 9 | Excel 库 | MiniExcel | — | — | **MiniExcel**（设计文档提及的 NPOI 统一替换） |
-| 10 | 状态字段 | 部分数字码 | — | 字符串 | **小写字符串常量**，与 basic_dict、前端常量三方一致 |
+| 10 | 状态字段 | 部分数字码 | — | 字符串 | **int 类型枚举**（本次决策 7.5），与前端常量、basic_dict 映射一致 |
 | 11 | 表名 | PascalCase（`User`） | PascalCase | — | **模块前缀 + snake_case**（整合设计 6.1） |
 | 12 | 校验 | 手工 if + BusinessException | 同 | — | **DataAnnotations + Service 业务校验**（本次决策 3） |
 | 13 | JWT 库 | JwtBearer + 第三方 JWT 包并存 | JwtBearer | — | **仅 JwtBearer 体系** |
