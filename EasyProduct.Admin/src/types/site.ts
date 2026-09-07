@@ -38,7 +38,7 @@ export interface SiteNewsParams {
   contentEn?: string
   coverImage?: string
   categoryId?: string
-  isTop?: boolean
+  isTop?: 0 | 1  // 是否置顶：0=否，1=是
 }
 
 // ---- Category ----

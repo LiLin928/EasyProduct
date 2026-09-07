@@ -251,7 +251,7 @@ const handleClose = (): void => {
   model.contentEn = ''
   model.coverImage = ''
   model.categoryId = ''
-  model.isTop = false
+  model.isTop = 0
   emit('update:visible', false)
 }
 
