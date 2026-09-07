@@ -1,4 +1,5 @@
 using EasyProduct.Common.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyProduct.Web.Controllers;

@@ -35,7 +35,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     // 添加各层程序集
     module.AddAssembly("EasyProduct.Business");
     module.AddAssembly("EasyProduct.Common");
-    module.AddAssembly(typeof(Program).Assembly);
+    module.AddAssembly(typeof(Program).Assembly.GetName().Name ?? "EasyProduct.Web");
     
     containerBuilder.RegisterModule(module);
 });
@@ -49,6 +49,12 @@ builder.Services.AddSqlSugarService(builder.Configuration);
 
 // HttpClient
 builder.Services.AddHttpClient();
+
+// HttpContextAccessor（用于获取客户端 IP、User-Agent 等）
+builder.Services.AddHttpContextAccessor();
+
+// 注册 JwtHelper（用于生成 JWT Token）
+builder.Services.AddScoped<EasyProduct.Common.Helper.JwtHelper>();
 
 // Swagger（开发环境）
 if (builder.Configuration.GetValue<bool>("IsUseSwagger"))
