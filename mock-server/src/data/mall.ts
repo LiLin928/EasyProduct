@@ -19,10 +19,10 @@ export interface MemberLevel {
 }
 
 export const MEMBER_LEVELS: MemberLevel[] = [
-  { id: guid(), name: '普通会员', minPoints: 0, discount: 1.0, sort: 1, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '银卡会员', minPoints: 1000, discount: 0.98, sort: 2, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '金卡会员', minPoints: 5000, discount: 0.95, sort: 3, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '钻石会员', minPoints: 20000, discount: 0.90, sort: 4, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '普通会员', minPoints: 0, discount: 1.0, sort: 1, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '银卡会员', minPoints: 1000, discount: 0.98, sort: 2, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '金卡会员', minPoints: 5000, discount: 0.95, sort: 3, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '钻石会员', minPoints: 20000, discount: 0.90, sort: 4, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
 ]
 
 // ---- Member ----
@@ -60,7 +60,7 @@ export const MEMBERS: Member[] = memberNames.map((m: { name: string }, i: number
     points: Mock.mock('@integer(0,20000)') as number,
     totalSpent: spent,
     orderCount: Mock.mock('@integer(0,50)') as number,
-    status: 'active' as const,
+    status: 1 as const,
     createdAt: new Date(Date.now() - (i + 1) * 86400000 * 3).toISOString(),
     updatedAt: isoTime(),
   }
@@ -127,10 +127,10 @@ export interface Coupon {
 }
 
 export const COUPONS: Coupon[] = [
-  { id: guid(), name: '满100减10', type: 'fixed', value: 10, minSpend: 100, totalCount: 1000, issuedCount: 320, usedCount: 156, startDate: new Date(Date.now() - 86400000 * 7).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 30).toISOString().slice(0, 10), status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '满500减50', type: 'fixed', value: 50, minSpend: 500, totalCount: 500, issuedCount: 210, usedCount: 89, startDate: new Date(Date.now() - 86400000 * 5).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 60).toISOString().slice(0, 10), status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '9折券', type: 'percent', value: 0.9, minSpend: 200, totalCount: 2000, issuedCount: 890, usedCount: 456, startDate: new Date(Date.now() - 86400000 * 10).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 15).toISOString().slice(0, 10), status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: '85折券', type: 'percent', value: 0.85, minSpend: 1000, totalCount: 300, issuedCount: 120, usedCount: 34, startDate: new Date(Date.now() - 86400000 * 3).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 90).toISOString().slice(0, 10), status: 'disabled', createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '满100减10', type: 'fixed', value: 10, minSpend: 100, totalCount: 1000, issuedCount: 320, usedCount: 156, startDate: new Date(Date.now() - 86400000 * 7).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 30).toISOString().slice(0, 10), status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '满500减50', type: 'fixed', value: 50, minSpend: 500, totalCount: 500, issuedCount: 210, usedCount: 89, startDate: new Date(Date.now() - 86400000 * 5).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 60).toISOString().slice(0, 10), status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '9折券', type: 'percent', value: 0.9, minSpend: 200, totalCount: 2000, issuedCount: 890, usedCount: 456, startDate: new Date(Date.now() - 86400000 * 10).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 15).toISOString().slice(0, 10), status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: '85折券', type: 'percent', value: 0.85, minSpend: 1000, totalCount: 300, issuedCount: 120, usedCount: 34, startDate: new Date(Date.now() - 86400000 * 3).toISOString().slice(0, 10), endDate: new Date(Date.now() + 86400000 * 90).toISOString().slice(0, 10), status: 0, createdAt: isoTime(), updatedAt: isoTime() },
 ]
 
 // ---- Order ----

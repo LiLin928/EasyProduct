@@ -17,9 +17,9 @@ export interface ProductCategory {
 }
 
 export const CATEGORIES: ProductCategory[] = [
-  { id: guid(), name: 'gongye shebei', nameEn: 'Industrial Equipment', parentId: '0', sort: 1, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: 'dianzi chanpin', nameEn: 'Electronics', parentId: '0', sort: 2, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
-  { id: guid(), name: 'bangong yongpin', nameEn: 'Office Supplies', parentId: '0', sort: 3, status: 'enabled', createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: 'gongye shebei', nameEn: 'Industrial Equipment', parentId: '0', sort: 1, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: 'dianzi chanpin', nameEn: 'Electronics', parentId: '0', sort: 2, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
+  { id: guid(), name: 'bangong yongpin', nameEn: 'Office Supplies', parentId: '0', sort: 3, status: 1, createdAt: isoTime(), updatedAt: isoTime() },
 ]
 
 export const PRODUCTS = Mock.mock({
@@ -36,7 +36,7 @@ export const PRODUCTS = Mock.mock({
     'price|100-10000.2': 1,
     unit: 'tai',
     specs: JSON.stringify({ weight: '@float(1,100,2,2)kg', size: 'LxWxH mm' }),
-  status: 'active',
+  status: 1,
   createdAt: '@datetime("yyyy-MM-ddTHH:mm:ss")',
   }],
 }).list.map((p: Record<string, unknown>) => ({ ...p, id: guid(), createdAt: isoTime() }))
