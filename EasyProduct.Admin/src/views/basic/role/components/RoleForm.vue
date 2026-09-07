@@ -43,10 +43,10 @@
       prop="status"
     >
       <el-radio-group v-model="model.status">
-        <el-radio value="enabled">
+        <el-radio :value="1">
           {{ t('common.status.enabled') }}
         </el-radio>
-        <el-radio value="disabled">
+        <el-radio :value="0">
           {{ t('common.status.disabled') }}
         </el-radio>
       </el-radio-group>
@@ -93,7 +93,7 @@ const loading = ref(false)
 const model = reactive<RoleCreateParams>({
   name: '',
   code: '',
-  status: 'enabled',
+  status: 1,
   sort: 1,
   remark: '',
   menuIds: []
@@ -112,7 +112,7 @@ const resetForm = (): void => {
   Object.assign(model, {
     name: '',
     code: '',
-    status: 'enabled',
+    status: 1,
     sort: 1,
     remark: '',
     menuIds: []

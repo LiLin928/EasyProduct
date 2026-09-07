@@ -63,10 +63,10 @@
       prop="status"
     >
       <el-radio-group v-model="model.status">
-        <el-radio value="enabled">
+        <el-radio :value="1">
           {{ t('common.status.enabled') }}
         </el-radio>
-        <el-radio value="disabled">
+        <el-radio :value="0">
           {{ t('common.status.disabled') }}
         </el-radio>
       </el-radio-group>
@@ -133,7 +133,7 @@ const model = reactive<UserCreateParams>({
   realName: '',
   email: '',
   phone: '',
-  status: 'enabled',
+  status: 1,
   deptId: '',
   roleIds: []
 })
@@ -161,7 +161,7 @@ const resetForm = (): void => {
     realName: '',
     email: '',
     phone: '',
-    status: 'enabled',
+    status: 1,
     deptId: '',
     roleIds: []
   })

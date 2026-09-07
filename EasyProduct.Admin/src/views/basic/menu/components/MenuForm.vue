@@ -111,18 +111,22 @@
       :label="t('basic.menu.visible')"
       prop="visible"
     >
-      <el-switch v-model="model.visible" />
+      <el-switch
+        v-model="model.visible"
+        :active-value="1"
+        :inactive-value="0"
+      />
     </el-form-item>
     <el-form-item
       :label="t('basic.menu.status')"
       prop="status"
     >
       <el-radio-group v-model="model.status">
-        <el-radio value="enabled">
-          {{ t('common.status.enabled') }}
+        <el-radio :value="1">
+          {{ t('common.status.1') }}
         </el-radio>
-        <el-radio value="disabled">
-          {{ t('common.status.disabled') }}
+        <el-radio :value="0">
+          {{ t('common.status.0') }}
         </el-radio>
       </el-radio-group>
     </el-form-item>
@@ -186,8 +190,8 @@ const model = reactive<MenuCreateParams>({
   sort: 1,
   permission: '',
   component: '',
-  visible: true,
-  status: 'enabled'
+  visible: 1,
+  status: 1
 })
 
 // 表单验证规则
@@ -275,8 +279,8 @@ const resetForm = (): void => {
     sort: 1,
     permission: '',
     component: '',
-    visible: true,
-    status: 'enabled'
+    visible: 1,
+    status: 1
   })
 }
 

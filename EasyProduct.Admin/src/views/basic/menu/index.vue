@@ -73,6 +73,8 @@
           <template #default="{ row }">
             <el-switch
               v-model="row.visible"
+              :active-value="1"
+              :inactive-value="0"
               :active-text="t('basic.menu.visibleLabel')"
               :inactive-text="t('basic.menu.hiddenLabel')"
               :loading="isMenuLoading(row.id, 'visible')"
@@ -90,8 +92,8 @@
           <template #default="{ row }">
             <el-switch
               v-model="row.status"
-              active-value="enabled"
-              inactive-value="disabled"
+              :active-value="1"
+              :inactive-value="0"
               :active-text="t('basic.menu.enabled')"
               :inactive-text="t('basic.menu.disabled')"
               :loading="isMenuLoading(row.id, 'status')"
@@ -297,12 +299,12 @@ const handleCollapseAll = (): void => {
 const handleStatusChange = async (row: Menu): Promise<void> => {
   // 防止重复提交
   if (isMenuLoading(row.id, 'status')) return
-  
-  const oldStatus = row.status === 'enabled' ? 'disabled' : 'enabled'
+
+  const oldStatus = row.status === 1 ? 0 : 1
   setMenuLoading(row.id, 'status', true)
-  
+
   try {
-    await updateMenuStatus(row.id, row.status as 'enabled' | 'disabled')
+    await updateMenuStatus(row.id, row.status as 0 | 1)
     ElMessage.success(t('basic.menu.updateSuccess'))
   } catch (error) {
     // 恢复原值
@@ -317,12 +319,12 @@ const handleStatusChange = async (row: Menu): Promise<void> => {
 const handleVisibleChange = async (row: Menu): Promise<void> => {
   // 防止重复提交
   if (isMenuLoading(row.id, 'visible')) return
-  
-  const oldVisible = !row.visible
+
+  const oldVisible = row.visible === 1 ? 0 : 1
   setMenuLoading(row.id, 'visible', true)
-  
+
   try {
-    await updateMenuVisible(row.id, row.visible)
+    await updateMenuVisible(row.id, row.visible as 0 | 1)
     ElMessage.success(t('basic.menu.updateSuccess'))
   } catch (error) {
     // 恢复原值

@@ -56,10 +56,10 @@
       prop="status"
     >
       <el-radio-group v-model="formData.status">
-        <el-radio value="enabled">
+        <el-radio :value="1">
           {{ t('common.status.enabled') }}
         </el-radio>
-        <el-radio value="disabled">
+        <el-radio :value="0">
           {{ t('common.status.disabled') }}
         </el-radio>
       </el-radio-group>
@@ -100,7 +100,7 @@ const formData = reactive<DictDataCreateParams>({
   value: '',
   labelKey: '',
   sort: 0,
-  status: 'enabled'
+  status: 1
 })
 
 // 表单验证规则
