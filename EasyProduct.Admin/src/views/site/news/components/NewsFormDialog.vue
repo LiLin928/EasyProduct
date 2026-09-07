@@ -60,7 +60,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('site.news.isTop')">
-            <el-switch v-model="model.isTop" />
+            <el-switch v-model="model.isTop" :active-value="1" :inactive-value="0" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -172,7 +172,7 @@ interface NewsFormModel {
   contentEn: string
   coverImage: string
   categoryId: string
-  isTop: boolean
+  isTop: 0 | 1
 }
 
 const model = reactive<NewsFormModel>({
@@ -184,7 +184,7 @@ const model = reactive<NewsFormModel>({
   contentEn: '',
   coverImage: '',
   categoryId: '',
-  isTop: false,
+  isTop: 0,
 })
 
 const rules: FormRules = {

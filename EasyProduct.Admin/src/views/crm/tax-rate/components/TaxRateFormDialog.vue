@@ -113,7 +113,7 @@ const model = reactive({
   code: '',
   name: '',
   rate: 0,
-  status: 'active' as 'active' | 'inactive',
+  status: 1,
   remark: '',
 })
 

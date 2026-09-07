@@ -145,7 +145,7 @@
    address: '',
    manager: '',
    phone: '',
-   status: 'active' as 'active' | 'inactive',
+   status: 1,
    remark: '',
  })
 

@@ -227,7 +227,7 @@ const filteredTableData = computed(() => {
 // 过滤菜单树（递归）
 const filterMenuTree = (
   menus: Menu[],
-  params: { name?: string; status?: string }
+  params: { name?: string; status?: number }
 ): Menu[] => {
   return menus
     .filter((menu) => {
