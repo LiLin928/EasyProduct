@@ -173,7 +173,7 @@ const { t } = useI18n()
 const formRef = ref<FormInstance>()
 const saving = ref(false)
 
-const model = reactive({
+const model = reactive<Partial<Supplier>>({
   code: '',
   name: '',
   contactPerson: '',

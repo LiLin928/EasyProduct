@@ -219,7 +219,7 @@ const { t } = useI18n()
 const formRef = ref<FormInstance>()
 const saving = ref(false)
 
-const model = reactive({
+const model = reactive<Partial<Customer>>({
   code: '',
   name: '',
   type: 'b2b' as 'b2b' | 'retail',

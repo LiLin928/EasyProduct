@@ -139,7 +139,7 @@
  const formRef = ref<FormInstance>()
  const saving = ref(false)
 
- const model = reactive({
+ const model = reactive<Partial<Warehouse>>({
    code: '',
    name: '',
    address: '',

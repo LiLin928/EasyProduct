@@ -109,7 +109,7 @@ const { t } = useI18n()
 const formRef = ref<FormInstance>()
 const saving = ref(false)
 
-const model = reactive({
+const model = reactive<Partial<TaxRate>>({
   code: '',
   name: '',
   rate: 0,
