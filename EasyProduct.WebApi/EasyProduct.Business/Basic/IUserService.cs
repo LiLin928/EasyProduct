@@ -42,4 +42,20 @@ public interface IUserService
     /// <param name="id">用户ID</param>
     /// <returns>删除成功返回 true</returns>
     Task<bool> DeleteAsync(Guid id);
+
+    /// <summary>
+    /// 重置用户密码
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="newPassword">新密码</param>
+    /// <returns>重置成功返回 true</returns>
+    Task<bool> ResetPasswordAsync(Guid id, string newPassword);
+
+    /// <summary>
+    /// 分配用户角色
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <param name="roleIds">角色ID列表</param>
+    /// <returns>分配成功返回 true</returns>
+    Task<bool> AssignRolesAsync(Guid userId, List<string> roleIds);
 }

@@ -10,7 +10,7 @@ namespace EasyProduct.Web.Controllers.Admin.Basic;
 /// 用户管理控制器
 /// </summary>
 /// <remarks>
-/// 提供用户管理的 CRUD 接口
+/// 提供用户管理的 CRUD 接口，包括用户列表、创建、更新、删除、重置密码、分配角色等功能
 /// </remarks>
 public class UserController : AdminControllerBase
 {
@@ -37,10 +37,10 @@ public class UserController : AdminControllerBase
     /// <param name="id">用户ID</param>
     /// <returns>用户信息</returns>
     [HttpGet("{id}")]
-    public async Task<ApiResponse<UserDto?>> GetById(Guid id)
+    public async Task<ApiResponse<UserDto>> GetById(Guid id)
     {
         var result = await _userService.GetByIdAsync(id);
-        return Success(result);
+        return Success(result!);
     }
 
     /// <summary>
@@ -77,5 +77,31 @@ public class UserController : AdminControllerBase
     {
         var result = await _userService.DeleteAsync(id);
         return result ? Success("删除成功") : Error<object>("删除失败");
+    }
+
+    /// <summary>
+    /// 重置用户密码
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="dto">重置密码参数</param>
+    /// <returns>重置结果</returns>
+    [HttpPost("{id}/reset-password")]
+    public async Task<ApiResponse<object>> ResetPassword(Guid id, [FromBody] ResetPasswordDto dto)
+    {
+        var result = await _userService.ResetPasswordAsync(id, dto.NewPassword);
+        return result ? Success("密码重置成功") : Error<object>("密码重置失败");
+    }
+
+    /// <summary>
+    /// 分配用户角色
+    /// </summary>
+    /// <param name="id">用户ID</param>
+    /// <param name="dto">分配角色参数</param>
+    /// <returns>分配结果</returns>
+    [HttpPost("{id}/assign-roles")]
+    public async Task<ApiResponse<object>> AssignRoles(Guid id, [FromBody] AssignRolesDto dto)
+    {
+        var result = await _userService.AssignRolesAsync(id, dto.RoleIds);
+        return result ? Success("角色分配成功") : Error<object>("角色分配失败");
     }
 }
