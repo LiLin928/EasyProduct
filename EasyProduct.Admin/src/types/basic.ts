@@ -43,7 +43,7 @@ export interface User {
   realName: string // 真实姓名
   email: string // 邮箱
   phone: string // 手机号
-  status: 'enabled' | 'disabled' // 状态
+  status: 0 | 1  // 状态：0=禁用，1=启用 // 状态
   deptId: string // 部门ID（GUID）
   deptName?: string // 部门名称（列表查询返回）
   roleIds: string[] // 角色ID列表（GUID数组）
@@ -69,7 +69,7 @@ export interface UserCreateParams {
   realName: string
   email: string
   phone: string
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   deptId: string
   roleIds: string[]
 }
@@ -86,7 +86,7 @@ export interface Role {
   id: string // GUID
   name: string // 角色名称
   code: string // 角色编码
-  status: 'enabled' | 'disabled' // 状态
+  status: 0 | 1  // 状态：0=禁用，1=启用 // 状态
   sort: number // 排序
   remark: string // 备注
   menuIds: string[] // 分配的菜单ID列表（GUID数组）
@@ -107,7 +107,7 @@ export interface RoleQuery {
 export interface RoleCreateParams {
   name: string
   code: string
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   sort: number
   remark: string
   menuIds: string[]
@@ -126,8 +126,8 @@ export interface Menu {
   sort: number // 排序
   permission?: string // 权限标识（按钮级，如 'basic:user:edit'）
   component?: string // 组件路径（如 'basic/user/index'）
-  visible: boolean // 是否显示在菜单
-  status: 'enabled' | 'disabled' // 状态
+  visible: 0 | 1  // 是否可见：0=否，1=是 // 是否显示在菜单
+  status: 0 | 1  // 状态：0=禁用，1=启用 // 状态
   children?: Menu[] // 子菜单
 }
 
@@ -141,8 +141,8 @@ export interface MenuCreateParams {
   sort: number
   permission?: string
   component?: string
-  visible: boolean
-  status: 'enabled' | 'disabled'
+  visible: 0 | 1  // 是否可见：0=否，1=是
+  status: 0 | 1  // 状态：0=禁用，1=启用
 }
 
 // ==================== 部门管理 ====================
@@ -154,7 +154,7 @@ export interface Dept {
   name: string
   code: string
   sort: number
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   leaderName?: string // 部门负责人
   phone?: string // 联系电话
   email?: string // 邮箱
@@ -171,7 +171,7 @@ export interface DeptCreateParams {
   name: string
   code: string
   sort: number
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   leaderName?: string
   phone?: string
   email?: string
@@ -188,7 +188,7 @@ export interface DictType {
   id: string
   name: string
   code: string
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   remark: string
 }
 
@@ -202,7 +202,7 @@ export interface DictTypeQuery extends PageQuery {
 export interface DictTypeCreateParams {
   name: string
   code: string
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
   remark: string
 }
 
@@ -213,7 +213,7 @@ export interface DictData {
   value: string
   labelKey: string
   sort: number
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
 }
 
 /** 字典数据查询参数 */
@@ -227,7 +227,7 @@ export interface DictDataCreateParams {
   value: string
   labelKey: string
   sort: number
-  status: 'enabled' | 'disabled'
+  status: 0 | 1  // 状态：0=禁用，1=启用
 }
 
 // ==================== 系统参数 ====================

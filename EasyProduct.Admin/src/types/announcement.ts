@@ -36,7 +36,7 @@ export interface Announcement {
   type: AnnouncementType // 类型：all-全员，targeted-定向
   level: AnnouncementLevel // 级别：normal-普通，important-重要，urgent-紧急
   targetRoleIds?: string[] // 目标角色ID列表（定向公告时使用）
-  isTop: boolean // 是否置顶
+  isTop: 0 | 1  // 是否置顶：0=否，1=是 // 是否置顶
   topTime?: string // 置顶时间
   publishTime?: string // 发布时间
   recallTime?: string // 撤回时间
@@ -87,5 +87,5 @@ export interface UpdateAnnouncementParams {
  * 置顶参数
  */
 export interface SetTopParams {
-  isTop: boolean // 是否置顶
+  isTop: 0 | 1  // 是否置顶：0=否，1=是 // 是否置顶
 }

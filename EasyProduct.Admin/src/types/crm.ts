@@ -13,7 +13,7 @@ export interface Customer {
   address: string
   salesPersonName: string
   creditLimit: number
-  status: 'active' | 'inactive'
+  status: 0 | 1  // 状态：0=不活跃，1=活跃
   remark: string
   createdAt: string
   updatedAt: string
@@ -46,7 +46,7 @@ export interface Supplier {
   address: string
   bankName: string
   bankAccount: string
-  status: 'active' | 'inactive'
+  status: 0 | 1  // 状态：0=不活跃，1=活跃
   remark: string
   createdAt: string
   updatedAt: string
@@ -64,8 +64,8 @@ export interface Currency {
   name: string
   symbol: string
   exchangeRate: number
-  isDefault: boolean
-  status: 'active' | 'inactive'
+  isDefault: 0 | 1  // 是否默认：0=否，1=是
+  status: 0 | 1  // 状态：0=不活跃，1=活跃
   createdAt: string
   updatedAt: string
 }
@@ -81,7 +81,7 @@ export interface TaxRate {
   code: string
   name: string
   rate: number
-  status: 'active' | 'inactive'
+  status: 0 | 1  // 状态：0=不活跃，1=活跃
   remark: string
   createdAt: string
   updatedAt: string
@@ -196,7 +196,7 @@ export const PURCHASE_ORDER_STATUS_OPTIONS = [
    address: string
    manager: string
    phone: string
-   status: 'active' | 'inactive'
+   status: 0 | 1  // 状态：0=不活跃，1=活跃
    remark: string
    createdAt: string
    updatedAt: string

@@ -15,7 +15,7 @@ export interface SiteNews {
   content: string
   contentEn: string
   coverImage: string
-  isTop: boolean
+  isTop: 0 | 1  // 是否置顶：0=否，1=是
   viewCount: number
   status: SiteNewsStatus
   publishTime: string
