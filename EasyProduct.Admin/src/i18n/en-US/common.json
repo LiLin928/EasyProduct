@@ -42,7 +42,39 @@
   "emailFormat": "Please enter a valid email address",
   "status": {
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "0": "Disabled",
+    "1": "Enabled"
+  },
+  "bool": {
+    "0": "No",
+    "1": "Yes"
+  },
+  "orderStatus": {
+    "0": "Cancelled",
+    "1": "Pending",
+    "2": "Paid",
+    "3": "Shipped",
+    "4": "Completed",
+    "5": "Refunded"
+  },
+  "paymentStatus": {
+    "0": "Pending",
+    "1": "Success",
+    "2": "Failed",
+    "3": "Refunded"
+  },
+  "memberStatus": {
+    "0": "Inactive",
+    "1": "Active"
+  },
+  "workflowStatus": {
+    "0": "Draft",
+    "1": "Submitted",
+    "2": "Approved",
+    "3": "Completed",
+    "4": "Cancelled",
+    "5": "Rejected"
   },
   "dict": {
     "customerType": {
