@@ -1,7 +1,7 @@
 using SqlSugar;
 using System;
 using System.ComponentModel.DataAnnotations;
-using EasyProduct.Models.Constants;
+using EasyProduct.Models.Enums;
 
 namespace EasyProduct.Models.Entitys.Base;
 
@@ -44,22 +44,21 @@ public abstract class BaseEntity
     /// 是否删除（软删除标记）
     /// </summary>
     /// <remarks>
-    /// 使用 int 类型：0-未删除，1-已删除。
+    /// 使用 int 类型：0=未删除，1=已删除。
     /// 查询时默认过滤 IsDeleted = 1 的记录。
-    /// 使用 DeleteStatus 常量：DeleteStatus.NotDeleted、DeleteStatus.Deleted。
     /// </remarks>
     [SugarColumn(ColumnDescription = "是否删除")]
-    public int IsDeleted { get; set; } = DeleteStatus.NotDeleted;
+    public int IsDeleted { get; set; } = 0;
 
     /// <summary>
     /// 状态
     /// </summary>
     /// <remarks>
-    /// 使用 int 类型：1-启用/正常，0-禁用/停用。
-    /// 使用 CommonStatus 常量：CommonStatus.Enabled、CommonStatus.Disabled。
+    /// 使用 Status 枚举：0=禁用，1=启用。
+    /// 默认为启用状态。
     /// </remarks>
     [SugarColumn(ColumnDescription = "状态")]
-    public int Status { get; set; } = CommonStatus.Enabled;
+    public Status Status { get; set; } = Status.Enabled;
 
     /// <summary>
     /// 创建时间

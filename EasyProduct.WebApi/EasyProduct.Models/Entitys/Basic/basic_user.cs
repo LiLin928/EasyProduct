@@ -1,6 +1,5 @@
 using SqlSugar;
 using EasyProduct.Models.Entitys.Base;
-using EasyProduct.Models.Constants;
 
 namespace EasyProduct.Models.Entitys.Basic;
 
@@ -49,4 +48,28 @@ public class basic_user : BaseEntity
     /// </summary>
     [SugarColumn(Length = 500, IsNullable = true, ColumnDescription = "头像URL")]
     public string? Avatar { get; set; }
+
+    /// <summary>
+    /// 部门ID
+    /// </summary>
+    /// <remarks>
+    /// 用户所属部门ID，关联 basic_dept 表
+    /// </remarks>
+    [SugarColumn(ColumnDataType = "varchar(36)", IsNullable = true, ColumnDescription = "部门ID")]
+    public string? DeptId { get; set; }
+
+    /// <summary>
+    /// 部门名称
+    /// </summary>
+    /// <remarks>
+    /// 冗余字段，方便显示，从部门表同步
+    /// </remarks>
+    [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "部门名称")]
+    public string? DeptName { get; set; }
+
+    /// <summary>
+    /// 简介
+    /// </summary>
+    [SugarColumn(Length = 500, IsNullable = true, ColumnDescription = "简介")]
+    public string? Introduction { get; set; }
 }

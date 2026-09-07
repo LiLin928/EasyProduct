@@ -2,7 +2,7 @@ using EasyProduct.Common.Base;
 using EasyProduct.Common.Error;
 using EasyProduct.Models.Dto.Basic;
 using EasyProduct.Models.Entitys.Basic;
-using EasyProduct.Models.Constants;
+using EasyProduct.Models.Enums;
 using Mapster;
 using SqlSugar;
 
@@ -23,7 +23,7 @@ public class UserService : BaseService<basic_user>, IUserService
         var whereExpr = Expressionable.Create<basic_user>()
             .AndIF(!string.IsNullOrEmpty(query.Keyword), u => u.UserName.Contains(query.Keyword!) || u.RealName!.Contains(query.Keyword!))
             .AndIF(query.Status.HasValue, u => u.Status == query.Status!.Value)
-            .And(u => u.IsDeleted == DeleteStatus.NotDeleted)
+            .And(u => u.IsDeleted == 0)
             .ToExpression();
 
         var result = await GetPageListAsync(
@@ -43,10 +43,10 @@ public class UserService : BaseService<basic_user>, IUserService
     /// </summary>
     /// <param name="id">用户ID</param>
     /// <returns>用户信息</returns>
-    public async Task<UserDto?> GetByIdAsync(Guid id)
+    public new async Task<UserDto?> GetByIdAsync(Guid id)
     {
-        var entity = await GetByIdAsync(id);
-        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+        var entity = await base.GetByIdAsync(id);
+        if (entity == null || entity.IsDeleted == 1)
             return null;
 
         return entity.Adapt<UserDto>();
@@ -61,7 +61,7 @@ public class UserService : BaseService<basic_user>, IUserService
     public async Task<bool> CreateAsync(CreateUserDto dto)
     {
         // 检查用户名是否已存在
-        if (await ExistsAsync(u => u.UserName == dto.UserName && u.IsDeleted == DeleteStatus.NotDeleted))
+        if (await ExistsAsync(u => u.UserName == dto.UserName && u.IsDeleted == 0))
         {
             throw new BusinessException("用户名已存在", 400);
         }
@@ -69,10 +69,9 @@ public class UserService : BaseService<basic_user>, IUserService
         var entity = dto.Adapt<basic_user>();
         entity.Id = Guid.NewGuid();
         entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-        entity.Status = UserStatus.Active;
-        entity.IsDeleted = DeleteStatus.NotDeleted;
+        entity.Status = Status.Enabled;
+        entity.IsDeleted = 0;
         entity.CreatedAt = DateTime.UtcNow;
-        entity.UpdatedAt = DateTime.UtcNow;
 
         return await InsertAsync(entity);
     }
@@ -85,8 +84,8 @@ public class UserService : BaseService<basic_user>, IUserService
     /// <exception cref="BusinessException">用户不存在时抛出</exception>
     public async Task<bool> UpdateAsync(UpdateUserDto dto)
     {
-        var entity = await GetByIdAsync(dto.Id);
-        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+        var entity = await base.GetByIdAsync(dto.Id);
+        if (entity == null || entity.IsDeleted == 1)
         {
             throw new BusinessException("用户不存在", 404);
         }
@@ -100,6 +99,8 @@ public class UserService : BaseService<basic_user>, IUserService
             entity.Email = dto.Email;
         if (!string.IsNullOrEmpty(dto.Avatar))
             entity.Avatar = dto.Avatar;
+        if (!string.IsNullOrEmpty(dto.DeptId))
+            entity.DeptId = dto.DeptId;
         if (dto.Status.HasValue)
             entity.Status = dto.Status.Value;
 
@@ -113,15 +114,15 @@ public class UserService : BaseService<basic_user>, IUserService
     /// </summary>
     /// <param name="id">用户ID</param>
     /// <returns>删除成功返回 true</returns>
-    public async Task<bool> DeleteAsync(Guid id)
+    public new async Task<bool> DeleteAsync(Guid id)
     {
-        var entity = await GetByIdAsync(id);
-        if (entity == null || entity.IsDeleted == DeleteStatus.Deleted)
+        var entity = await base.GetByIdAsync(id);
+        if (entity == null || entity.IsDeleted == 1)
             return false;
 
-        entity.IsDeleted = DeleteStatus.Deleted;
+        entity.IsDeleted = 1;
         entity.UpdatedAt = DateTime.UtcNow;
-        entity.Status = UserStatus.Inactive;
+        entity.Status = Status.Disabled;
 
         return await UpdateAsync(entity) > 0;
     }
