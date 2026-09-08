@@ -20,6 +20,7 @@ public class UpdateSkuDto
     /// 必填，GUID 字符串格式
     /// </remarks>
     [Required(ErrorMessage = "SKU ID不能为空")]
+    [StringLength(36, ErrorMessage = "SKU ID长度不能超过36个字符")]
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
