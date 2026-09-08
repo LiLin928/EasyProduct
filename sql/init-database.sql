@@ -211,6 +211,98 @@ CREATE TABLE `ops_login_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志表';
 
 -- ========================================
+-- Basic 扩展表（字典、公告、系统参数）
+-- ========================================
+
+-- ----------------------------
+-- 9. 字典类型表 (basic_dict_type)
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_dict_type`;
+CREATE TABLE `basic_dict_type` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `dict_name` VARCHAR(100) NOT NULL COMMENT '字典名称',
+  `dict_type` VARCHAR(100) NOT NULL COMMENT '字典类型（唯一标识）',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_dict_type` (`dict_type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
+
+-- ----------------------------
+-- 10. 字典数据表 (basic_dict_data)
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_dict_data`;
+CREATE TABLE `basic_dict_data` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `dict_type` VARCHAR(100) NOT NULL COMMENT '字典类型',
+  `dict_label` VARCHAR(100) NOT NULL COMMENT '字典标签',
+  `dict_value` VARCHAR(100) NOT NULL COMMENT '字典值',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_dict_type` (`dict_type`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典数据表';
+
+-- ----------------------------
+-- 11. 公告表 (basic_notice)
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_notice`;
+CREATE TABLE `basic_notice` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `notice_title` VARCHAR(200) NOT NULL COMMENT '公告标题',
+  `notice_content` TEXT NOT NULL COMMENT '公告内容（富文本）',
+  `notice_type` INT NOT NULL DEFAULT 1 COMMENT '公告类型：1=通知，2=公告',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `top_flag` INT DEFAULT 0 COMMENT '是否置顶：0=否，1=是',
+  `publish_time` DATETIME DEFAULT NULL COMMENT '发布时间',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_notice_type` (`notice_type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_top_flag` (`top_flag`),
+  KEY `idx_publish_time` (`publish_time`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告表';
+
+-- ----------------------------
+-- 12. 系统参数表 (basic_config)
+-- ----------------------------
+DROP TABLE IF EXISTS `basic_config`;
+CREATE TABLE `basic_config` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `config_name` VARCHAR(100) NOT NULL COMMENT '参数名称',
+  `config_key` VARCHAR(100) NOT NULL COMMENT '参数键名',
+  `config_value` VARCHAR(500) NOT NULL COMMENT '参数键值',
+  `config_type` INT DEFAULT 1 COMMENT '系统内置：0=否，1=是',
+  `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_config_key` (`config_key`),
+  KEY `idx_config_type` (`config_type`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统参数表';
+
+-- ========================================
 -- 完成提示
 -- ========================================
 SELECT '数据库初始化完成' AS message;
