@@ -241,6 +241,36 @@ CREATE TABLE `product_category` (
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类表';
 
+-- ----------------------------
+-- 商品主档表 (product_spu)
+-- ----------------------------
+DROP TABLE IF EXISTS `product_spu`;
+CREATE TABLE `product_spu` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `spu_name` VARCHAR(200) NOT NULL COMMENT '商品名称',
+  `spu_code` VARCHAR(50) DEFAULT NULL COMMENT '商品编码',
+  `category_id` CHAR(36) DEFAULT NULL COMMENT '分类ID',
+  `main_image` VARCHAR(500) DEFAULT NULL COMMENT '主图URL',
+  `images` TEXT COMMENT '商品图集（JSON数组）',
+  `description` TEXT COMMENT '商品描述（富文本）',
+  `unit` VARCHAR(20) DEFAULT '件' COMMENT '计量单位',
+  `spu_type` INT DEFAULT 1 COMMENT '商品类型：1=实物，2=虚拟，3=票品',
+  `brand` VARCHAR(100) DEFAULT NULL COMMENT '品牌',
+  `spec_template` TEXT COMMENT '规格模板（JSON）',
+  `status` INT DEFAULT 0 COMMENT '状态：0=下架，1=上架',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_spu_code` (`spu_code`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_spu_type` (`spu_type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品主档表';
+
 -- ========================================
 -- Basic 扩展表（字典、公告、系统参数）
 -- ========================================
