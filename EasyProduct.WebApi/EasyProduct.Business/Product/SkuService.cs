@@ -225,6 +225,12 @@ public class SkuService : BaseService, ISkuService
         // 4. 插入数据库
         var result = await _db.Insertable(sku).ExecuteCommandAsync();
 
+        // 5. 记录日志
+        if (result > 0)
+        {
+            _logger.LogInformation("成功创建SKU: {SkuId}, 名称: {SkuName}, 编码: {SkuCode}", sku.Id, sku.SkuName, sku.SkuCode);
+        }
+
         return result > 0;
     }
 
@@ -292,6 +298,12 @@ public class SkuService : BaseService, ISkuService
         // 5. 更新数据库
         var result = await _db.Updateable(sku).ExecuteCommandAsync();
 
+        // 6. 记录日志
+        if (result > 0)
+        {
+            _logger.LogInformation("成功更新SKU: {SkuId}, 名称: {SkuName}, 编码: {SkuCode}", sku.Id, sku.SkuName, sku.SkuCode);
+        }
+
         return result > 0;
     }
 
@@ -324,6 +336,12 @@ public class SkuService : BaseService, ISkuService
 
         var result = await _db.Updateable(sku).ExecuteCommandAsync();
 
+        // 3. 记录日志
+        if (result > 0)
+        {
+            _logger.LogInformation("成功删除SKU: {SkuId}, 名称: {SkuName}, 编码: {SkuCode}", sku.Id, sku.SkuName, sku.SkuCode);
+        }
+
         return result > 0;
     }
 
@@ -349,14 +367,26 @@ public class SkuService : BaseService, ISkuService
             throw new BusinessException("SKU不存在", 404);
         }
 
-        // 2. 更新状态
+        // 2. 验证状态值是否有效
+        if (!Enum.IsDefined(typeof(Status), status))
+        {
+            throw new BusinessException("无效的状态值", 400);
+        }
+
+        // 3. 更新状态
         sku.Status = (Status)status;
         sku.UpdatedAt = DateTime.UtcNow;
 
-        // 3. 更新数据库
+        // 4. 更新数据库
         var result = await _db.Updateable(sku)
             .UpdateColumns(s => new { s.Status, s.UpdatedAt })
             .ExecuteCommandAsync();
+
+        // 5. 记录日志
+        if (result > 0)
+        {
+            _logger.LogInformation("成功更新SKU状态: {SkuId}, 名称: {SkuName}, 新状态: {Status}", sku.Id, sku.SkuName, sku.Status);
+        }
 
         return result > 0;
     }
@@ -399,6 +429,12 @@ public class SkuService : BaseService, ISkuService
         var result = await _db.Updateable(sku)
             .UpdateColumns(s => new { s.Stock, s.UpdatedAt })
             .ExecuteCommandAsync();
+
+        // 5. 记录日志
+        if (result > 0)
+        {
+            _logger.LogInformation("成功更新SKU库存: {SkuId}, 名称: {SkuName}, 新库存: {Stock}", sku.Id, sku.SkuName, stock);
+        }
 
         return result > 0;
     }
