@@ -211,6 +211,37 @@ CREATE TABLE `ops_login_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志表';
 
 -- ========================================
+-- Product 模块表
+-- ========================================
+
+-- ----------------------------
+-- 商品分类表 (product_category)
+-- ----------------------------
+DROP TABLE IF EXISTS `product_category`;
+CREATE TABLE `product_category` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `parent_id` CHAR(36) DEFAULT '0' COMMENT '父分类ID（根节点为0）',
+  `category_name` VARCHAR(100) NOT NULL COMMENT '分类名称',
+  `category_code` VARCHAR(50) DEFAULT NULL COMMENT '分类编码',
+  `icon` VARCHAR(255) DEFAULT NULL COMMENT '分类图标',
+  `image` VARCHAR(500) DEFAULT NULL COMMENT '分类图片',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `level` INT DEFAULT 1 COMMENT '层级',
+  `full_path` VARCHAR(500) DEFAULT NULL COMMENT '完整路径',
+  `show_in_nav` INT DEFAULT 1 COMMENT '是否显示在导航：0=否，1=是',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_parent_id` (`parent_id`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类表';
+
+-- ========================================
 -- Basic 扩展表（字典、公告、系统参数）
 -- ========================================
 
