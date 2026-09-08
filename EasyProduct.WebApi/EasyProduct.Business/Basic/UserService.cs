@@ -1,6 +1,7 @@
 using EasyProduct.Common.Base;
 using EasyProduct.Common.Error;
 using EasyProduct.Models.Dto.Basic;
+using EasyProduct.Models.Dto.Basic.Profile;
 using EasyProduct.Models.Entitys.Basic;
 using EasyProduct.Models.Enums;
 using Mapster;
@@ -266,4 +267,117 @@ public class UserService : BaseService<basic_user>, IUserService
 
         await _db.Insertable(userRoles).ExecuteCommandAsync();
     }
+
+    #region 个人中心
+
+    /// <summary>
+    /// 获取个人信息
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <returns>个人信息</returns>
+    /// <exception cref="BusinessException">用户不存在时抛出</exception>
+    public async Task<ProfileDto> GetProfileAsync(string userId)
+    {
+        var entity = await _db.Queryable<basic_user>()
+            .Where(x => x.Id.ToString() == userId && x.IsDeleted == 0)
+            .FirstAsync();
+
+        if (entity == null)
+        {
+            throw new BusinessException("用户不存在", 404);
+        }
+
+        var profileDto = entity.Adapt<ProfileDto>();
+
+        // 查询部门名称
+        if (!string.IsNullOrEmpty(entity.DeptId))
+        {
+            var dept = await _db.Queryable<basic_dept>()
+                .Where(x => x.Id.ToString() == entity.DeptId && x.IsDeleted == 0)
+                .FirstAsync();
+
+            if (dept != null)
+            {
+                profileDto.DeptName = dept.DeptName;
+            }
+        }
+
+        return profileDto;
+    }
+
+    /// <summary>
+    /// 更新个人信息
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <param name="dto">更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    /// <exception cref="BusinessException">用户不存在时抛出</exception>
+    public async Task<bool> UpdateProfileAsync(string userId, UpdateProfileDto dto)
+    {
+        var entity = await _db.Queryable<basic_user>()
+            .Where(x => x.Id.ToString() == userId && x.IsDeleted == 0)
+            .FirstAsync();
+
+        if (entity == null)
+        {
+            throw new BusinessException("用户不存在", 404);
+        }
+
+        // 更新字段
+        if (!string.IsNullOrEmpty(dto.RealName))
+            entity.RealName = dto.RealName;
+        if (!string.IsNullOrEmpty(dto.Phone))
+            entity.Phone = dto.Phone;
+        if (!string.IsNullOrEmpty(dto.Email))
+            entity.Email = dto.Email;
+        if (!string.IsNullOrEmpty(dto.Avatar))
+            entity.Avatar = dto.Avatar;
+
+        entity.UpdatedAt = DateTime.UtcNow;
+
+        await _db.Updateable(entity).ExecuteCommandAsync();
+
+        return true;
+    }
+
+    /// <summary>
+    /// 修改密码
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <param name="dto">修改密码参数</param>
+    /// <returns>修改成功返回 true</returns>
+    /// <exception cref="BusinessException">用户不存在或旧密码错误时抛出</exception>
+    public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto dto)
+    {
+        var entity = await _db.Queryable<basic_user>()
+            .Where(x => x.Id.ToString() == userId && x.IsDeleted == 0)
+            .FirstAsync();
+
+        if (entity == null)
+        {
+            throw new BusinessException("用户不存在", 404);
+        }
+
+        // 验证旧密码
+        if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, entity.Password))
+        {
+            throw new BusinessException("旧密码错误", 400);
+        }
+
+        // 新密码不能与旧密码相同
+        if (BCrypt.Net.BCrypt.Verify(dto.NewPassword, entity.Password))
+        {
+            throw new BusinessException("新密码不能与旧密码相同", 400);
+        }
+
+        // 更新密码
+        entity.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        entity.UpdatedAt = DateTime.UtcNow;
+
+        await _db.Updateable(entity).ExecuteCommandAsync();
+
+        return true;
+    }
+
+    #endregion
 }

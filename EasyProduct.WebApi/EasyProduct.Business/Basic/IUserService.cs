@@ -1,5 +1,6 @@
 using EasyProduct.Common.Base;
 using EasyProduct.Models.Dto.Basic;
+using EasyProduct.Models.Dto.Basic.Profile;
 
 namespace EasyProduct.Business.Basic;
 
@@ -58,4 +59,31 @@ public interface IUserService
     /// <param name="roleIds">角色ID列表</param>
     /// <returns>分配成功返回 true</returns>
     Task<bool> AssignRolesAsync(Guid userId, List<string> roleIds);
+
+    #region 个人中心
+
+    /// <summary>
+    /// 获取个人信息
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <returns>个人信息</returns>
+    Task<ProfileDto> GetProfileAsync(string userId);
+
+    /// <summary>
+    /// 更新个人信息
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <param name="dto">更新参数</param>
+    /// <returns>更新成功返回 true</returns>
+    Task<bool> UpdateProfileAsync(string userId, UpdateProfileDto dto);
+
+    /// <summary>
+    /// 修改密码
+    /// </summary>
+    /// <param name="userId">用户ID</param>
+    /// <param name="dto">修改密码参数</param>
+    /// <returns>修改成功返回 true</returns>
+    Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto dto);
+
+    #endregion
 }
