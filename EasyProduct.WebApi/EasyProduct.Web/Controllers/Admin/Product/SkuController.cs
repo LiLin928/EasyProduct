@@ -57,6 +57,12 @@ public class SkuController : BaseController
         [FromQuery] int pageIndex = 1,
         [FromQuery] int pageSize = 10)
     {
+        // 验证状态值是否有效
+        if (status.HasValue && !Enum.IsDefined(typeof(Status), status.Value))
+        {
+            return Error<PageResponse<SkuDto>>("无效的状态值", 400);
+        }
+
         var query = new SkuQueryDto
         {
             SkuName = skuName,
