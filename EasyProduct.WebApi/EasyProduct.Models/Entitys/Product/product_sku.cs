@@ -67,7 +67,7 @@ public class product_sku : BaseEntity
     /// <remarks>
     /// 商品的销售价格，精确到分（保留2位小数）
     /// </remarks>
-    [SugarColumn(Length = 18, DecimalDigits = 2, ColumnDescription = "零售价")]
+    [SugarColumn(ColumnDataType = "decimal(18,2)", ColumnDescription = "零售价")]
     public decimal Price { get; set; }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class product_sku : BaseEntity
     /// 会员专享价格，可为空表示不设置会员价
     /// 精确到分（保留2位小数）
     /// </remarks>
-    [SugarColumn(Length = 18, DecimalDigits = 2, IsNullable = true, ColumnDescription = "会员价")]
+    [SugarColumn(ColumnDataType = "decimal(18,2)", IsNullable = true, ColumnDescription = "会员价")]
     public decimal? MemberPrice { get; set; }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class product_sku : BaseEntity
     /// 批发价格，可为空表示不设置批发价
     /// 精确到分（保留2位小数）
     /// </remarks>
-    [SugarColumn(Length = 18, DecimalDigits = 2, IsNullable = true, ColumnDescription = "批发价")]
+    [SugarColumn(ColumnDataType = "decimal(18,2)", IsNullable = true, ColumnDescription = "批发价")]
     public decimal? WholesalePrice { get; set; }
 
     /// <summary>
@@ -97,7 +97,7 @@ public class product_sku : BaseEntity
     /// 商品的进货成本，可为空表示不记录成本
     /// 精确到分（保留2位小数）
     /// </remarks>
-    [SugarColumn(Length = 18, DecimalDigits = 2, IsNullable = true, ColumnDescription = "成本价")]
+    [SugarColumn(ColumnDataType = "decimal(18,2)", IsNullable = true, ColumnDescription = "成本价")]
     public decimal? CostPrice { get; set; }
 
     /// <summary>
