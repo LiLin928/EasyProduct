@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using EasyProduct.Models.Dto.Common;
 
 namespace EasyProduct.Models.Dto.Mall.Member;
 
@@ -7,20 +8,10 @@ namespace EasyProduct.Models.Dto.Mall.Member;
 /// </summary>
 /// <remarks>
 /// 用于会员列表查询，支持按关键词、会员等级、状态筛选
-/// 包含分页参数
+/// 包含分页参数（继承自 PageQuery）
 /// </remarks>
-public class MemberQuery
+public class MemberQuery : PageQuery
 {
-    /// <summary>
-    /// 页码，从 1 开始
-    /// </summary>
-    public int PageIndex { get; set; } = 1;
-
-    /// <summary>
-    /// 每页数量
-    /// </summary>
-    public int PageSize { get; set; } = 10;
-
     /// <summary>
     /// 关键词(昵称/手机号)
     /// </summary>
