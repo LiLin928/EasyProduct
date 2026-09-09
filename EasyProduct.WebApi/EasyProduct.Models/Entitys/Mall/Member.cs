@@ -54,6 +54,7 @@ public class Member : BaseEntity
     /// <summary>
     /// 生日
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? Birthday { get; set; }
 
     /// <summary>
@@ -65,6 +66,7 @@ public class Member : BaseEntity
     /// <summary>
     /// 会员等级ID
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public Guid? LevelId { get; set; }
 
     /// <summary>
@@ -91,6 +93,7 @@ public class Member : BaseEntity
     /// <summary>
     /// 最后登录时间
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? LastLoginTime { get; set; }
 
     /// <summary>

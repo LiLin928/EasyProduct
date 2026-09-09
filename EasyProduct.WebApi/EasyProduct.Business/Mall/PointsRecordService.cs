@@ -78,24 +78,39 @@ public class PointsRecordService : BaseService, IPointsRecordService
         // 分页查询
         RefAsync<int> total = 0;
         var list = await queryable
-            .Select((pr, m) => new PointsRecordDto
+            .Select((pr, m) => new
             {
-                Id = pr.Id.ToString(),
-                MemberId = pr.MemberId.ToString(),
+                pr.Id,
+                pr.MemberId,
                 MemberNickname = m.Nickname,
                 PointsType = (int)pr.PointsType,
-                PointsTypeName = GetPointsTypeName(pr.PointsType),
-                Points = pr.Points,
-                Balance = pr.Balance,
-                OrderNo = pr.OrderNo,
-                Remark = pr.Remark,
-                CreateTime = pr.CreatedAt,
-                UpdateTime = pr.UpdatedAt
+                pr.Points,
+                pr.Balance,
+                pr.OrderNo,
+                pr.Remark,
+                pr.CreatedAt,
+                pr.UpdatedAt
             })
             .ToPageListAsync(query.PageIndex, query.PageSize, total);
 
+        // 在内存中映射 PointsTypeName
+        var result = list.Select(x => new PointsRecordDto
+        {
+            Id = x.Id.ToString(),
+            MemberId = x.MemberId.ToString(),
+            MemberNickname = x.MemberNickname,
+            PointsType = x.PointsType,
+            PointsTypeName = GetPointsTypeName((PointsType)x.PointsType),
+            Points = x.Points,
+            Balance = x.Balance,
+            OrderNo = x.OrderNo,
+            Remark = x.Remark,
+            CreateTime = x.CreatedAt,
+            UpdateTime = x.UpdatedAt
+        }).ToList();
+
         return PageResponse<PointsRecordDto>.Create(
-            list,
+            result,
             total.Value,
             query.PageIndex,
             query.PageSize);
