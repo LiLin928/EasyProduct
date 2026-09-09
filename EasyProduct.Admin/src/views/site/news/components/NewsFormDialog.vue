@@ -60,7 +60,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item :label="t('site.news.isTop')">
-            <el-switch v-model="model.isTop" :active-value="1" :inactive-value="0" />
+            <el-switch
+              v-model="model.isTop"
+              :active-value="1"
+              :inactive-value="0"
+            />
           </el-form-item>
         </el-col>
       </el-row>

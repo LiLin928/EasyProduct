@@ -56,7 +56,11 @@
         :label="t('crm.currency.isDefault')"
         prop="isDefault"
       >
-        <el-switch v-model="model.isDefault" :active-value="1" :inactive-value="0" />
+        <el-switch
+          v-model="model.isDefault"
+          :active-value="1"
+          :inactive-value="0"
+        />
       </el-form-item>
       <el-form-item
         :label="t('crm.currency.status')"
