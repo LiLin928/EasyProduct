@@ -461,7 +461,7 @@ CREATE TABLE `mall_member_level` (
   `level_code` VARCHAR(50) NOT NULL COMMENT '等级编码',
   `level` INT NOT NULL COMMENT '等级数值',
   `min_points` INT DEFAULT 0 COMMENT '最低积分要求',
-  `max_points` INT DEFAULT 0 COMMENT '最高积分上限',
+  `max_points` INT DEFAULT NULL COMMENT '最高积分上限（NULL表示无上限）',
   `discount_rate` DECIMAL(3,2) DEFAULT 1.00 COMMENT '折扣率(0.00-1.00)',
   `icon` VARCHAR(255) DEFAULT NULL COMMENT '等级图标',
   `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
@@ -549,7 +549,6 @@ CREATE TABLE `mall_favorite` (
   `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_member_spu` (`member_id`, `spu_id`),
-  KEY `idx_member_id` (`member_id`),
   KEY `idx_spu_id` (`spu_id`),
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
