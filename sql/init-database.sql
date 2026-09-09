@@ -324,6 +324,32 @@ CREATE TABLE `product_image` (
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图集表';
 
+-- ----------------------------
+-- 商品渠道发布表 (product_channel)
+-- ----------------------------
+DROP TABLE IF EXISTS `product_channel`;
+CREATE TABLE `product_channel` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `spu_id` CHAR(36) NOT NULL COMMENT '商品ID',
+  `channel_code` VARCHAR(20) NOT NULL COMMENT '渠道编码：site=官网，miniapp=小程序，b2b=B2B',
+  `status` INT DEFAULT 1 COMMENT '上架状态：0=下架，1=上架',
+  `sort` INT DEFAULT 0 COMMENT '渠道排序',
+  `price` DECIMAL(18,2) DEFAULT NULL COMMENT '渠道价格（可选，为空则使用SKU价格）',
+  `show_price` TINYINT(1) DEFAULT 1 COMMENT '是否显示价格：0=否，1=是',
+  `show_stock` TINYINT(1) DEFAULT 1 COMMENT '是否显示库存：0=否，1=是',
+  `publish_time` DATETIME DEFAULT NULL COMMENT '发布时间',
+  `unpublish_time` DATETIME DEFAULT NULL COMMENT '下架时间',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_spu_channel` (`spu_id`, `channel_code`),
+  KEY `idx_channel_code` (`channel_code`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品渠道发布表';
+
 -- ========================================
 -- Basic 扩展表（字典、公告、系统参数）
 -- ========================================
