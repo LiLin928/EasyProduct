@@ -299,6 +299,31 @@ CREATE TABLE `product_sku` (
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品SKU表';
 
+-- ----------------------------
+-- 商品图集表 (product_image)
+-- ----------------------------
+DROP TABLE IF EXISTS `product_image`;
+CREATE TABLE `product_image` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `spu_id` CHAR(36) NOT NULL COMMENT '商品ID',
+  `image_url` VARCHAR(500) NOT NULL COMMENT '图片URL',
+  `thumbnail_url` VARCHAR(500) DEFAULT NULL COMMENT '缩略图URL',
+  `image_name` VARCHAR(200) DEFAULT NULL COMMENT '图片名称',
+  `image_size` INT DEFAULT NULL COMMENT '图片大小（字节）',
+  `image_type` VARCHAR(50) DEFAULT NULL COMMENT '图片类型（jpg/png/webp等）',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `is_main` TINYINT(1) DEFAULT 0 COMMENT '是否主图：0=否，1=是',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_spu_id` (`spu_id`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_is_main` (`is_main`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图集表';
+
 -- ========================================
 -- Basic 扩展表（字典、公告、系统参数）
 -- ========================================
