@@ -446,3 +446,110 @@ CREATE TABLE `basic_config` (
 -- 完成提示
 -- ========================================
 SELECT '数据库初始化完成' AS message;
+
+-- ========================================
+-- Mall 模块表 - 会员相关
+-- ========================================
+
+-- ----------------------------
+-- 会员等级表 (mall_member_level)
+-- ----------------------------
+DROP TABLE IF EXISTS `mall_member_level`;
+CREATE TABLE `mall_member_level` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `level_name` VARCHAR(50) NOT NULL COMMENT '等级名称',
+  `level_code` VARCHAR(50) NOT NULL COMMENT '等级编码',
+  `level` INT NOT NULL COMMENT '等级数值',
+  `min_points` INT DEFAULT 0 COMMENT '最低积分要求',
+  `max_points` INT DEFAULT 0 COMMENT '最高积分上限',
+  `discount_rate` DECIMAL(3,2) DEFAULT 1.00 COMMENT '折扣率(0.00-1.00)',
+  `icon` VARCHAR(255) DEFAULT NULL COMMENT '等级图标',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_level_code` (`level_code`),
+  KEY `idx_level` (`level`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员等级表';
+
+-- ----------------------------
+-- 会员主表 (mall_member)
+-- ----------------------------
+DROP TABLE IF EXISTS `mall_member`;
+CREATE TABLE `mall_member` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `openid` VARCHAR(100) DEFAULT NULL COMMENT '微信OpenID',
+  `unionid` VARCHAR(100) DEFAULT NULL COMMENT '微信UnionID',
+  `nickname` VARCHAR(100) DEFAULT NULL COMMENT '昵称',
+  `avatar` VARCHAR(500) DEFAULT NULL COMMENT '头像URL',
+  `gender` INT DEFAULT 0 COMMENT '性别：0=未知，1=男，2=女',
+  `phone` VARCHAR(20) DEFAULT NULL COMMENT '手机号',
+  `real_name` VARCHAR(50) DEFAULT NULL COMMENT '真实姓名',
+  `birthday` DATE DEFAULT NULL COMMENT '生日',
+  `email` VARCHAR(100) DEFAULT NULL COMMENT '邮箱',
+  `level_id` CHAR(36) DEFAULT NULL COMMENT '会员等级ID',
+  `points` INT DEFAULT 0 COMMENT '当前积分',
+  `total_points` INT DEFAULT 0 COMMENT '累计积分',
+  `balance` DECIMAL(18,2) DEFAULT 0.00 COMMENT '账户余额',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `last_login_time` DATETIME DEFAULT NULL COMMENT '最后登录时间',
+  `last_login_ip` VARCHAR(50) DEFAULT NULL COMMENT '最后登录IP',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_openid` (`openid`),
+  KEY `idx_unionid` (`unionid`),
+  KEY `idx_phone` (`phone`),
+  KEY `idx_level_id` (`level_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员主表';
+
+-- ----------------------------
+-- 积分记录表 (mall_points_record)
+-- ----------------------------
+DROP TABLE IF EXISTS `mall_points_record`;
+CREATE TABLE `mall_points_record` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `member_id` CHAR(36) NOT NULL COMMENT '会员ID',
+  `points_type` INT NOT NULL COMMENT '积分类型：1=消费获得，2=订单使用，3=后台调整，4=签到，5=注册赠送',
+  `points` INT NOT NULL COMMENT '积分变动(正数为获得，负数为使用)',
+  `balance` INT NOT NULL COMMENT '变动后余额',
+  `order_no` VARCHAR(50) DEFAULT NULL COMMENT '关联订单号',
+  `remark` VARCHAR(255) DEFAULT NULL COMMENT '备注',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_member_id` (`member_id`),
+  KEY `idx_points_type` (`points_type`),
+  KEY `idx_order_no` (`order_no`),
+  KEY `idx_create_time` (`create_time`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='积分记录表';
+
+-- ----------------------------
+-- 收藏表 (mall_favorite)
+-- ----------------------------
+DROP TABLE IF EXISTS `mall_favorite`;
+CREATE TABLE `mall_favorite` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `member_id` CHAR(36) NOT NULL COMMENT '会员ID',
+  `spu_id` CHAR(36) NOT NULL COMMENT '商品SPU ID',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_member_spu` (`member_id`, `spu_id`),
+  KEY `idx_member_id` (`member_id`),
+  KEY `idx_spu_id` (`spu_id`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
