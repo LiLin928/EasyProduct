@@ -23,4 +23,44 @@ public class BusinessException : Exception
     {
         Code = code;
     }
+
+    /// <summary>
+    /// 创建参数错误异常
+    /// </summary>
+    /// <param name="message">错误消息</param>
+    /// <returns>业务异常实例</returns>
+    public static BusinessException BadRequest(string message)
+    {
+        return new BusinessException(message, 400);
+    }
+
+    /// <summary>
+    /// 创建资源不存在异常
+    /// </summary>
+    /// <param name="message">错误消息</param>
+    /// <returns>业务异常实例</returns>
+    public static BusinessException NotFound(string message)
+    {
+        return new BusinessException(message, 404);
+    }
+
+    /// <summary>
+    /// 创建未授权异常
+    /// </summary>
+    /// <param name="message">错误消息</param>
+    /// <returns>业务异常实例</returns>
+    public static BusinessException Unauthorized(string message)
+    {
+        return new BusinessException(message, 401);
+    }
+
+    /// <summary>
+    /// 创建无权限异常
+    /// </summary>
+    /// <param name="message">错误消息</param>
+    /// <returns>业务异常实例</returns>
+    public static BusinessException Forbidden(string message)
+    {
+        return new BusinessException(message, 403);
+    }
 }

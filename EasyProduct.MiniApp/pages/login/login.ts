@@ -9,14 +9,11 @@ interface LoginData {
 }
 
 interface LoginResult {
-  memberToken: string
-  member: {
-    id: string
-    nickName: string
-    avatar: string
-    level: string
-    points: number
-  }
+  token: string
+  memberId: string
+  openId: string
+  nickname?: string
+  avatar?: string
 }
 
 Page({
@@ -117,8 +114,14 @@ Page({
       }
 
       // 保存登录信息
-      setMemberToken(envelope.data.memberToken)
-      setMemberInfo(envelope.data.member)
+      setMemberToken(envelope.data.token)
+      setMemberInfo({
+        id: envelope.data.memberId,
+        nickName: envelope.data.nickname || '微信用户',
+        avatar: envelope.data.avatar || '',
+        level: '',
+        points: 0,
+      })
 
       wx.showToast({ title: '登录成功', icon: 'success' })
       
@@ -163,8 +166,14 @@ Page({
       }
 
       // 保存登录信息
-      setMemberToken(envelope.data.memberToken)
-      setMemberInfo(envelope.data.member)
+      setMemberToken(envelope.data.token)
+      setMemberInfo({
+        id: envelope.data.memberId,
+        nickName: envelope.data.nickname || '微信用户',
+        avatar: envelope.data.avatar || '',
+        level: '',
+        points: 0,
+      })
 
       wx.showToast({ title: '登录成功', icon: 'success' })
       
