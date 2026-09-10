@@ -85,7 +85,7 @@ EasyProduct.WebApi/
 
 ### 1. 还原 NuGet 包
 
-`ash
+`bash
 cd EasyProduct.WebApi
 dotnet restore
 `
@@ -104,7 +104,7 @@ dotnet restore
 
 ### 3. 运行项目
 
-`ash
+`bash
 cd EasyProduct.Web
 dotnet run
 `
@@ -175,7 +175,7 @@ dotnet run
 
 ### Service 层
 
-- 继承 BaseService<T> 获得基础 CRUD 方法
+- 继承 BaseService 获得基础 CRUD 方法
 - 所有公共方法必须添加中文注释
 - 使用构造器注入获取依赖
 - 业务异常使用 BusinessException 抛出
@@ -184,7 +184,8 @@ dotnet run
 
 - 使用 SqlSugar 的 [SugarTable] 特性标注表名
 - 表名使用 snake_case 命名（模块前缀 + 表名）
-- 状态字段使用小写字符串常量
+- **必须继承 BaseEntity**，自动包含通用字段（Id、IsDeleted、Status、CreatedAt、UpdatedAt 等）
+- IsDeleted 使用 **int 类型**（0=未删除，1=已删除），**不使用 bool**
 - GUID 作为主键
 
 ## 代码示例
@@ -193,20 +194,41 @@ dotnet run
 
 `csharp
 using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
 
 namespace EasyProduct.Models.Entitys.Basic;
 
-[SugarTable("basic_user")]
-public class basic_user
+/// <summary>
+/// 用户实体
+/// </summary>
+/// <remarks>
+/// 继承 BaseEntity，自动包含：Id、IsDeleted（int）、Status、CreatedAt、UpdatedAt 等字段
+/// </remarks>
+[SugarTable("basic_user", "用户表")]
+public class basic_user : BaseEntity
 {
-    [SugarColumn(IsPrimaryKey = true, IsIdentity = false)]
-    public Guid Id { get; set; }
+    /// <summary>
+    /// 用户名
+    /// </summary>
+    [SugarColumn(Length = 50)]
     public string UserName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 用户状态（active/inactive）
+    /// </summary>
+    [SugarColumn(Length = 20)]
     public string Status { get; set; } = "active";
-    public bool IsDeleted { get; set; } = false;
-    public DateTime CreateTime { get; set; } = DateTime.Now;
 }
 `
+
+**BaseEntity 字段说明：**
+- `Id`: GUID 主键
+- `IsDeleted`: **int 类型**（0=未删除，1=已删除）
+- `Status`: Status 枚举（Disabled=0，Enabled=1）
+- `CreatedAt`: 创建时间
+- `UpdatedAt`: 更新时间（可空）
+- `CreatedBy`: 创建人ID（可空）
+- `UpdatedBy`: 更新人ID（可空）
 
 ### 创建 Service
 
@@ -216,21 +238,47 @@ using EasyProduct.Models.Entitys.Basic;
 
 namespace EasyProduct.Business.Basic;
 
+/// <summary>
+/// 用户服务接口
+/// </summary>
 public interface IUserService
 {
+    /// <summary>
+    /// 分页查询用户列表
+    /// </summary>
     Task<PageResponse<UserDto>> GetPageListAsync(UserQueryDto query);
 }
 
-public class UserService : BaseService<basic_user>, IUserService
+/// <summary>
+/// 用户服务实现
+/// </summary>
+public class UserService : BaseService, IUserService
 {
-    public UserService(ISqlSugarClient db)
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    public UserService()
     {
-        _db = db;
     }
 
+    /// <summary>
+    /// 分页查询用户列表
+    /// </summary>
     public async Task<PageResponse<UserDto>> GetPageListAsync(UserQueryDto query)
     {
-        return await GetPageListAsync(query.PageIndex, query.PageSize);
+        var queryable = _db.Queryable<basic_user>()
+            .Where(u => u.IsDeleted == 0);  // 使用 int 类型：0=未删除
+
+        // 关键词搜索
+        if (!string.IsNullOrEmpty(query.Keyword))
+        {
+            queryable = queryable.Where(u => u.UserName.Contains(query.Keyword));
+        }
+
+        // 分页查询
+        return await queryable
+            .OrderBy(u => u.CreatedAt, OrderByType.Desc)
+            .ToPageAsync(query.PageIndex, query.PageSize);
     }
 }
 `
@@ -242,15 +290,24 @@ using EasyProduct.Web.Controllers.Admin.Base;
 
 namespace EasyProduct.Web.Controllers.Admin.Basic;
 
+/// <summary>
+/// 用户管理控制器
+/// </summary>
 public class UserController : AdminControllerBase
 {
     private readonly IUserService _userService;
 
+    /// <summary>
+    /// 构造函数
+    /// </summary>
     public UserController(IUserService userService)
     {
         _userService = userService;
     }
 
+    /// <summary>
+    /// 分页查询用户列表
+    /// </summary>
     [HttpGet]
     public async Task<ApiResponse<PageResponse<UserDto>>> GetPageList([FromQuery] UserQueryDto query)
     {
