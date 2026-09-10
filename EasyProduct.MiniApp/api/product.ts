@@ -11,7 +11,7 @@ import type {
   ReviewListResult,
 } from '../types/product.types'
 
-const BASE_URL = '/products'
+const BASE_URL = '/product'
 
 /** 获取商品列表 */
 export function getProductList(params: ProductQuery): Promise<ProductListResult> {
