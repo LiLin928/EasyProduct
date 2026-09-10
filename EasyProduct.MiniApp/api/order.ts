@@ -2,7 +2,7 @@
 import { request } from '../utils/request'
 import type { Order, OrderListResult, CreateOrderParams, OrderQuery } from '../types/order.types'
 
-const BASE_URL = '/orders'
+const BASE_URL = '/order'
 
 /** 创建订单
  * @param params 创建订单参数
