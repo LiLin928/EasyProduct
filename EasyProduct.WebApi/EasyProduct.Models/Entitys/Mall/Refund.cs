@@ -111,6 +111,18 @@ public class Refund : BaseEntity
     public RefundStatus Status { get; set; } = RefundStatus.Pending;
 
     /// <summary>
+    /// 审核状态
+    /// </summary>
+    /// <remarks>
+    /// 专门记录审核环节的状态，与 Status 字段独立。
+    /// 状态说明：
+    /// - Pending (0): 待审核，表示申请已提交，等待管理员审核
+    /// - Approved (1): 已通过，表示审核通过，可以进入下一步处理
+    /// - Rejected (2): 已拒绝，表示审核被拒绝，申请被驳回
+    /// </remarks>
+    public AuditStatus AuditStatus { get; set; } = AuditStatus.Pending;
+
+    /// <summary>
     /// 物流公司
     /// </summary>
     /// <remarks>
