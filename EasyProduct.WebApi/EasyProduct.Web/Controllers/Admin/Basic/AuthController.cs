@@ -91,13 +91,13 @@ public class AuthController : BaseController
     {
         try
         {
-            var userId = GetCurrentUserId();
-            if (userId == Guid.Empty)
+            var userIdGuid = GetCurrentUserId();
+            if (userIdGuid == Guid.Empty)
             {
                 return Error<UserInfoDto>("未登录", 401);
             }
 
-            var result = await _authService.GetUserInfoAsync(userId.ToString());
+            var result = await _authService.GetUserInfoAsync(userIdGuid.ToString());
             return Success(result);
         }
         catch (BusinessException ex)

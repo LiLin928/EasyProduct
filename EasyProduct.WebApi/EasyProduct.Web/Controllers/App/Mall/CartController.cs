@@ -45,7 +45,7 @@ public class AppCartController : BaseController
     [HttpGet("list")]
     public async Task<ApiResponse<CartListDto>> GetMyCart()
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.GetCartListAsync(memberId);
         return Success(result);
     }
@@ -61,7 +61,7 @@ public class AppCartController : BaseController
     [HttpPost]
     public async Task<ApiResponse<string>> AddToCart([FromBody] CartAddDto dto)
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var cartId = await _cartService.AddToCartAsync(memberId, dto);
         return Success(cartId, "添加成功");
     }
@@ -77,7 +77,7 @@ public class AppCartController : BaseController
     [HttpPost("batch")]
     public async Task<ApiResponse<int>> BatchAddToCart([FromBody] CartBatchAddDto dto)
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var count = await _cartService.BatchAddToCartAsync(memberId, dto);
         return Success(count, $"成功添加 {count} 件商品");
     }
@@ -94,7 +94,7 @@ public class AppCartController : BaseController
     [HttpPut("{id}/quantity")]
     public async Task<ApiResponse<bool>> UpdateQuantity(string id, [FromBody] CartUpdateQuantityDto dto)
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.UpdateQuantityAsync(id, dto.Quantity, memberId);
         return Success(result, "修改成功");
     }
@@ -143,7 +143,7 @@ public class AppCartController : BaseController
     public async Task<ApiResponse<int>> SelectAll([FromBody] dynamic body)
     {
         int selected = body.selected;
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var count = await _cartService.UpdateSelectAllAsync(memberId, selected);
         return Success(count, selected == 1 ? $"已选中 {count} 件商品" : $"已取消选中 {count} 件商品");
     }
@@ -159,7 +159,7 @@ public class AppCartController : BaseController
     [HttpPut("sku")]
     public async Task<ApiResponse<bool>> ChangeSku([FromBody] CartChangeSkuDto dto)
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.ChangeSkuAsync(memberId, dto.CartId, dto.NewSkuId);
         return Success(result, "规格切换成功");
     }
@@ -175,7 +175,7 @@ public class AppCartController : BaseController
     [HttpDelete("{id}")]
     public async Task<ApiResponse<bool>> DeleteCart(string id)
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.DeleteAsync(id, memberId);
         return Success(result, "删除成功");
     }
@@ -192,7 +192,7 @@ public class AppCartController : BaseController
     public async Task<ApiResponse<int>> BatchDelete([FromBody] dynamic body)
     {
         List<string> ids = ((Newtonsoft.Json.Linq.JArray)body.ids).ToObject<List<string>>();
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var count = await _cartService.BatchDeleteAsync(ids, memberId);
         return Success(count, $"成功删除 {count} 件商品");
     }
@@ -207,7 +207,7 @@ public class AppCartController : BaseController
     [HttpDelete("clear")]
     public async Task<ApiResponse<int>> ClearCart()
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var count = await _cartService.ClearCartAsync(memberId);
         return Success(count, $"已清空购物车，删除 {count} 件商品");
     }
@@ -222,7 +222,7 @@ public class AppCartController : BaseController
     [HttpDelete("invalid")]
     public async Task<ApiResponse<int>> ClearInvalidItems()
     {
-        var memberId = GetCurrentUserId().ToString();
+        var memberId = GetCurrentUserId().ToString().ToString();
         var count = await _cartService.ClearInvalidItemsAsync(memberId);
         return Success(count, $"已清除 {count} 件失效商品");
     }

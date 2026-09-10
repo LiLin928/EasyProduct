@@ -90,7 +90,7 @@ public class AdminCartController : BaseController
     [HttpPut("{id}/quantity")]
     public async Task<ApiResponse<bool>> UpdateQuantity(string id, [FromBody] CartUpdateQuantityDto dto)
     {
-        var adminId = GetCurrentUserId().ToString();
+        var adminId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.UpdateQuantityAsync(id, dto.Quantity, adminId);
         return Success(result, "修改成功");
     }
@@ -106,7 +106,7 @@ public class AdminCartController : BaseController
     [HttpDelete("{id}")]
     public async Task<ApiResponse<bool>> DeleteCart(string id)
     {
-        var adminId = GetCurrentUserId().ToString();
+        var adminId = GetCurrentUserId().ToString().ToString();
         var result = await _cartService.DeleteAsync(id, adminId);
         return Success(result, "删除成功");
     }

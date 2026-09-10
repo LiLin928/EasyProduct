@@ -118,7 +118,7 @@ public class UserController : AdminControllerBase
     [HttpGet("profile")]
     public async Task<ApiResponse<ProfileDto>> GetProfile()
     {
-        var userId = GetCurrentUserId().ToString();
+        var userId = GetCurrentUserId().ToString().ToString();
         var result = await _userService.GetProfileAsync(userId);
         return Success(result);
     }
@@ -134,7 +134,7 @@ public class UserController : AdminControllerBase
     [HttpPut("profile")]
     public async Task<ApiResponse<object>> UpdateProfile([FromBody] UpdateProfileDto dto)
     {
-        var userId = GetCurrentUserId().ToString();
+        var userId = GetCurrentUserId().ToString().ToString();
         var result = await _userService.UpdateProfileAsync(userId, dto);
         return result ? Success("更新成功") : Error<object>("更新失败");
     }
@@ -150,7 +150,7 @@ public class UserController : AdminControllerBase
     [HttpPost("change-password")]
     public async Task<ApiResponse<object>> ChangePassword([FromBody] ChangePasswordDto dto)
     {
-        var userId = GetCurrentUserId().ToString();
+        var userId = GetCurrentUserId().ToString().ToString();
         var result = await _userService.ChangePasswordAsync(userId, dto);
         return result ? Success("密码修改成功") : Error<object>("密码修改失败");
     }
