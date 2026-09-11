@@ -16,23 +16,26 @@ public interface IWxPayService
     /// <param name="openid">微信 openid</param>
     /// <returns>支付参数</returns>
     /// <remarks>
-    /// 1. 创建支付单（状态：pending）。
-    /// 2. 调用微信 JSAPI 下单接口。
-    /// 3. 返回前端支付所需的参数（timeStamp、nonceStr、package、signType、paySign）。
+    /// 1. 查询订单信息，验证订单状态。
+    /// 2. 创建支付单（状态：pending）。
+    /// 3. 调用微信 JSAPI 下单接口。
+    /// 4. 返回前端支付所需的参数（timeStamp、nonceStr、package、signType、paySign）。
     /// </remarks>
     Task<JsapiPayParams> CreateJsapiOrderAsync(string orderId, string memberId, string openid);
 
     /// <summary>
     /// 处理支付回调
     /// </summary>
-    /// <param name="callbackData">回调数据</param>
+    /// <param name="callbackData">回调数据（JSON 格式）</param>
     /// <returns>处理结果</returns>
     /// <remarks>
-    /// 1. 验证签名。
-    /// 2. 更新支付单状态（success）。
-    /// 3. 更新订单状态（paid）。
-    /// 4. 记录支付流水。
-    /// 5. 返回成功响应给微信。
+    /// 1. 验证签名，确保回调来自微信。
+    /// 2. 解析回调数据，提取支付结果。
+    /// 3. 幂等性检查，防止重复处理。
+    /// 4. 更新支付单状态（success/failed）。
+    /// 5. 更新订单状态（paid）。
+    /// 6. 记录支付流水。
+    /// 7. 返回成功响应给微信。
     /// </remarks>
     Task<bool> HandlePayCallbackAsync(string callbackData);
 
@@ -41,7 +44,26 @@ public interface IWxPayService
     /// </summary>
     /// <param name="paymentId">支付单 ID</param>
     /// <returns>支付状态</returns>
+    /// <remarks>
+    /// 1. 查询本地支付单状态。
+    /// 2. 如果支付单已成功，直接返回。
+    /// 3. 如果支付单状态为 pending，调用微信查询接口同步状态。
+    /// 4. 更新支付单和订单状态。
+    /// </remarks>
     Task<PaymentStatus> QueryPayStatusAsync(string paymentId);
+
+    /// <summary>
+    /// 关闭订单（超时未支付）
+    /// </summary>
+    /// <param name="paymentId">支付单 ID</param>
+    /// <returns>是否关闭成功</returns>
+    /// <remarks>
+    /// 1. 检查支付单状态（仅 pending 状态可关闭）。
+    /// 2. 调用微信关单接口。
+    /// 3. 更新支付单状态为 closed。
+    /// 4. 更新订单状态为 cancelled。
+    /// </remarks>
+    Task<bool> CloseOrderAsync(string paymentId);
 }
 
 /// <summary>
@@ -91,7 +113,7 @@ public class PaymentStatus
     public string OrderId { get; set; } = string.Empty;
 
     /// <summary>
-    /// 状态（pending、success、failed）
+    /// 状态（pending、success、failed、closed）
     /// </summary>
     public string Status { get; set; } = string.Empty;
 

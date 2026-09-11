@@ -104,4 +104,21 @@ public class WxPayService : BaseService, IWxPayService
             PayTime = null
         };
     }
+
+    /// <summary>
+    /// 关闭订单（超时未支付）
+    /// </summary>
+    /// <param name="paymentId">支付单 ID</param>
+    /// <returns>是否关闭成功</returns>
+    public async Task<bool> CloseOrderAsync(string paymentId)
+    {
+        // TODO: 检查支付单状态
+        // TODO: 调用微信关单接口
+        // TODO: 更新支付单状态
+        // TODO: 更新订单状态
+
+        _logger.LogInformation("关闭微信支付订单：{PaymentId}", paymentId);
+
+        return await Task.FromResult(true);
+    }
 }
