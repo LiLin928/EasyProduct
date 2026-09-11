@@ -3,6 +3,12 @@ using Autofac.Extensions.DependencyInjection;
 using EasyProduct.Common.Extensions;
 using EasyProduct.Common.Logging;
 using EasyProduct.Web.Middleware;
+using EasyProduct.Models.Options;
+using EasyProduct.Business.Mall;
+using EasyProduct.Business.Mall.Jobs;
+using Quartz;
+using Polly;
+using Microsoft.Extensions.Http;
 using Serilog;
 
 // ============================================
@@ -102,6 +108,31 @@ if (!string.IsNullOrEmpty(jwtOptions.GetValue<string>("SecretKey")))
             };
         });
 }
+
+// 微信支付配置
+builder.Services.Configure<WxPayOptions>(builder.Configuration.GetSection("WxPay"));
+
+// 微信支付服务（带 HttpClient 和重试策略）
+builder.Services.AddHttpClient<IWxPayService, WxPayService>()
+    .AddTransientHttpErrorPolicy(p => p
+        .WaitAndRetryAsync(3, retryAttempt =>
+            TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))  // 指数退避：1s, 2s, 4s
+    .AddTransientHttpErrorPolicy(p => p
+        .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));  // 熔断器：连续失败 5 次后熔断 30 秒
+
+// 定时任务（Quartz）
+builder.Services.AddQuartz(q =>
+{
+    // 支付超时检查任务：每 5 分钟执行一次
+    q.ScheduleJob<PaymentTimeoutJob>(trigger => trigger
+        .WithIdentity("PaymentTimeoutTrigger")
+        .WithCronSchedule("0 */5 * * * ?"));  // 每 5 分钟执行一次
+});
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
+});
 
 // 限流策略（会员端 API）
 builder.Services.AddRateLimiter(options =>
