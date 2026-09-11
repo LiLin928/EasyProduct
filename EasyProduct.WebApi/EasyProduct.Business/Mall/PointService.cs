@@ -53,8 +53,8 @@ public class PointService : BaseService, IPointService
         // 创建规则实体
         var rule = dto.Adapt<PointRule>();
         rule.Id = Guid.NewGuid();
-        rule.CreateTime = DateTime.Now;
-        rule.UpdateTime = DateTime.Now;
+        rule.CreatedAt = DateTime.Now;
+        rule.UpdatedAt = DateTime.Now;
 
         // 插入数据库
         await _db.Insertable(rule).ExecuteCommandAsync();
@@ -79,7 +79,7 @@ public class PointService : BaseService, IPointService
 
         // 查询规则
         var rule = await _db.Queryable<PointRule>()
-            .Where(r => r.Id == Guid.Parse(dto.Id) && !r.IsDeleted)
+            .Where(r => r.Id == Guid.Parse(dto.Id) && r.IsDeleted == 0)
             .FirstAsync();
 
         if (rule == null)
@@ -89,7 +89,7 @@ public class PointService : BaseService, IPointService
 
         // 更新字段
         dto.Adapt(rule);
-        rule.UpdateTime = DateTime.Now;
+        rule.UpdatedAt = DateTime.Now;
 
         // 更新数据库
         var result = await _db.Updateable(rule).ExecuteCommandAsync() > 0;
@@ -108,7 +108,7 @@ public class PointService : BaseService, IPointService
     {
         // 查询规则
         var rule = await _db.Queryable<PointRule>()
-            .Where(r => r.Id == Guid.Parse(ruleId) && !r.IsDeleted)
+            .Where(r => r.Id == Guid.Parse(ruleId) && r.IsDeleted == 0)
             .FirstAsync();
 
         if (rule == null)
@@ -117,8 +117,8 @@ public class PointService : BaseService, IPointService
         }
 
         // 软删除
-        rule.IsDeleted = true;
-        rule.UpdateTime = DateTime.Now;
+        rule.IsDeleted = 1;
+        rule.UpdatedAt = DateTime.Now;
 
         var result = await _db.Updateable(rule).ExecuteCommandAsync() > 0;
 
@@ -135,7 +135,7 @@ public class PointService : BaseService, IPointService
     public async Task<PageResponse<PointRuleDto>> GetRuleListAsync(PointRuleQueryDto query)
     {
         var queryable = _db.Queryable<PointRule>()
-            .Where(r => !r.IsDeleted);
+            .Where(r => r.IsDeleted == 0);
 
         // 名称模糊查询
         if (!string.IsNullOrWhiteSpace(query.Name))
@@ -156,7 +156,7 @@ public class PointService : BaseService, IPointService
         }
 
         // 排序
-        queryable = queryable.OrderBy(r => r.Sort).OrderBy(r => r.CreateTime, OrderByType.Desc);
+        queryable = queryable.OrderBy(r => r.Sort).OrderBy(r => r.CreatedAt, OrderByType.Desc);
 
         // 分页查询
         RefAsync<int> total = 0;
@@ -176,7 +176,7 @@ public class PointService : BaseService, IPointService
     public async Task<PointRuleDto> GetRuleDetailAsync(string ruleId)
     {
         var rule = await _db.Queryable<PointRule>()
-            .Where(r => r.Id == Guid.Parse(ruleId) && !r.IsDeleted)
+            .Where(r => r.Id == Guid.Parse(ruleId) && r.IsDeleted == 0)
             .FirstAsync();
 
         if (rule == null)
@@ -197,7 +197,7 @@ public class PointService : BaseService, IPointService
         var now = DateTime.Now;
 
         var queryable = _db.Queryable<PointRule>()
-            .Where(r => !r.IsDeleted && r.Status)
+            .Where(r => r.IsDeleted == 0 && r.Status)
             .Where(r => r.StartTime <= now && r.EndTime >= now);
 
         if (type.HasValue)
@@ -374,7 +374,7 @@ public class PointService : BaseService, IPointService
         {
             // 查询会员
             var member = await _db.Queryable<Member>()
-                .Where(m => m.Id == Guid.Parse(memberId) && !m.IsDeleted)
+                .Where(m => m.Id == Guid.Parse(memberId) && m.IsDeleted == 0)
                 .FirstAsync();
 
             if (member == null)
@@ -394,7 +394,7 @@ public class PointService : BaseService, IPointService
             {
                 member.TotalPoints += points;
             }
-            member.UpdateTime = DateTime.Now;
+            member.UpdatedAt = DateTime.Now;
 
             await _db.Updateable(member).ExecuteCommandAsync();
 
@@ -409,8 +409,8 @@ public class PointService : BaseService, IPointService
                 Balance = member.Points,
                 Remark = remark,
                 RelatedId = relatedId,
-                CreateTime = DateTime.Now,
-                UpdateTime = DateTime.Now
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
 
             await _db.Insertable(record).ExecuteCommandAsync();
@@ -455,7 +455,7 @@ public class PointService : BaseService, IPointService
         {
             // 查询会员
             var member = await _db.Queryable<Member>()
-                .Where(m => m.Id == Guid.Parse(memberId) && !m.IsDeleted)
+                .Where(m => m.Id == Guid.Parse(memberId) && m.IsDeleted == 0)
                 .FirstAsync();
 
             if (member == null)
@@ -472,7 +472,7 @@ public class PointService : BaseService, IPointService
             // 冻结积分
             member.Points -= points;
             // TODO: 添加冻结积分字段
-            member.UpdateTime = DateTime.Now;
+            member.UpdatedAt = DateTime.Now;
 
             await _db.Updateable(member).ExecuteCommandAsync();
 
@@ -487,8 +487,8 @@ public class PointService : BaseService, IPointService
                 Balance = member.Points,
                 Remark = $"订单抵扣积分冻结，订单号：{orderId}",
                 RelatedId = orderId,
-                CreateTime = DateTime.Now,
-                UpdateTime = DateTime.Now
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
 
             await _db.Insertable(record).ExecuteCommandAsync();
@@ -509,7 +509,7 @@ public class PointService : BaseService, IPointService
     {
         // 查询冻结的积分流水
         var frozenRecord = await _db.Queryable<PointRecord>()
-            .Where(r => r.MemberId == memberId && r.RelatedId == orderId && r.Type == PointType.Frozen && !r.IsDeleted)
+            .Where(r => r.MemberId == memberId && r.RelatedId == orderId && r.Type == PointType.Frozen && r.IsDeleted == 0)
             .FirstAsync();
 
         if (frozenRecord == null)
@@ -525,7 +525,7 @@ public class PointService : BaseService, IPointService
         {
             // 查询会员
             var member = await _db.Queryable<Member>()
-                .Where(m => m.Id == Guid.Parse(memberId) && !m.IsDeleted)
+                .Where(m => m.Id == Guid.Parse(memberId) && m.IsDeleted == 0)
                 .FirstAsync();
 
             if (member == null)
@@ -536,7 +536,7 @@ public class PointService : BaseService, IPointService
             // 解冻积分
             member.Points += points;
             // TODO: 减少冻结积分字段
-            member.UpdateTime = DateTime.Now;
+            member.UpdatedAt = DateTime.Now;
 
             await _db.Updateable(member).ExecuteCommandAsync();
 
@@ -551,8 +551,8 @@ public class PointService : BaseService, IPointService
                 Balance = member.Points,
                 Remark = $"取消订单解冻积分，订单号：{orderId}",
                 RelatedId = orderId,
-                CreateTime = DateTime.Now,
-                UpdateTime = DateTime.Now
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
 
             await _db.Insertable(record).ExecuteCommandAsync();
@@ -575,7 +575,7 @@ public class PointService : BaseService, IPointService
     public async Task<PointBalanceDto> GetMemberBalanceAsync(string memberId)
     {
         var member = await _db.Queryable<Member>()
-            .Where(m => m.Id == Guid.Parse(memberId) && !m.IsDeleted)
+            .Where(m => m.Id == Guid.Parse(memberId) && m.IsDeleted == 0)
             .FirstAsync();
 
         if (member == null)
@@ -600,7 +600,7 @@ public class PointService : BaseService, IPointService
     public async Task<PageResponse<PointRecordDto>> GetRecordListAsync(PointRecordQueryDto query)
     {
         var queryable = _db.Queryable<PointRecord>()
-            .Where(r => !r.IsDeleted);
+            .Where(r => r.IsDeleted == 0);
 
         // 会员ID筛选
         if (!string.IsNullOrWhiteSpace(query.MemberId))
@@ -623,16 +623,16 @@ public class PointService : BaseService, IPointService
         // 时间范围筛选
         if (query.StartTime.HasValue)
         {
-            queryable = queryable.Where(r => r.CreateTime >= query.StartTime.Value);
+            queryable = queryable.Where(r => r.CreatedAt >= query.StartTime.Value);
         }
 
         if (query.EndTime.HasValue)
         {
-            queryable = queryable.Where(r => r.CreateTime <= query.EndTime.Value);
+            queryable = queryable.Where(r => r.CreatedAt <= query.EndTime.Value);
         }
 
         // 排序
-        queryable = queryable.OrderBy(r => r.CreateTime, OrderByType.Desc);
+        queryable = queryable.OrderBy(r => r.CreatedAt, OrderByType.Desc);
 
         // 分页查询
         RefAsync<int> total = 0;
@@ -654,8 +654,8 @@ public class PointService : BaseService, IPointService
     public async Task<PageResponse<PointExchangeDto>> GetExchangeListAsync(string memberId, int pageIndex = 1, int pageSize = 10)
     {
         var queryable = _db.Queryable<PointExchange>()
-            .Where(e => e.MemberId == memberId && !e.IsDeleted)
-            .OrderBy(e => e.CreateTime, OrderByType.Desc);
+            .Where(e => e.MemberId == memberId && e.IsDeleted == 0)
+            .OrderBy(e => e.CreatedAt, OrderByType.Desc);
 
         RefAsync<int> total = 0;
         var list = await queryable.ToPageListAsync(pageIndex, pageSize, total);
@@ -680,11 +680,11 @@ public class PointService : BaseService, IPointService
 
         // 统计各类积分
         var incomeTotal = await _db.Queryable<PointRecord>()
-            .Where(r => r.MemberId == memberId && r.Type == PointType.Income && !r.IsDeleted)
+            .Where(r => r.MemberId == memberId && r.Type == PointType.Income && r.IsDeleted == 0)
             .SumAsync(r => r.Points);
 
         var expenseTotal = await _db.Queryable<PointRecord>()
-            .Where(r => r.MemberId == memberId && r.Type == PointType.Expense && !r.IsDeleted)
+            .Where(r => r.MemberId == memberId && r.Type == PointType.Expense && r.IsDeleted == 0)
             .SumAsync(r => Math.Abs(r.Points));
 
         return new Dictionary<string, object>

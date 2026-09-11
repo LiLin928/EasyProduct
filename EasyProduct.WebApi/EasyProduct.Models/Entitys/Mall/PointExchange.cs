@@ -1,4 +1,5 @@
 using SqlSugar;
+using EasyProduct.Models.Entitys.Base;
 
 namespace EasyProduct.Models.Entitys.Mall;
 

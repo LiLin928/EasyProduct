@@ -6,6 +6,7 @@ using EasyProduct.Common.Base;
 using EasyProduct.Models.Entitys.Mall;
 using EasyProduct.Models.Options;
 using EasyProduct.Models.Enums.Mall;
+using EasyProduct.Business.Basic;
 
 namespace EasyProduct.Business.Mall;
 
@@ -86,7 +87,7 @@ public class WxLoginService : BaseService, IWxLoginService
     public async Task<WxUserInfo?> GetWxUserInfoAsync(string openid)
     {
         var member = await _db.Queryable<Member>()
-            .Where(m => m.OpenId == openid && !m.IsDeleted)
+            .Where(m => m.OpenId == openid && m.IsDeleted == 0)
             .FirstAsync();
 
         if (member == null)
@@ -169,7 +170,7 @@ public class WxLoginService : BaseService, IWxLoginService
     {
         // 查询会员
         var member = await _db.Queryable<Member>()
-            .Where(m => m.OpenId == openid && !m.IsDeleted)
+            .Where(m => m.OpenId == openid && m.IsDeleted == 0)
             .FirstAsync();
 
         if (member == null)
@@ -186,8 +187,8 @@ public class WxLoginService : BaseService, IWxLoginService
                 Points = 0,
                 TotalPoints = 0,
                 Balance = 0,
-                CreateTime = DateTime.Now,
-                UpdateTime = DateTime.Now
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
 
             await _db.Insertable(member).ExecuteCommandAsync();
@@ -198,7 +199,7 @@ public class WxLoginService : BaseService, IWxLoginService
         {
             // 更新最后登录时间
             member.LastLoginTime = DateTime.Now;
-            member.UpdateTime = DateTime.Now;
+            member.UpdatedAt = DateTime.Now;
 
             await _db.Updateable(member).ExecuteCommandAsync();
         }

@@ -1,5 +1,6 @@
 using SqlSugar;
 using EasyProduct.Models.Enums.Mall;
+using EasyProduct.Models.Entitys.Base;
 
 namespace EasyProduct.Models.Entitys.Mall;
 
