@@ -636,3 +636,86 @@ CREATE TABLE `site_banner` (
   KEY `idx_time_range` (`start_time`, `end_time`),
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Banner表';
+
+-- ----------------------------
+-- 关于我们表 (site_about)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_about`;
+CREATE TABLE `site_about` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '标题',
+  `title_en` VARCHAR(200) DEFAULT NULL COMMENT '标题（英文）',
+  `subtitle` VARCHAR(500) DEFAULT NULL COMMENT '副标题',
+  `subtitle_en` VARCHAR(500) DEFAULT NULL COMMENT '副标题（英文）',
+  `content` LONGTEXT COMMENT '内容（富文本）',
+  `content_en` LONGTEXT COMMENT '内容（英文，富文本）',
+  `cover_image` VARCHAR(500) DEFAULT NULL COMMENT '封面图片URL',
+  `keywords` VARCHAR(200) DEFAULT NULL COMMENT 'SEO关键词',
+  `description` VARCHAR(500) DEFAULT NULL COMMENT 'SEO描述',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='关于我们表';
+
+-- ----------------------------
+-- 下载管理表 (site_download)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_download`;
+CREATE TABLE `site_download` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '下载标题',
+  `title_en` VARCHAR(200) DEFAULT NULL COMMENT '下载标题（英文）',
+  `description` VARCHAR(500) DEFAULT NULL COMMENT '描述',
+  `description_en` VARCHAR(500) DEFAULT NULL COMMENT '描述（英文）',
+  `file_url` VARCHAR(500) NOT NULL COMMENT '文件URL',
+  `file_name` VARCHAR(200) DEFAULT NULL COMMENT '文件名称',
+  `file_size` BIGINT DEFAULT 0 COMMENT '文件大小（字节）',
+  `file_type` VARCHAR(50) DEFAULT NULL COMMENT '文件类型（扩展名）',
+  `download_count` INT DEFAULT 0 COMMENT '下载次数',
+  `category` VARCHAR(50) DEFAULT NULL COMMENT '分类',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_category` (`category`),
+  KEY `idx_status` (`status`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='下载管理表';
+
+-- ----------------------------
+-- 视频管理表 (site_video)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_video`;
+CREATE TABLE `site_video` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '视频标题',
+  `title_en` VARCHAR(200) DEFAULT NULL COMMENT '视频标题（英文）',
+  `description` VARCHAR(500) DEFAULT NULL COMMENT '描述',
+  `description_en` VARCHAR(500) DEFAULT NULL COMMENT '描述（英文）',
+  `cover_image` VARCHAR(500) DEFAULT NULL COMMENT '封面图片URL',
+  `video_url` VARCHAR(500) NOT NULL COMMENT '视频URL',
+  `video_type` VARCHAR(20) DEFAULT 'mp4' COMMENT '视频类型：mp4/webm/external',
+  `duration` INT DEFAULT 0 COMMENT '视频时长（秒）',
+  `play_count` INT DEFAULT 0 COMMENT '播放次数',
+  `category` VARCHAR(50) DEFAULT NULL COMMENT '分类',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_category` (`category`),
+  KEY `idx_status` (`status`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频管理表';

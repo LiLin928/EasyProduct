@@ -1,16 +1,16 @@
 // src/routes/site/about.ts
 import { Router } from 'express'
 import { ok } from '../../helpers/envelope.js'
-import { ABOUT, CONTACT_INFO } from '../../data/site-full.js'
+import { ABOUT } from '../../data/site-full.js'
 
 export const siteAboutRouter = Router()
 
-// 关于单页
-siteAboutRouter.get('/about/detail', (_req, res) => {
-  res.json(ok(ABOUT))
-})
-
-// 联系信息
-siteAboutRouter.get('/contact/info', (_req, res) => {
-  res.json(ok(CONTACT_INFO))
+// 获取关于我们详情（官网公开）
+siteAboutRouter.get('/about', (_req, res) => {
+  // 只返回启用状态的关于我们内容
+  if (ABOUT.status === 1) {
+    res.json(ok(ABOUT))
+  } else {
+    res.json(ok(null))
+  }
 })
