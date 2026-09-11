@@ -87,7 +87,7 @@ public class PaymentService : BaseService, IPaymentService
             Amount = order.PayAmount,
             PaymentMethod = paymentMethod,
             PaymentChannel = dto.PaymentChannel ?? "jsapi",
-            Status = PaymentStatus.Pending
+            Status = EasyProduct.Models.Enums.Mall.PaymentStatus.Pending
         };
 
         // 5. 保存支付单
@@ -248,7 +248,7 @@ public class PaymentService : BaseService, IPaymentService
         }
 
         // 2. 验证支付单状态
-        if (payment.Status != PaymentStatus.Pending)
+        if (payment.Status != EasyProduct.Models.Enums.Mall.PaymentStatus.Pending)
         {
             // 支付单已处理，幂等性保证
             _logger.LogWarning("支付单已处理：支付单号={PaymentNo}，当前状态={Status}",
@@ -257,7 +257,7 @@ public class PaymentService : BaseService, IPaymentService
         }
 
         // 3. 解析支付状态
-        var paymentStatus = dto.Status.ToLower() == "success" ? PaymentStatus.Success : PaymentStatus.Failed;
+        var paymentStatus = dto.Status.ToLower() == "success" ? EasyProduct.Models.Enums.Mall.PaymentStatus.Success : EasyProduct.Models.Enums.Mall.PaymentStatus.Failed;
 
         // 4. 开启事务
         var result = await _db.Ado.UseTranAsync(async () =>
@@ -271,7 +271,7 @@ public class PaymentService : BaseService, IPaymentService
             await _db.Updateable(payment).ExecuteCommandAsync();
 
             // 如果支付成功，更新订单状态
-            if (paymentStatus == PaymentStatus.Success)
+            if (paymentStatus == EasyProduct.Models.Enums.Mall.PaymentStatus.Success)
             {
                 await _orderService.MarkOrderPaidAsync(payment.OrderId, payment.PaymentTime!.Value);
             }
@@ -346,7 +346,7 @@ public class PaymentService : BaseService, IPaymentService
         var payment = await GetPaymentDetailAsync(paymentId);
 
         // 如果支付单状态是待支付，可以主动查询第三方支付状态
-        if (payment.Status == PaymentStatus.Pending.ToString())
+        if (payment.Status == EasyProduct.Models.Enums.Mall.PaymentStatus.Pending.ToString())
         {
             await SyncPaymentStatusAsync(payment.PaymentNo);
             payment = await GetPaymentDetailAsync(paymentId);
@@ -407,13 +407,13 @@ public class PaymentService : BaseService, IPaymentService
         }
 
         // 验证支付单状态
-        if (payment.Status != PaymentStatus.Pending)
+        if (payment.Status != EasyProduct.Models.Enums.Mall.PaymentStatus.Pending)
         {
             throw new BusinessException("支付单状态不允许关闭", 400);
         }
 
         // 更新支付单状态为失败
-        payment.Status = PaymentStatus.Failed;
+        payment.Status = EasyProduct.Models.Enums.Mall.PaymentStatus.Failed;
         payment.UpdatedAt = DateTime.Now;
 
         var success = await _db.Updateable(payment).ExecuteCommandAsync() > 0;
@@ -424,6 +424,32 @@ public class PaymentService : BaseService, IPaymentService
         }
 
         return success;
+    }
+
+    #endregion
+
+    #region 支付超时处理
+
+    /// <summary>
+    /// 获取超时未支付的支付单列表
+    /// </summary>
+    /// <param name="timeoutMinutes">超时时间（分钟）</param>
+    /// <returns>超时支付单列表</returns>
+    /// <remarks>
+    /// 查询超过指定时间仍未支付的支付单（状态为 pending），用于定时任务关闭超时订单。
+    /// </remarks>
+    public async Task<List<PaymentDto>> GetTimeoutPaymentsAsync(int timeoutMinutes)
+    {
+        var cutoffTime = DateTime.Now.AddMinutes(-timeoutMinutes);
+
+        var payments = await _db.Queryable<Payment>()
+            .Where(p => p.Status == EasyProduct.Models.Enums.Mall.PaymentStatus.Pending && p.CreatedAt < cutoffTime && p.IsDeleted == 0)
+            .OrderBy(p => p.CreatedAt, OrderByType.Asc)
+            .ToListAsync();
+
+        _logger.LogInformation("查询到 {Count} 个超时未支付支付单（超过 {Minutes} 分钟）", payments.Count, timeoutMinutes);
+
+        return payments.Adapt<List<PaymentDto>>();
     }
 
     #endregion

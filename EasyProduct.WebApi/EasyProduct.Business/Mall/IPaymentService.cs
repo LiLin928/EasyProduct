@@ -112,4 +112,18 @@ public interface IPaymentService
     Task<bool> ClosePaymentAsync(string paymentId);
 
     #endregion
+
+    #region 支付超时处理
+
+    /// <summary>
+    /// 获取超时未支付的支付单列表
+    /// </summary>
+    /// <param name="timeoutMinutes">超时时间（分钟）</param>
+    /// <returns>超时支付单列表</returns>
+    /// <remarks>
+    /// 查询超过指定时间仍未支付的支付单（状态为 pending），用于定时任务关闭超时订单。
+    /// </remarks>
+    Task<List<PaymentDto>> GetTimeoutPaymentsAsync(int timeoutMinutes);
+
+    #endregion
 }
