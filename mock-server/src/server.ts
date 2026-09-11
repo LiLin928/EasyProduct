@@ -36,6 +36,7 @@ import { adminDesktopRouter } from './routes/admin/desktop.js'
 import { adminProfileRouter } from './routes/admin/profile.js'
 import { adminAnnouncementRouter } from './routes/admin/announcement.js'
 import { adminSiteNewsRouter } from './routes/admin/site-news.js'
+import { adminSiteNewsCategoryRouter } from './routes/admin/site-news-category.js'
 import { adminSiteCategoryRouter } from './routes/admin/site-category.js'
 import { adminSiteBannerRouter } from './routes/admin/site-banner.js'
 import { adminSiteVideoRouter } from './routes/admin/site-video.js'
@@ -88,6 +89,7 @@ import { siteHomeRouter } from './routes/site/home.js'
 import { siteProductRouter } from './routes/site/product.js'
 import { siteCategoryRouter } from './routes/site/category.js'
 import { siteNewsRouter } from './routes/site/news.js'
+import { siteBannerRouter } from './routes/site/banner.js'
 import { siteVideoRouter } from './routes/site/video.js'
 import { siteDownloadRouter } from './routes/site/download.js'
 import { siteAboutRouter } from './routes/site/about.js'
@@ -104,8 +106,8 @@ import { appMemberRouter } from './routes/app/member.js'
 import { appAddressRouter } from './routes/app/address.js'
 import { i18nRouter } from './routes/i18n.js'
 
-app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminMallAddressRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter, adminCrmReversalRouter, adminOpsOperateLogRouter, adminOpsLoginLogRouter, adminOpsTaskRouter, adminOpsTaskLogRouter, adminOpsLogQueryRouter, adminRptDatasourceRouter, adminRptDefinitionRouter, adminRptColumnTemplateRouter, adminWfMyApplyRouter, adminWfTodoRouter, adminWfDoneRouter, adminWfInstanceRouter, adminWfDefinitionRouter, adminWfDesignerRouter, adminWorkflowVueflowRouter)
-app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
+app.use('/api/admin', adminGuard, adminAuthRouter, adminMenuRouter, adminDictRouter, adminUserRouter, adminDeptRouter, adminRoleRouter, adminFileRouter, adminConfigRouter, adminDesktopRouter, adminProfileRouter, adminAnnouncementRouter, adminSiteNewsRouter, adminSiteNewsCategoryRouter, adminSiteCategoryRouter, adminSiteBannerRouter, adminSiteVideoRouter, adminSiteDownloadRouter, adminSiteAboutRouter, adminSiteInquiryRouter, adminSiteContactRouter, adminProductCategoryRouter, adminProductSpuRouter, adminProductChannelRouter, adminMallMemberRouter, adminMallLevelRouter, adminMallPointsRouter, adminMallCouponRouter, adminMallOrderRouter, adminMallPaymentRouter, adminMallAddressRouter, adminCrmCustomerRouter, adminCrmSupplierRouter, adminCrmCurrencyRouter, adminCrmTaxRateRouter, adminCrmSalesOrderRouter, adminCrmPurchaseOrderRouter, adminCrmWarehouseRouter, adminCrmStockRouter, adminCrmStockRecordRouter, adminCrmStockCheckRouter, adminCrmStockAlertRouter, adminCrmInvoiceRouter, adminCrmPaymentRouter, adminCrmArapRouter, adminCrmFixedAssetRouter, adminCrmReversalRouter, adminOpsOperateLogRouter, adminOpsLoginLogRouter, adminOpsTaskRouter, adminOpsTaskLogRouter, adminOpsLogQueryRouter, adminRptDatasourceRouter, adminRptDefinitionRouter, adminRptColumnTemplateRouter, adminWfMyApplyRouter, adminWfTodoRouter, adminWfDoneRouter, adminWfInstanceRouter, adminWfDefinitionRouter, adminWfDesignerRouter, adminWorkflowVueflowRouter)
+app.use('/api/site', siteHomeRouter, siteProductRouter, siteCategoryRouter, siteNewsRouter, siteBannerRouter, siteVideoRouter, siteDownloadRouter, siteAboutRouter, siteContactRouter, siteInquiryRouter, siteAnnouncementRouter)
 app.use('/api/app', appGuard)
 app.use('/api/app', appAuthRouter)
 app.use('/api/app/announcements', appAnnouncementRouter)
