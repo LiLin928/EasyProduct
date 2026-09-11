@@ -137,7 +137,7 @@ builder.Services.AddQuartzHostedService(options =>
 // 限流策略（会员端 API）
 builder.Services.AddRateLimiter(options =>
 {
-    // 添加滑动窗口限流策略
+    // 添加滑动窗口限流策略（会员端 API）
     options.AddPolicy("AppPolicy", context =>
         System.Threading.RateLimiting.RateLimitPartition.GetSlidingWindowLimiter(
             partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
@@ -146,6 +146,16 @@ builder.Services.AddRateLimiter(options =>
                 PermitLimit = 100,  // 每分钟最多 100 次请求
                 Window = TimeSpan.FromMinutes(1),
                 SegmentsPerWindow = 4
+            }));
+
+    // 添加固定窗口限流策略（官网提交 API）
+    options.AddPolicy("SiteSubmitPolicy", context =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,  // 每分钟最多 10 次提交
+                Window = TimeSpan.FromMinutes(1)
             }));
 
     // 限流拒绝响应
