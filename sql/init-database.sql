@@ -552,3 +552,87 @@ CREATE TABLE `mall_favorite` (
   KEY `idx_spu_id` (`spu_id`),
   KEY `idx_is_deleted` (`is_deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
+
+-- ========================================
+-- Site 模块表
+-- ========================================
+
+-- ----------------------------
+-- 新闻分类表 (site_news_category)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_news_category`;
+CREATE TABLE `site_news_category` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `category_name` VARCHAR(100) NOT NULL COMMENT '分类名称',
+  `category_code` VARCHAR(50) DEFAULT NULL COMMENT '分类编码',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='新闻分类表';
+
+-- ----------------------------
+-- 新闻表 (site_news)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_news`;
+CREATE TABLE `site_news` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `category_id` CHAR(36) DEFAULT NULL COMMENT '分类ID',
+  `title` VARCHAR(200) NOT NULL COMMENT '新闻标题',
+  `title_en` VARCHAR(200) DEFAULT NULL COMMENT '新闻标题（英文）',
+  `summary` VARCHAR(500) DEFAULT NULL COMMENT '摘要',
+  `summary_en` VARCHAR(500) DEFAULT NULL COMMENT '摘要（英文）',
+  `content` LONGTEXT COMMENT '内容（富文本）',
+  `content_en` LONGTEXT COMMENT '内容（英文，富文本）',
+  `cover_image` VARCHAR(500) DEFAULT NULL COMMENT '封面图片URL',
+  `author` VARCHAR(50) DEFAULT NULL COMMENT '作者',
+  `source` VARCHAR(100) DEFAULT NULL COMMENT '来源',
+  `view_count` INT DEFAULT 0 COMMENT '浏览次数',
+  `is_top` INT DEFAULT 0 COMMENT '是否置顶：0=否，1=是',
+  `publish_time` DATETIME DEFAULT NULL COMMENT '发布时间',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_is_top` (`is_top`),
+  KEY `idx_publish_time` (`publish_time`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='新闻表';
+
+-- ----------------------------
+-- Banner表 (site_banner)
+-- ----------------------------
+DROP TABLE IF EXISTS `site_banner`;
+CREATE TABLE `site_banner` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `title` VARCHAR(100) DEFAULT NULL COMMENT 'Banner标题',
+  `title_en` VARCHAR(100) DEFAULT NULL COMMENT 'Banner标题（英文）',
+  `image_url` VARCHAR(500) NOT NULL COMMENT '图片URL',
+  `link_url` VARCHAR(500) DEFAULT NULL COMMENT '跳转链接',
+  `target` VARCHAR(10) DEFAULT '_self' COMMENT '打开方式：_self/_blank',
+  `position` VARCHAR(50) DEFAULT 'home' COMMENT '位置：home=首页，product=产品页等',
+  `sort` INT DEFAULT 0 COMMENT '排序',
+  `status` INT DEFAULT 1 COMMENT '状态：0=禁用，1=启用',
+  `start_time` DATETIME DEFAULT NULL COMMENT '开始时间',
+  `end_time` DATETIME DEFAULT NULL COMMENT '结束时间',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` VARCHAR(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '软删除标记：0=未删除，1=已删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_position` (`position`),
+  KEY `idx_sort` (`sort`),
+  KEY `idx_status` (`status`),
+  KEY `idx_time_range` (`start_time`, `end_time`),
+  KEY `idx_is_deleted` (`is_deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Banner表';
