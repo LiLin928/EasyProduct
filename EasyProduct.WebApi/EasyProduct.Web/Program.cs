@@ -103,6 +103,34 @@ if (!string.IsNullOrEmpty(jwtOptions.GetValue<string>("SecretKey")))
         });
 }
 
+// 限流策略（会员端 API）
+builder.Services.AddRateLimiter(options =>
+{
+    // 添加滑动窗口限流策略
+    options.AddPolicy("AppPolicy", context =>
+        System.Threading.RateLimiting.RateLimitPartition.GetSlidingWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new System.Threading.RateLimiting.SlidingWindowRateLimiterOptions
+            {
+                PermitLimit = 100,  // 每分钟最多 100 次请求
+                Window = TimeSpan.FromMinutes(1),
+                SegmentsPerWindow = 4
+            }));
+
+    // 限流拒绝响应
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            code = 429,
+            message = "请求过于频繁，请稍后再试",
+            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+        }, cancellationToken);
+    };
+});
+
 // ============================================
 // 6. 构建应用
 // ============================================
@@ -130,6 +158,9 @@ app.UseStaticFiles();
 
 // CORS
 app.UseCors("AllowSpecific");
+
+// 限流（在认证之前，拦截恶意请求）
+app.UseRateLimiter();
 
 // 认证授权
 app.UseAuthentication();
