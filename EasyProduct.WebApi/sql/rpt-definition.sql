@@ -1,0 +1,25 @@
+-- 报表定义表
+CREATE TABLE `rpt_definition` (
+  `id` char(36) NOT NULL COMMENT '主键ID',
+  `name` varchar(100) NOT NULL COMMENT '报表名称',
+  `code` varchar(50) NOT NULL COMMENT '报表编码（唯一标识）',
+  `category` varchar(50) NOT NULL COMMENT '报表分类',
+  `datasource_id` char(36) NOT NULL COMMENT '数据源ID',
+  `sql_template` text NOT NULL COMMENT '查询SQL（支持参数化）',
+  `chart_type` varchar(20) DEFAULT 'table' COMMENT '图表类型：table/line/bar/pie',
+  `columns` text COMMENT '列定义（JSON数组）',
+  `filters` text COMMENT '筛选条件（JSON数组）',
+  `status` int NOT NULL DEFAULT 1 COMMENT '状态：1-草稿，2-已发布，3-已归档',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注说明',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `is_deleted` int NOT NULL DEFAULT 0 COMMENT '是否删除：0-否，1-是',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`),
+  KEY `idx_name` (`name`),
+  KEY `idx_category` (`category`),
+  KEY `idx_datasource` (`datasource_id`),
+  KEY `idx_status` (`status`),
+  CONSTRAINT `fk_definition_datasource` FOREIGN KEY (`datasource_id`) REFERENCES `rpt_datasource` (`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报表定义表';

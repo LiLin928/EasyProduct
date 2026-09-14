@@ -188,7 +188,81 @@ WHERE code = 'USD';
 - ✅ 外键约束：级联删除（ON DELETE CASCADE）
 - ✅ 索引：主键、唯一键、常用查询字段、外键字段
 
-## 🎯 下一步
+---
+
+# Report 模块数据库脚本
+
+## 📋 脚本列表
+
+| 脚本文件 | 说明 | 执行顺序 |
+|---------|------|---------|
+| `rpt-datasource.sql` | 数据源表 | 1 |
+| `rpt-definition.sql` | 报表定义表 | 2 |
+| `rpt-column-template.sql` | 列模板表 | 3 |
+
+## 🚀 执行方式
+
+### 方式一：命令行执行
+
+```bash
+mysql -u root -p easyproduct < rpt-datasource.sql
+mysql -u root -p easyproduct < rpt-definition.sql
+mysql -u root -p easyproduct < rpt-column-template.sql
+```
+
+### 方式二：在 MySQL 客户端中执行
+
+```sql
+source D:/4-MyProject/EasyProduct/EasyProduct.WebApi/sql/rpt-datasource.sql;
+source D:/4-MyProduct/EasyProduct/EasyProduct.WebApi/sql/rpt-definition.sql;
+source D:/4-MyProduct/EasyProduct/EasyProduct.WebApi/sql/rpt-column-template.sql;
+```
+
+## 📊 表结构概览
+
+### rpt_datasource（数据源表）
+
+存储报表数据源配置，支持多种数据库类型（MySQL、PostgreSQL、SQL Server、Oracle）。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | char(36) | 主键ID |
+| name | varchar(100) | 数据源名称（唯一） |
+| type | varchar(20) | 数据源类型 |
+| status | int | 连接状态（1-已连接，2-连接错误） |
+| password | varchar(500) | 密码（加密存储） |
+
+### rpt_definition（报表定义表）
+
+存储报表定义信息，包括 SQL 模板、列配置、图表类型等。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | char(36) | 主键ID |
+| code | varchar(50) | 报表编码（唯一） |
+| sql_template | text | 查询 SQL |
+| chart_type | varchar(20) | 图表类型 |
+| status | int | 状态（1-草稿，2-已发布，3-已归档） |
+
+### rpt_column_template（列模板表）
+
+存储报表列模板，用于快速配置列显示格式。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| field | varchar(50) | 字段名 |
+| type | varchar(20) | 字段类型 |
+| width | int | 列宽 |
+| format | varchar(50) | 格式化规则 |
+
+## ⚠️ 注意事项
+
+1. **执行顺序**：必须先执行 `rpt-datasource.sql`，再执行 `rpt-definition.sql`（有外键约束）
+2. **密码加密**：数据源密码在应用层加密存储，不要在数据库脚本中写入明文密码
+3. **SQL 注入防护**：报表 SQL 只允许执行 SELECT 语句，并有黑名单检查
+4. **默认数据源**：脚本会创建一个名为"主数据库"的默认数据源，需要根据实际环境修改配置
+
+---
 
 数据库表创建完成后，可以：
 
