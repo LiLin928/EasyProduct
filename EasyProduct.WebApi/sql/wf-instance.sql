@@ -1,0 +1,27 @@
+-- 流程实例表
+CREATE TABLE `wf_instance` (
+  `id` CHAR(36) NOT NULL COMMENT '主键ID',
+  `definition_id` CHAR(36) NOT NULL COMMENT '流程定义ID',
+  `definition_name` VARCHAR(100) NOT NULL COMMENT '流程定义名称',
+  `business_key` VARCHAR(50) NOT NULL COMMENT '业务单据ID',
+  `business_type` VARCHAR(50) NOT NULL COMMENT '业务类型',
+  `title` VARCHAR(200) NOT NULL COMMENT '流程标题',
+  `applicant_id` CHAR(36) NOT NULL COMMENT '申请人ID',
+  `applicant_name` VARCHAR(50) NOT NULL COMMENT '申请人姓名',
+  `current_node_id` VARCHAR(50) NOT NULL COMMENT '当前节点ID',
+  `current_node_name` VARCHAR(100) NOT NULL COMMENT '当前节点名称',
+  `status` INT NOT NULL DEFAULT 0 COMMENT '流程状态：0-运行中、1-已完成、2-已取消、3-已拒绝',
+  `start_time` DATETIME NOT NULL COMMENT '开始时间',
+  `end_time` DATETIME COMMENT '结束时间',
+  `is_deleted` INT NOT NULL DEFAULT 0 COMMENT '是否删除：0-否、1-是',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` DATETIME COMMENT '更新时间',
+  `created_by` VARCHAR(36) COMMENT '创建人ID',
+  `updated_by` VARCHAR(36) COMMENT '更新人ID',
+  PRIMARY KEY (`id`),
+  KEY `idx_definition_id` (`definition_id`),
+  KEY `idx_business_key` (`business_key`),
+  KEY `idx_applicant_id` (`applicant_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_start_time` (`start_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='流程实例表';
